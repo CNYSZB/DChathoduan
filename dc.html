@@ -11,13 +11,13 @@
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
   }
-  
+
   .page, #sidebar, .modal-box, .msg, .toast, .chat-item, button, .agent-card {
     will-change: transform;
     transform: translateZ(0);
     backface-visibility: hidden;
   }
-  
+
   :root {
     --bg: #0a0a0c;
     --surface: #14161a;
@@ -32,7 +32,7 @@
     --bubble-ai: #1e2026;
     --font-size: 16px;
   }
-  
+
   body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
     background: var(--bg);
@@ -497,7 +497,7 @@
     height: 100vh;
     position: relative;
   }
-  
+
   #sidebar {
     width: 280px;
     height: 100vh;
@@ -653,7 +653,7 @@
   .side-btn:active {
     transform: scale(0.97);
   }
-  
+
   #overlay {
     position: fixed;
     left: 0; top: 0;
@@ -668,7 +668,7 @@
     opacity: 1;
     visibility: visible;
   }
-  
+
   #chat-container {
     width: 100%;
     height: 100vh;
@@ -677,7 +677,7 @@
     overflow: hidden;
     background: transparent;
   }
-  
+
   .chat-header {
     background: var(--surface);
     padding: 16px 20px;
@@ -718,7 +718,7 @@
     cursor: pointer;
     background: var(--primary-bg);
   }
-  
+
   #messages {
     flex: 1;
     padding: 20px;
@@ -728,7 +728,7 @@
     gap: 16px;
     -webkit-overflow-scrolling: touch;
   }
-  
+
   .msg {
     max-width: 85%;
     padding: 14px 18px;
@@ -766,7 +766,7 @@
     font-size: var(--font-size);
     border: 1px solid var(--border);
   }
-  
+
   .input-bar {
     padding: 16px 20px;
     background: var(--surface);
@@ -811,7 +811,7 @@
   #send:active {
     transform: scale(0.92);
   }
-  
+
   .base-modal, #chatConfigModal, #promptModal, #agentModal, #editAgentModal, #selectModal {
     position: fixed;
     left: 0; top: 0;
@@ -849,7 +849,7 @@
   #selectModal.show .modal-box {
     transform: scale(1);
   }
-  
+
   .modal-head, .config-detail-title {
     display: flex;
     justify-content: space-between;
@@ -887,7 +887,7 @@
     min-height: 80px;
     resize: none;
   }
-  
+
   .select-btn {
     width: 100%;
     padding: 14px 16px;
@@ -907,7 +907,7 @@
     font-size: 12px;
     color: var(--subtext);
   }
-  
+
   .select-options {
     position: fixed;
     bottom: 0;
@@ -951,7 +951,7 @@
     opacity: 1;
     visibility: visible;
   }
-  
+
   .switch-box {
     display: flex;
     align-items: center;
@@ -1072,7 +1072,7 @@
   #avatarFile, #editAvatarFile {
     display: none;
   }
-  
+
   #chatConfigMask {
     z-index: 99999;
     position: fixed;
@@ -1091,7 +1091,7 @@
     opacity: 1;
     visibility: visible;
   }
-  
+
   .config-item-row {
     margin-bottom: 16px;
   }
@@ -1145,7 +1145,7 @@
     display: none;
     text-align: right;
   }
-  
+
   #rewardModal {
     position: fixed;
     left: 0; top: 0;
@@ -1205,7 +1205,7 @@
   #closeReward:active {
     transform: scale(0.96);
   }
-  
+
   #noticeModal {
     position: fixed;
     left: 0; top: 0;
@@ -1268,7 +1268,7 @@
     background: transparent;
     border-radius: 36px;
   }
-  
+
   #titleLoading {
     position: fixed;
     top: 0; left: 0;
@@ -1288,11 +1288,11 @@
     opacity: 1;
     visibility: visible;
   }
-  
+
   #renameModal .modal-box {
     max-width: 360px;
   }
-  
+
   .toast {
     position: fixed;
     top: 50%;
@@ -1328,11 +1328,11 @@
     background: #114444;
     border-color: #226666;
   }
-  
+
   .hide {
     display: none !important;
   }
-  
+
   ::-webkit-scrollbar {
     width: 4px;
   }
@@ -1343,7 +1343,7 @@
     background: #3a3c44;
     border-radius: 4px;
   }
-  
+
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -1479,7 +1479,7 @@
     <div class="modal-body">
       <label>自己的API密钥</label>
       <input type="password" id="userApiInput" placeholder="填写你自己的API">
-      
+
       <div class="font-size-setting">
         <span>字体大小</span>
         <div class="font-size-control">
@@ -1488,7 +1488,7 @@
           <button id="fontPlus">+</button>
         </div>
       </div>
-      
+
       <div class="switch-box">
         <span style="font-size:14px">下次进入输入密码</span>
         <div class="switch" id="pwdCheckSwitch"></div>
@@ -1722,18 +1722,18 @@ function showToast(message, type = 'info', duration = 2000) {
     clearTimeout(toastTimer);
     toastEl.classList.remove('show', 'error', 'success');
   }
-  
+
   toastEl.textContent = message;
   toastEl.className = 'toast';
   if (type === 'error') toastEl.classList.add('error');
   if (type === 'success') toastEl.classList.add('success');
-  
+
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       toastEl.classList.add('show');
     });
   });
-  
+
   toastTimer = setTimeout(() => {
     toastEl.classList.remove('show');
     toastTimer = null;
@@ -1751,7 +1751,7 @@ function showSelect(options, targetBtn) {
   return new Promise((resolve) => {
     currentSelectTarget = targetBtn;
     selectResolve = resolve;
-    
+
     selectOptionsList.innerHTML = '';
     options.forEach(opt => {
       const div = document.createElement('div');
@@ -1765,7 +1765,7 @@ function showSelect(options, targetBtn) {
       };
       selectOptionsList.appendChild(div);
     });
-    
+
     selectOverlay.classList.add('show');
     selectOptions.classList.add('show');
   });
@@ -1911,7 +1911,7 @@ async function migrateOldData() {
       }
     });
   }
-  
+
   if (agents.length === 0) {
     agents.push({
       id: 'agent_default',
@@ -1952,13 +1952,13 @@ let selectedAgentIds = new Set();
 function renderAgentList() {
   const list = document.getElementById('agentList');
   const sorted = [...agents].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
-  
+
   list.innerHTML = '';
   sorted.forEach(agent => {
     const card = document.createElement('div');
     card.className = `agent-card ${agent.pinned ? 'pinned' : ''} ${selectedAgentIds.has(agent.id) ? 'selected' : ''}`;
     card.dataset.id = agent.id;
-    
+
     const checkbox = document.createElement('div');
     checkbox.className = `agent-checkbox ${selectedAgentIds.has(agent.id) ? 'checked' : ''}`;
     checkbox.onclick = (e) => {
@@ -1971,20 +1971,20 @@ function renderAgentList() {
       renderAgentList();
       updateDeleteBar();
     };
-    
+
     card.appendChild(checkbox);
-    
+
     const avatar = document.createElement('img');
     avatar.className = 'agent-avatar';
     avatar.src = agent.avatar || defaultAvatarData;
     avatar.onerror = () => avatar.src = defaultAvatarData;
     card.appendChild(avatar);
-    
+
     const info = document.createElement('div');
     info.className = 'agent-info';
     info.innerHTML = `<div class="agent-name">${agent.name}</div><div class="agent-desc">${agent.description || ''}</div>`;
     card.appendChild(info);
-    
+
     const actions = document.createElement('div');
     actions.className = 'agent-actions';
     actions.innerHTML = `
@@ -1993,7 +1993,7 @@ function renderAgentList() {
       <span class="delete-agent" title="删除">✕</span>
     `;
     card.appendChild(actions);
-    
+
     card.addEventListener('click', (e) => {
       if (e.target.closest('.agent-actions') || e.target.closest('.agent-checkbox')) return;
       if (multiSelectMode) {
@@ -2008,7 +2008,7 @@ function renderAgentList() {
         enterChat(agent.id);
       }
     });
-    
+
     actions.querySelector('.pin-agent').addEventListener('click', (e) => {
       e.stopPropagation();
       const pinnedCount = agents.filter(a => a.pinned).length;
@@ -2020,12 +2020,12 @@ function renderAgentList() {
       saveAgents();
       renderAgentList();
     });
-    
+
     actions.querySelector('.edit-agent').addEventListener('click', (e) => {
       e.stopPropagation();
       openEditAgentModal(agent);
     });
-    
+
     actions.querySelector('.delete-agent').addEventListener('click', (e) => {
       e.stopPropagation();
       if (agents.length <= 1) {
@@ -2036,10 +2036,10 @@ function renderAgentList() {
       saveAgents();
       renderAgentList();
     });
-    
+
     list.appendChild(card);
   });
-  
+
   document.body.classList.toggle('multi-select-mode', multiSelectMode);
 }
 
@@ -2129,9 +2129,9 @@ document.getElementById('agentConfirm').onclick = async () => {
   const aiType = document.getElementById('aiTypeSelectBtn').dataset.value;
   const aiGender = document.getElementById('aiGenderSelectBtn').dataset.value;
   const aiStyle = document.getElementById('agentAiStyleInput').value.trim() || DEFAULT_STYLE[aiType];
-  
+
   if (!avatarData) await loadDefaultAvatar();
-  
+
   const newAgent = {
     id: 'agent_' + Date.now(),
     name,
@@ -2280,7 +2280,7 @@ document.getElementById('genImgBtn').onclick = async () => {
   const img = document.getElementById('resultImg');
   loading.style.display = 'block';
   img.classList.remove('show');
-  
+
   try {
     const res = await fetch('https://api.siliconflow.cn/v1/images/generations', {
       method: 'POST',
@@ -2309,7 +2309,7 @@ async function checkText(text) {
     const res = await fetch(DEEPSEEK_CONFIG.apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Authorization": "Bearer " + config.userApi },
-      body: JSON.stringify({ model: "Qwen/Qwen2.5-7B-Instruct", messages: [{ role: "user", content: "检查以下内容是否正常，只允许回复：正常 或 异常\n" + text }], temperature: 0.1, max_tokens: 8 })
+      body: JSON.stringify({ model: "Qwen/Qwen2.5-7B-Instruct", messages: [{ role: "user", content: "你是极度宽松的内容审核员。判断原则：1.只有直接、露骨、详细的色情动作描写才算异常 2.只有明确的暴力威胁（如要杀人、要伤害他人）才算异常 3.只有具体的违法犯罪操作指导才算异常。以下情况都属于正常：暧昧聊天、情感表达、调情、轻度黄色笑话、情侣对话、日常吐槽、网络用语。记住：拿不准的一律算正常，宁可放行也不错杀。回复只回复'正常'或'异常'两个字。\n" + text }], temperature: 0.1, max_tokens: 8 })
     });
     const data = await res.json();
     return (data.choices?.[0]?.message?.content || "").trim() === "正常";
@@ -2341,7 +2341,7 @@ function renderChatList() {
   const list = document.getElementById("chatList");
   list.innerHTML = "";
   const sorted = [...agent.chats].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
-  
+
   sorted.forEach(chat => {
     const item = document.createElement("div");
     item.className = `chat-item ${chat.pinned ? 'pinned' : ''} ${chat.id === currentChatId ? 'active' : ''}`;
@@ -2355,14 +2355,14 @@ function renderChatList() {
         <span class="del" data-id="${chat.id}">✕</span>
       </div>
     `;
-    
+
     item.querySelector('.pin-icon').onclick = (e) => {
       e.stopPropagation();
       chat.pinned = !chat.pinned;
       saveAgents();
       renderChatList();
     };
-    
+
     item.addEventListener("click", (e) => {
       if (e.target.closest('.del') || e.target.closest('.rename') || e.target.closest('.pin-icon')) return;
       currentChatId = chat.id;
@@ -2371,16 +2371,16 @@ function renderChatList() {
       document.getElementById("chatTitle").innerText = chat.title;
       closeSidebar();
     });
-    
+
     item.querySelector(".rename").onclick = async (e) => {
       e.stopPropagation();
       document.getElementById('renameInput').value = chat.title;
       showModal(document.getElementById('renameModal'));
-      
+
       const confirmBtn = document.getElementById('renameConfirm');
       const cancelBtn = document.getElementById('renameCancel');
       const modal = document.getElementById('renameModal');
-      
+
       const onConfirm = () => {
         const newTitle = document.getElementById('renameInput').value.trim();
         if (newTitle) {
@@ -2393,17 +2393,17 @@ function renderChatList() {
         confirmBtn.removeEventListener('click', onConfirm);
         cancelBtn.removeEventListener('click', onCancel);
       };
-      
+
       const onCancel = () => {
         hideModal(modal);
         confirmBtn.removeEventListener('click', onConfirm);
         cancelBtn.removeEventListener('click', onCancel);
       };
-      
+
       confirmBtn.addEventListener('click', onConfirm);
       cancelBtn.addEventListener('click', onCancel);
     };
-    
+
     item.querySelector(".del").onclick = (e) => {
       e.stopPropagation();
       if (agent.chats.length <= 1) { showToast("至少保留一个对话", "error"); return; }
@@ -2414,7 +2414,7 @@ function renderChatList() {
       renderMessages();
       document.getElementById("chatTitle").innerText = agent.chats[0].title;
     };
-    
+
     list.appendChild(item);
   });
 }
@@ -2485,7 +2485,7 @@ function formatAiReply(reply) {
 async function sendMsg() {
   const text = document.getElementById("input").value.trim();
   if (!text) return;
-  
+
   const ok = await checkText(text);
   if (!ok) {
     const box = document.getElementById("messages");
@@ -2494,19 +2494,19 @@ async function sendMsg() {
     document.getElementById("input").value = "";
     return;
   }
-  
+
   const chat = getCurrentChat();
   chat.messages.push({ role: "user", content: text });
   document.getElementById("input").value = "";
   renderMessages();
   saveAgents();
-  
+
   const loading = document.createElement("div");
   loading.className = "loading";
   loading.textContent = getCurrentAgent().aiConfig.type === "emotion" ? "该咋回呢" : "正在思考...";
   document.getElementById("messages").appendChild(loading);
   document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
-  
+
   try {
     let key = config.userApi;
     if (!key) throw new Error("请先在设置中配置API密钥");
@@ -2524,7 +2524,7 @@ async function sendMsg() {
     const data = await res.json();
     let reply = data.choices?.[0]?.message?.content || "";
     reply = formatAiReply(reply);
-    
+
     const rok = await checkText(reply);
     if (!rok) {
       loading.remove();
@@ -2533,7 +2533,7 @@ async function sendMsg() {
       document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
       return;
     }
-    
+
     loading.remove();
     const aiMsg = document.createElement("div"); aiMsg.className = "msg ai";
     document.getElementById("messages").appendChild(aiMsg);
@@ -2557,21 +2557,21 @@ async function initAll() {
   initPwdSwitch();
   setFontSize(config.fontSize);
   updateFontSizeDisplay();
-  
+
   document.getElementById("apiTag").onclick = triggerSecret;
-  
+
   document.getElementById("toggleSidebar").onclick = () => {
     document.getElementById("sidebar").classList.add("open");
     document.getElementById("overlay").classList.add("show");
   };
   document.getElementById("collapseBtn").onclick = closeSidebar;
   document.getElementById("overlay").onclick = closeSidebar;
-  
+
   document.getElementById("fontMinus").onclick = () => {
     if (config.fontSize > 8) setFontSize(config.fontSize - 1);
   };
   document.getElementById("fontPlus").onclick = () => setFontSize(config.fontSize + 1);
-  
+
   document.getElementById("newChat").onclick = () => {
     const agent = getCurrentAgent();
     const newChat = { id: 'chat_' + Date.now(), title: '新对话', messages: [], pinned: false };
@@ -2583,32 +2583,32 @@ async function initAll() {
     document.getElementById("chatTitle").innerText = newChat.title;
     closeSidebar();
   };
-  
+
   document.getElementById("openSettings").onclick = () => {
     document.getElementById("userApiInput").value = config.userApi;
     updateFontSizeDisplay();
     initDevUI();
     showModal(document.getElementById("modal"));
   };
-  
+
   document.getElementById("modalSave").onclick = () => {
     config.userApi = document.getElementById("userApiInput").value.trim();
     saveData();
     hideModal(document.getElementById("modal"));
   };
-  
+
   document.getElementById("modalCancel").onclick = () => hideModal(document.getElementById("modal"));
-  
+
   document.getElementById("send").onclick = sendMsg;
   document.getElementById("input").addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMsg(); }
   });
-  
+
   const rewardModal = document.getElementById("rewardModal");
   document.getElementById("openRewardBtn").onclick = () => { showModal(rewardModal); hideModal(document.getElementById("modal")); };
   document.getElementById("closeReward").onclick = () => hideModal(rewardModal);
   rewardModal.onclick = (e) => { if (e.target === rewardModal) hideModal(rewardModal); };
-  
+
   const noticeModal = document.getElementById("noticeModal");
   document.getElementById("openNoticeBtn").onclick = () => { showModal(noticeModal); closeSidebar(); };
   document.getElementById("closeNotice").onclick = () => hideModal(noticeModal);
@@ -2619,7 +2619,7 @@ async function initAll() {
   document.getElementById('openNoticeBtn').addEventListener('click', refreshNotice);
   setTimeout(refreshNotice, 500);
   setInterval(refreshNotice, 10000);
-  
+
   document.getElementById('closeConfigDetailBtn').onclick = () => hideModal(document.getElementById('chatConfigMask'));
 }
 
