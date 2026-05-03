@@ -1257,9 +1257,20 @@
     align-items: center;
     justify-content: center;
     z-index: 10;
+    transition: opacity 0.3s ease, background 0.3s ease;
+  }
+  #closeNotice.cooldown {
+    background: #2a2a2a;
+    color: #888;
+    cursor: not-allowed;
+    font-size: 16px;
+    font-weight: 600;
   }
   #closeNotice:active {
     transform: scale(0.9);
+  }
+  #closeNotice.cooldown:active {
+    transform: none;
   }
   #noticeIframe {
     width: 100%;
@@ -1366,6 +1377,9 @@
   }
   .chat-item .del:hover, .chat-item .rename:hover { transform: scale(1.15); }
   .agent-actions span:hover { background: #242830; }
+  #closeNotice.cooldown:hover {
+    filter: none;
+  }
 }
 </style>
 </head>
@@ -1485,7 +1499,7 @@
         <div class="switch" id="devSwitch"></div>
       </div>
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openRewardBtn">打赏作者</button>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 1.7.1</div>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 1.7.2</div>
     </div>
     <div class="modal-foot">
       <button id="modalCancel">取消</button>
@@ -1932,6 +1946,88 @@ function getCurrentChat() {
   const agent = getCurrentAgent();
   return agent.chats.find(c => c.id === currentChatId) || agent.chats[0];
 }
+
+// ========== 公告倒计时系统 ==========
+let noticeCooldownActive = false;
+let noticeCooldownTimer = null;
+let noticeCooldownRemaining = 0;
+
+const closeNoticeBtn = document.getElementById('closeNotice');
+const noticeModalEl = document.getElementById('noticeModal');
+
+function isNoticeClosable() {
+  return !noticeCooldownActive;
+}
+
+function enableNoticeClose() {
+  closeNoticeBtn.classList.remove('cooldown');
+  closeNoticeBtn.textContent = '×';
+  closeNoticeBtn.style.cursor = 'pointer';
+}
+
+function disableNoticeClose(text) {
+  closeNoticeBtn.classList.add('cooldown');
+  closeNoticeBtn.textContent = text;
+  closeNoticeBtn.style.cursor = 'not-allowed';
+}
+
+function startNoticeCooldown() {
+  noticeCooldownActive = true;
+  noticeCooldownRemaining = 5;
+  disableNoticeClose(String(noticeCooldownRemaining));
+
+  noticeCooldownTimer = setInterval(() => {
+    noticeCooldownRemaining--;
+    if (noticeCooldownRemaining <= 0) {
+      clearInterval(noticeCooldownTimer);
+      noticeCooldownTimer = null;
+      noticeCooldownActive = false;
+      enableNoticeClose();
+    } else {
+      disableNoticeClose(String(noticeCooldownRemaining));
+    }
+  }, 1000);
+}
+
+function clearNoticeCooldown() {
+  if (noticeCooldownTimer) {
+    clearInterval(noticeCooldownTimer);
+    noticeCooldownTimer = null;
+  }
+  noticeCooldownActive = false;
+}
+
+function showNotice(autoPopup = false) {
+  showModal(noticeModalEl);
+  if (autoPopup) {
+    clearNoticeCooldown();
+    startNoticeCooldown();
+  } else {
+    clearNoticeCooldown();
+    enableNoticeClose();
+  }
+}
+
+function hideNotice() {
+  if (!isNoticeClosable()) return;
+  clearNoticeCooldown();
+  hideModal(noticeModalEl);
+}
+
+// 关闭按钮点击
+closeNoticeBtn.onclick = (e) => {
+  e.stopPropagation();
+  if (isNoticeClosable()) {
+    hideNotice();
+  }
+};
+
+// 遮罩点击
+noticeModalEl.onclick = (e) => {
+  if (e.target === noticeModalEl && isNoticeClosable()) {
+    hideNotice();
+  }
+};
 
 // ========== 渲染智能体列表 ==========
 let multiSelectMode = false;
@@ -2598,13 +2694,17 @@ async function initAll() {
   document.getElementById("closeReward").onclick = () => hideModal(rewardModal);
   rewardModal.onclick = (e) => { if (e.target === rewardModal) hideModal(rewardModal); };
 
-  const noticeModal = document.getElementById("noticeModal");
-  document.getElementById("openNoticeBtn").onclick = () => { showModal(noticeModal); closeSidebar(); };
-  document.getElementById("closeNotice").onclick = () => hideModal(noticeModal);
-  noticeModal.onclick = (e) => { if (e.target === noticeModal) hideModal(noticeModal); };
+  // 公告按钮手动打开，无冷却
+  document.getElementById("openNoticeBtn").onclick = () => {
+    showNotice(false);
+    closeSidebar();
+  };
 
   const noticeIframe = document.getElementById('noticeIframe');
-  const refreshNotice = () => noticeIframe.src = `https://cnyszb.github.io/gongao/Gongao.html?t=${Date.now()}`;
+  const refreshNotice = () => {
+    const timestamp = Date.now();
+    noticeIframe.src = `https://cnyszb.github.io/gongao/Gongao.html?t=${timestamp}`;
+  };
   document.getElementById('openNoticeBtn').addEventListener('click', refreshNotice);
   setTimeout(refreshNotice, 500);
   setInterval(refreshNotice, 600000);
@@ -2620,7 +2720,9 @@ async function initAll() {
       hideModal(document.getElementById('editAgentModal'));
       hideModal(document.getElementById('promptModal'));
       hideModal(document.getElementById('rewardModal'));
-      hideModal(document.getElementById('noticeModal'));
+      if (isNoticeClosable()) {
+        hideNotice();
+      }
       hideModal(document.getElementById('renameModal'));
       hideModal(document.getElementById('chatConfigMask'));
       closePrompt(null);
@@ -2658,14 +2760,16 @@ window.onload = () => {
     document.getElementById("loginWrapper").style.display = "none";
     document.getElementById("app").style.display = "block";
     initAll();
-    setTimeout(() => showModal(document.getElementById("noticeModal")), 500);
+    // 首次自动弹出公告，带5秒倒计时
+    setTimeout(() => showNotice(true), 500);
   }
   document.getElementById("loginBtn").onclick = () => {
     if (document.getElementById("loginPwd").value.trim() === CORRECT_PWD) {
       document.getElementById("loginWrapper").style.display = "none";
       document.getElementById("app").style.display = "block";
       initAll();
-      setTimeout(() => showModal(document.getElementById("noticeModal")), 500);
+      // 首次自动弹出公告，带5秒倒计时
+      setTimeout(() => showNotice(true), 500);
     } else { showToast("密码错误", "error"); }
   };
 };
