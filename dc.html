@@ -1743,7 +1743,7 @@ body.light-mode #closeNotice.cooldown {
         <div class="switch" id="pwdCheckSwitch"></div>
       </div>
       <div class="switch-box" id="devControlBox" style="margin-top:12px;display:none;">
-        <span style="font-size:14px">开发者模式</span>
+        <span style="font-size:14px">创造者模式</span>
         <div class="switch" id="devSwitch"></div>
       </div>
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openRewardBtn">打赏作者</button>
@@ -3054,17 +3054,19 @@ window.onload = () => {
   const day = now.getDate();
 
  const mourningDays = [
-  { month: 3, day: 21, subtitle: '东航MU5735航班遇难同胞' },
+  { month: 1, day: 25, subtitle: '南方特大冰雪灾害遇难同胞' },
   { month: 4, day: 4, subtitle: '新冠肺炎疫情逝者' },
   { month: 4, day: 14, subtitle: '玉树大地震遇难同胞' },
   { month: 4, day: 20, subtitle: '雅安大地震遇难同胞' },
   { month: 5, day: 12, subtitle: '汶川大地震遇难同胞' },
   { month: 6, day: 1, subtitle: '东方之星沉船遇难同胞' },
   { month: 7, day: 20, subtitle: '郑州特大暴雨遇难同胞' },
+  { month: 7, day: 23, subtitle: '温州动车事故遇难同胞' },
   { month: 7, day: 28, subtitle: '唐山大地震遇难同胞' },
   { month: 8, day: 3, subtitle: '鲁甸大地震遇难同胞' },
   { month: 8, day: 7, subtitle: '舟曲特大泥石流与九八抗洪遇难同胞' },
-  { month: 8, day: 12, subtitle: '天津滨海爆炸遇难同胞' }
+  { month: 8, day: 12, subtitle: '天津滨海爆炸遇难同胞' },
+  { month: 9, day: 7, subtitle: '云南彝良地震遇难同胞' }
 ];
 
   const todayMourning = mourningDays.find(d => d.month === month && d.day === day);
