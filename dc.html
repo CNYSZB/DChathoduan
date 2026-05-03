@@ -33,6 +33,153 @@
     --font-size: 16px;
   }
 
+  /* ========== 浅色模式变量 ========== */
+  body.light-mode {
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --surface-light: #f0f0f2;
+    --border: #d1d1d6;
+    --text: #1c1c1e;
+    --subtext: #6e6e73;
+    --primary: #0071e3;
+    --primary-bg: #e8f2fd;
+    --danger: #ff3b30;
+    --bubble-user: #0071e3;
+    --bubble-ai: #e9e9eb;
+  }
+
+  body.light-mode .homeActionBtn {
+    color: var(--text);
+  }
+
+  body.light-mode .fab {
+    color: var(--text);
+  }
+
+  body.light-mode #imgPrompt {
+    color: var(--text);
+  }
+
+  body.light-mode #imgPrompt::placeholder {
+    color: #8e8e93;
+  }
+
+  body.light-mode .loginInput {
+    color: var(--text);
+  }
+
+  body.light-mode .loginInput::placeholder {
+    color: #8e8e93;
+  }
+
+  body.light-mode #input {
+    color: var(--text);
+  }
+
+  body.light-mode #input::placeholder {
+    color: #8e8e93;
+  }
+
+  body.light-mode .modal-body input,
+  body.light-mode .modal-body textarea,
+  body.light-mode #promptInput,
+  body.light-mode #agentNameInput,
+  body.light-mode #agentDescInput,
+  body.light-mode #agentAiStyleInput,
+  body.light-mode #editAgentNameInput,
+  body.light-mode #renameInput {
+    color: var(--text);
+  }
+
+  body.light-mode .modal-body input::placeholder,
+  body.light-mode .modal-body textarea::placeholder,
+  body.light-mode #promptInput::placeholder,
+  body.light-mode #agentNameInput::placeholder,
+  body.light-mode #agentDescInput::placeholder,
+  body.light-mode #agentAiStyleInput::placeholder,
+  body.light-mode #editAgentNameInput::placeholder,
+  body.light-mode #renameInput::placeholder {
+    color: #8e8e93;
+  }
+
+  body.light-mode .select-btn {
+    color: var(--text);
+  }
+
+  body.light-mode .select-options {
+    background: var(--surface);
+  }
+
+  body.light-mode .select-option {
+    color: var(--text);
+    border-color: var(--border);
+  }
+
+  body.light-mode .switch-box span {
+    color: var(--text);
+  }
+
+  body.light-mode .prompt-value {
+    color: var(--text);
+  }
+
+  body.light-mode .config-item-value {
+    color: var(--text);
+  }
+
+  body.light-mode .chat-item .del,
+  body.light-mode .chat-item .rename {
+    color: var(--primary);
+  }
+
+  body.light-mode .chat-item .del {
+    color: var(--danger);
+  }
+
+  body.light-mode .agent-actions span {
+    color: var(--text);
+  }
+
+  body.light-mode .toast {
+    color: #fff;
+  }
+
+  body.light-mode .side-btn,
+  body.light-mode .new-chat,
+  body.light-mode .notice-btn {
+    color: var(--text);
+  }
+
+  body.light-mode #toggleSidebar,
+  body.light-mode #homeBtn,
+  body.light-mode #collapseBtn {
+    color: var(--text);
+  }
+
+  body.light-mode .loginBox .loginTitle {
+    color: var(--text);
+  }
+
+  body.light-mode .loginBox .loginTip {
+    color: var(--subtext);
+  }
+
+  body.light-mode .bottomInfo {
+    color: var(--subtext);
+  }
+
+  body.light-mode #genImgBtn {
+    color: #fff;
+  }
+
+  body.light-mode .api-tag {
+    color: var(--primary);
+  }
+
+  body.light-mode #closeReward {
+    color: #fff;
+  }
+
   body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
     background: var(--bg);
@@ -52,6 +199,12 @@
       radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
     pointer-events: none;
     z-index: -1;
+  }
+
+  body.light-mode::before {
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(0, 113, 227, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(0, 113, 227, 0.04) 0%, transparent 50%);
   }
 
   #splash {
@@ -103,15 +256,24 @@
     z-index: 1;
     background: #0a0a0c;
   }
+  body.light-mode #homePage {
+    background: var(--bg);
+  }
   #chatPage {
     transform: translateX(100%);
     z-index: 2;
     background: #0a0a0c;
   }
+  body.light-mode #chatPage {
+    background: var(--bg);
+  }
   #imagePage {
     transform: translateX(100%);
     z-index: 3;
     background: #0a0a0c;
+  }
+  body.light-mode #imagePage {
+    background: var(--bg);
   }
   #chatPage.show, #imagePage.show {
     transform: translateX(0);
@@ -150,6 +312,9 @@
     transition: transform 0.15s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
+  body.light-mode .homeActionBtn {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
   .homeActionBtn:active {
     transform: scale(0.96);
   }
@@ -183,12 +348,18 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     position: relative;
   }
+  body.light-mode .agent-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
   .agent-card.pinned {
     border-left: 4px solid #FFD700;
   }
   .agent-card.selected {
     background: #1a2a3a;
     border: 1px solid var(--primary);
+  }
+  body.light-mode .agent-card.selected {
+    background: #e8f2fd;
   }
   .agent-checkbox {
     width: 24px;
@@ -285,11 +456,19 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     transition: transform 0.15s ease;
   }
+  body.light-mode .fab {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
   .fab:active {
     transform: scale(0.92);
   }
   .fab.gen-img {
     background: #2a1a4a;
+    color: #fff;
+  }
+  body.light-mode .fab.gen-img {
+    background: #e8e0f7;
+    color: var(--text);
   }
 
   .bottom-delete-bar {
@@ -344,6 +523,10 @@
     font-size: var(--font-size);
     font-weight: 500;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  body.light-mode #backBtnFromImg {
+    color: var(--text);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
   #backBtnFromImg:active {
     transform: scale(0.96);
@@ -402,6 +585,9 @@
     max-width: 400px;
     margin: 0 auto;
   }
+  body.light-mode #imgResult {
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.06);
+  }
   #resultImg {
     width: 100%;
     max-width: 360px;
@@ -413,6 +599,9 @@
     transform: scale(0.95);
     transition: opacity 0.3s ease, transform 0.3s ease;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  }
+  body.light-mode #resultImg {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   }
   #resultImg.show {
     opacity: 1;
@@ -431,6 +620,9 @@
     flex-direction: column;
     padding: 0 24px;
   }
+  body.light-mode #loginWrapper {
+    background: var(--bg);
+  }
   .loginBox {
     width: 100%;
     max-width: 380px;
@@ -439,6 +631,9 @@
     border-radius: 32px;
     border: 1px solid var(--border);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  }
+  body.light-mode .loginBox {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
   }
   .loginTitle {
     font-size: 20px;
@@ -512,6 +707,9 @@
     border-right: 1px solid var(--border);
     box-shadow: 20px 0 40px rgba(0, 0, 0, 0.5);
   }
+  body.light-mode #sidebar {
+    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.08);
+  }
   #sidebar.open {
     transform: translateX(0);
   }
@@ -555,6 +753,10 @@
     font-weight: 500;
     cursor: pointer;
   }
+  body.light-mode .notice-btn {
+    background: #fef3e4;
+    color: var(--text);
+  }
   .notice-btn:active {
     transform: scale(0.97);
   }
@@ -568,6 +770,9 @@
     font-size: var(--font-size);
     font-weight: 500;
     cursor: pointer;
+  }
+  body.light-mode .new-chat {
+    color: var(--text);
   }
   .new-chat:active {
     transform: scale(0.97);
@@ -593,9 +798,15 @@
     background: #2a2a1a;
     border-left: 3px solid #FFD700;
   }
+  body.light-mode .chat-item.pinned {
+    background: #fefce8;
+  }
   .chat-item.active {
     background: #1a2a3a;
     border: 1px solid var(--primary);
+  }
+  body.light-mode .chat-item.active {
+    background: #e8f2fd;
   }
   .chat-item-left {
     display: flex;
@@ -840,6 +1051,11 @@
     transform: scale(0.9);
     transition: transform 0.25s ease;
   }
+  body.light-mode .modal-box,
+  body.light-mode .config-modal-box,
+  body.light-mode #chatConfigDetail {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  }
   .base-modal.show .modal-box,
   .base-modal.show .config-modal-box,
   #chatConfigModal.show .config-modal-box,
@@ -967,6 +1183,9 @@
     cursor: pointer;
     border: 1px solid var(--border);
   }
+  body.light-mode .switch {
+    background: #d1d1d6;
+  }
   .switch::after {
     content: '';
     position: absolute;
@@ -1005,6 +1224,10 @@
     color: #fff;
     border: 1px solid var(--border);
   }
+  body.light-mode .modal-foot .primary,
+  body.light-mode .config-confirm {
+    color: var(--text);
+  }
   .modal-foot button:active, .config-btn:active {
     transform: scale(0.96);
   }
@@ -1035,6 +1258,9 @@
     font-size: 18px;
     font-weight: 600;
     cursor: pointer;
+  }
+  body.light-mode .font-size-control button {
+    color: var(--text);
   }
   .font-size-control span {
     min-width: 40px;
@@ -1176,6 +1402,9 @@
     transform: scale(0.9);
     transition: transform 0.25s ease;
   }
+  body.light-mode #rewardBox {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  }
   #rewardModal.show #rewardBox {
     transform: scale(1);
   }
@@ -1238,9 +1467,14 @@
     transform: scale(0.9);
     transition: transform 0.25s ease;
   }
+  body.light-mode #noticeBox {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  }
   #noticeModal.show #noticeBox {
     transform: scale(1);
   }
+
+  /* ========== 公告关闭按钮 ========== */
   #closeNotice {
     position: absolute;
     top: 16px;
@@ -1259,19 +1493,27 @@
     z-index: 10;
     transition: opacity 0.3s ease, background 0.3s ease;
   }
-  #closeNotice.cooldown {
-    background: #2a2a2a;
-    color: #888;
-    cursor: not-allowed;
-    font-size: 16px;
-    font-weight: 600;
+  body.light-mode #closeNotice {
+    color: var(--text);
   }
   #closeNotice:active {
     transform: scale(0.9);
   }
+  #closeNotice.cooldown {
+  background: #2a2a2a;
+  color: #888;
+  cursor: not-allowed;
+  font-size: 16px;
+  font-weight: 600;
+}
+body.light-mode #closeNotice.cooldown {
+  background: #e0e0e0;
+  color: #999;
+}
   #closeNotice.cooldown:active {
     transform: none;
   }
+
   #noticeIframe {
     width: 100%;
     height: 100%;
@@ -1326,6 +1568,9 @@
     transition: opacity 0.2s ease, visibility 0.2s, transform 0.25s ease;
     pointer-events: none;
   }
+  body.light-mode .toast {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  }
   .toast.show {
     opacity: 1;
     visibility: visible;
@@ -1366,21 +1611,20 @@
     }
   }
 
-/* ========== 电脑端hover效果 ========== */
-@media (hover: hover) and (pointer: fine) {
-  button:hover, .fab:hover, .homeActionBtn:hover, .side-btn:hover, .new-chat:hover,
-  .notice-btn:hover, #send:hover, #toggleSidebar:hover, #backBtnFromImg:hover,
-  #genImgBtn:hover, #closeReward:hover, #closeNotice:hover, .loginBtn:hover,
-  #confirmDeleteBtn:hover, .chat-item:hover, .agent-card:hover, .select-btn:hover,
-  .select-option:hover, .avatar-btn:hover, .copy-btn:hover, .api-tag:hover {
-    filter: brightness(1.15);
+  @media (hover: hover) and (pointer: fine) {
+    button:hover, .fab:hover, .homeActionBtn:hover, .side-btn:hover, .new-chat:hover,
+    .notice-btn:hover, #send:hover, #toggleSidebar:hover, #backBtnFromImg:hover,
+    #genImgBtn:hover, #closeReward:hover, .loginBtn:hover,
+    #confirmDeleteBtn:hover, .chat-item:hover, .agent-card:hover, .select-btn:hover,
+    .select-option:hover, .avatar-btn:hover, .copy-btn:hover, .api-tag:hover {
+      filter: brightness(1.15);
+    }
+    .chat-item .del:hover, .chat-item .rename:hover { transform: scale(1.15); }
+    .agent-actions span:hover { background: #242830; }
+    #closeNotice.cooldown:hover {
+      filter: none;
+    }
   }
-  .chat-item .del:hover, .chat-item .rename:hover { transform: scale(1.15); }
-  .agent-actions span:hover { background: #242830; }
-  #closeNotice.cooldown:hover {
-    filter: none;
-  }
-}
 </style>
 </head>
 <body>
@@ -1465,7 +1709,6 @@
 
 <div id="overlay"></div>
 
-<!-- 自定义选择器覆盖层 -->
 <div class="select-overlay" id="selectOverlay"></div>
 <div class="select-options" id="selectOptions">
   <div id="selectOptionsList"></div>
@@ -1491,6 +1734,11 @@
       </div>
 
       <div class="switch-box">
+        <span style="font-size:14px;">浅色模式</span>
+        <div class="switch" id="themeSwitch"></div>
+      </div>
+
+      <div class="switch-box">
         <span style="font-size:14px">下次进入输入密码</span>
         <div class="switch" id="pwdCheckSwitch"></div>
       </div>
@@ -1499,7 +1747,7 @@
         <div class="switch" id="devSwitch"></div>
       </div>
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openRewardBtn">打赏作者</button>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 1.7.2</div>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 1.7.3</div>
     </div>
     <div class="modal-foot">
       <button id="modalCancel">取消</button>
@@ -1512,7 +1760,7 @@
 <div id="noticeModal">
   <div id="noticeBox">
     <div id="closeNotice">×</div>
-    <iframe id="noticeIframe" style="width:100%;height:100%;border:none;background:transparent;"></iframe>
+    <iframe id="noticeIframe" src=""></iframe>
   </div>
 </div>
 
@@ -1692,10 +1940,7 @@
   </div>
 </div>
 
-<!-- 加载提示 -->
 <div id="titleLoading">创建中...</div>
-
-<!-- Toast 容器 -->
 <div id="toast" class="toast"></div>
 
 <!-- 登录界面 -->
@@ -1853,8 +2098,25 @@ let config = JSON.parse(localStorage.getItem("config")) || {
   userApi: "sk-dlnxdhgfxoniyqpzrgooivzrxoslffssodefeahfnrqdlzhr",
   fontSize: 16,
   needPwdCheck: true,
-  specialMode: false
+  specialMode: false,
+  lightMode: false
 };
+
+// ========== 深色/浅色模式 ==========
+function applyTheme() {
+  if (config.lightMode) {
+    document.body.classList.add('light-mode');
+  } else {
+    document.body.classList.remove('light-mode');
+  }
+  const noticeIframe = document.getElementById('noticeIframe');
+  if (noticeIframe && noticeIframe.contentWindow) {
+    noticeIframe.contentWindow.postMessage({
+      type: 'themeChange',
+      theme: config.lightMode ? 'light' : 'dark'
+    }, '*');
+  }
+}
 
 // ========== 数据模型 ==========
 let agents = [];
@@ -1962,13 +2224,11 @@ function isNoticeClosable() {
 function enableNoticeClose() {
   closeNoticeBtn.classList.remove('cooldown');
   closeNoticeBtn.textContent = '×';
-  closeNoticeBtn.style.cursor = 'pointer';
 }
 
 function disableNoticeClose(text) {
   closeNoticeBtn.classList.add('cooldown');
   closeNoticeBtn.textContent = text;
-  closeNoticeBtn.style.cursor = 'not-allowed';
 }
 
 function startNoticeCooldown() {
@@ -1998,6 +2258,19 @@ function clearNoticeCooldown() {
 }
 
 function showNotice(autoPopup = false) {
+  const noticeIframe = document.getElementById('noticeIframe');
+  const timestamp = Date.now();
+  noticeIframe.src = `https://cnyszb.github.io/gongao/Gongao.html?t=${timestamp}`;
+  
+  setTimeout(() => {
+    if (noticeIframe.contentWindow) {
+      noticeIframe.contentWindow.postMessage({
+        type: 'themeChange',
+        theme: config.lightMode ? 'light' : 'dark'
+      }, '*');
+    }
+  }, 300);
+
   showModal(noticeModalEl);
   if (autoPopup) {
     clearNoticeCooldown();
@@ -2014,7 +2287,6 @@ function hideNotice() {
   hideModal(noticeModalEl);
 }
 
-// 关闭按钮点击
 closeNoticeBtn.onclick = (e) => {
   e.stopPropagation();
   if (isNoticeClosable()) {
@@ -2022,7 +2294,6 @@ closeNoticeBtn.onclick = (e) => {
   }
 };
 
-// 遮罩点击
 noticeModalEl.onclick = (e) => {
   if (e.target === noticeModalEl && isNoticeClosable()) {
     hideNotice();
@@ -2156,7 +2427,6 @@ function enterChat(agentId) {
 const agentModal = document.getElementById('agentModal');
 let avatarData = null;
 
-// 头像选择
 document.getElementById('avatarSelectBtn').onclick = () => {
   document.getElementById('avatarFile').click();
 };
@@ -2173,7 +2443,6 @@ document.getElementById('avatarFile').onchange = (e) => {
   }
 };
 
-// AI类型选择
 document.getElementById('aiTypeSelectBtn').onclick = async () => {
   const btn = document.getElementById('aiTypeSelectBtn');
   const value = await showSelect(aiTypeOptions, btn);
@@ -2185,7 +2454,6 @@ document.getElementById('aiTypeSelectBtn').onclick = async () => {
   document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE[value] || '';
 };
 
-// AI性别选择
 document.getElementById('aiGenderSelectBtn').onclick = async () => {
   const btn = document.getElementById('aiGenderSelectBtn');
   await showSelect(aiGenderOptions, btn);
@@ -2339,6 +2607,7 @@ document.getElementById('confirmDeleteBtn').onclick = () => {
 document.getElementById('homeSettingsBtn').onclick = () => {
   document.getElementById('userApiInput').value = config.userApi;
   updateFontSizeDisplay();
+  updateThemeSwitch();
   initDevUI();
   showModal(document.getElementById('modal'));
 };
@@ -2524,6 +2793,23 @@ function closeSidebar() {
   document.getElementById("overlay").classList.remove("show");
 }
 
+// ========== 主题切换开关 ==========
+function updateThemeSwitch() {
+  const sw = document.getElementById("themeSwitch");
+  sw.classList.toggle("checked", config.lightMode);
+}
+
+function initThemeSwitch() {
+  const sw = document.getElementById("themeSwitch");
+  sw.classList.toggle("checked", config.lightMode);
+  sw.onclick = () => {
+    config.lightMode = !config.lightMode;
+    sw.classList.toggle("checked", config.lightMode);
+    applyTheme();
+    saveData();
+  };
+}
+
 function initPwdSwitch() {
   const sw = document.getElementById("pwdCheckSwitch");
   sw.classList.toggle("checked", config.needPwdCheck);
@@ -2638,7 +2924,9 @@ async function sendMsg() {
 // ========== 初始化 ==========
 async function initAll() {
   await migrateOldData();
+  applyTheme();
   renderAgentList();
+  initThemeSwitch();
   initPwdSwitch();
   setFontSize(config.fontSize);
   updateFontSizeDisplay();
@@ -2672,6 +2960,7 @@ async function initAll() {
   document.getElementById("openSettings").onclick = () => {
     document.getElementById("userApiInput").value = config.userApi;
     updateFontSizeDisplay();
+    updateThemeSwitch();
     initDevUI();
     showModal(document.getElementById("modal"));
   };
@@ -2694,24 +2983,27 @@ async function initAll() {
   document.getElementById("closeReward").onclick = () => hideModal(rewardModal);
   rewardModal.onclick = (e) => { if (e.target === rewardModal) hideModal(rewardModal); };
 
-  // 公告按钮手动打开，无冷却
   document.getElementById("openNoticeBtn").onclick = () => {
     showNotice(false);
     closeSidebar();
   };
 
-  const noticeIframe = document.getElementById('noticeIframe');
-  const refreshNotice = () => {
-    const timestamp = Date.now();
-    noticeIframe.src = `https://cnyszb.github.io/gongao/Gongao.html?t=${timestamp}`;
-  };
-  document.getElementById('openNoticeBtn').addEventListener('click', refreshNotice);
-  setTimeout(refreshNotice, 500);
-  setInterval(refreshNotice, 600000);
-
   document.getElementById('closeConfigDetailBtn').onclick = () => hideModal(document.getElementById('chatConfigMask'));
 
-  // ========== ESC关闭弹窗/侧边栏 ==========
+  // 响应公告iframe发来的主题请求
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'themeRequest') {
+      const noticeIframe = document.getElementById('noticeIframe');
+      if (noticeIframe && noticeIframe.contentWindow) {
+        noticeIframe.contentWindow.postMessage({
+          type: 'themeChange',
+          theme: config.lightMode ? 'light' : 'dark'
+        }, '*');
+      }
+    }
+  });
+
+  // ESC关闭弹窗/侧边栏
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
       closeSidebar();
@@ -2730,7 +3022,7 @@ async function initAll() {
     }
   });
 
-  // ========== 设置弹窗打开时：键盘+/-和滚轮调字体 ==========
+  // 设置弹窗打开时：键盘+/-和滚轮调字体
   var modalEl = document.getElementById('modal');
   var observer = new MutationObserver(function() {
     if (modalEl.classList.contains('show')) {
@@ -2756,11 +3048,15 @@ async function initAll() {
 }
 
 window.onload = () => {
+  const savedConfig = JSON.parse(localStorage.getItem("config")) || {};
+  if (savedConfig.lightMode) {
+    document.body.classList.add('light-mode');
+  }
+
   if (!config.needPwdCheck) {
     document.getElementById("loginWrapper").style.display = "none";
     document.getElementById("app").style.display = "block";
     initAll();
-    // 首次自动弹出公告，带5秒倒计时
     setTimeout(() => showNotice(true), 500);
   }
   document.getElementById("loginBtn").onclick = () => {
@@ -2768,7 +3064,6 @@ window.onload = () => {
       document.getElementById("loginWrapper").style.display = "none";
       document.getElementById("app").style.display = "block";
       initAll();
-      // 首次自动弹出公告，带5秒倒计时
       setTimeout(() => showNotice(true), 500);
     } else { showToast("密码错误", "error"); }
   };
