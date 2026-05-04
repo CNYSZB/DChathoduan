@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>你应该反思为什么能看到这个</title>
+<title>不准拆包</title>
 <style>
   * {
     margin: 0;
@@ -48,38 +48,14 @@
     --bubble-ai: #e9e9eb;
   }
 
-  body.light-mode .homeActionBtn {
-    color: var(--text);
-  }
-
-  body.light-mode .fab {
-    color: var(--text);
-  }
-
-  body.light-mode #imgPrompt {
-    color: var(--text);
-  }
-
-  body.light-mode #imgPrompt::placeholder {
-    color: #8e8e93;
-  }
-
-  body.light-mode .loginInput {
-    color: var(--text);
-  }
-
-  body.light-mode .loginInput::placeholder {
-    color: #8e8e93;
-  }
-
-  body.light-mode #input {
-    color: var(--text);
-  }
-
-  body.light-mode #input::placeholder {
-    color: #8e8e93;
-  }
-
+  body.light-mode .homeActionBtn { color: var(--text); }
+  body.light-mode .fab { color: var(--text); }
+  body.light-mode #imgPrompt { color: var(--text); }
+  body.light-mode #imgPrompt::placeholder { color: #8e8e93; }
+  body.light-mode .loginInput { color: var(--text); }
+  body.light-mode .loginInput::placeholder { color: #8e8e93; }
+  body.light-mode #input { color: var(--text); }
+  body.light-mode #input::placeholder { color: #8e8e93; }
   body.light-mode .modal-body input,
   body.light-mode .modal-body textarea,
   body.light-mode #promptInput,
@@ -87,10 +63,7 @@
   body.light-mode #agentDescInput,
   body.light-mode #agentAiStyleInput,
   body.light-mode #editAgentNameInput,
-  body.light-mode #renameInput {
-    color: var(--text);
-  }
-
+  body.light-mode #renameInput { color: var(--text); }
   body.light-mode .modal-body input::placeholder,
   body.light-mode .modal-body textarea::placeholder,
   body.light-mode #promptInput::placeholder,
@@ -98,87 +71,30 @@
   body.light-mode #agentDescInput::placeholder,
   body.light-mode #agentAiStyleInput::placeholder,
   body.light-mode #editAgentNameInput::placeholder,
-  body.light-mode #renameInput::placeholder {
-    color: #8e8e93;
-  }
-
-  body.light-mode .select-btn {
-    color: var(--text);
-  }
-
-  body.light-mode .select-options {
-    background: var(--surface);
-  }
-
-  body.light-mode .select-option {
-    color: var(--text);
-    border-color: var(--border);
-  }
-
-  body.light-mode .switch-box span {
-    color: var(--text);
-  }
-
-  body.light-mode .prompt-value {
-    color: var(--text);
-  }
-
-  body.light-mode .config-item-value {
-    color: var(--text);
-  }
-
+  body.light-mode #renameInput::placeholder { color: #8e8e93; }
+  body.light-mode .select-btn { color: var(--text); }
+  body.light-mode .select-options { background: var(--surface); }
+  body.light-mode .select-option { color: var(--text); border-color: var(--border); }
+  body.light-mode .switch-box span { color: var(--text); }
+  body.light-mode .prompt-value { color: var(--text); }
+  body.light-mode .config-item-value { color: var(--text); }
   body.light-mode .chat-item .del,
-  body.light-mode .chat-item .rename {
-    color: var(--primary);
-  }
-
-  body.light-mode .chat-item .del {
-    color: var(--danger);
-  }
-
-  body.light-mode .agent-actions span {
-    color: var(--text);
-  }
-
-  body.light-mode .toast {
-    color: #fff;
-  }
-
+  body.light-mode .chat-item .rename { color: var(--primary); }
+  body.light-mode .chat-item .del { color: var(--danger); }
+  body.light-mode .agent-actions span { color: var(--text); }
+  body.light-mode .toast { color: #fff; }
   body.light-mode .side-btn,
   body.light-mode .new-chat,
-  body.light-mode .notice-btn {
-    color: var(--text);
-  }
-
+  body.light-mode .notice-btn { color: var(--text); }
   body.light-mode #toggleSidebar,
   body.light-mode #homeBtn,
-  body.light-mode #collapseBtn {
-    color: var(--text);
-  }
-
-  body.light-mode .loginBox .loginTitle {
-    color: var(--text);
-  }
-
-  body.light-mode .loginBox .loginTip {
-    color: var(--subtext);
-  }
-
-  body.light-mode .bottomInfo {
-    color: var(--subtext);
-  }
-
-  body.light-mode #genImgBtn {
-    color: #fff;
-  }
-
-  body.light-mode .api-tag {
-    color: var(--primary);
-  }
-
-  body.light-mode #closeReward {
-    color: #fff;
-  }
+  body.light-mode #collapseBtn { color: var(--text); }
+  body.light-mode .loginBox .loginTitle { color: var(--text); }
+  body.light-mode .loginBox .loginTip { color: var(--subtext); }
+  body.light-mode .bottomInfo { color: var(--subtext); }
+  body.light-mode #genImgBtn { color: #fff; }
+  body.light-mode .api-tag { color: var(--primary); }
+  body.light-mode #closeReward { color: #fff; }
 
   body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
@@ -256,28 +172,20 @@
     z-index: 1;
     background: #0a0a0c;
   }
-  body.light-mode #homePage {
-    background: var(--bg);
-  }
+  body.light-mode #homePage { background: var(--bg); }
   #chatPage {
     transform: translateX(100%);
     z-index: 2;
     background: #0a0a0c;
   }
-  body.light-mode #chatPage {
-    background: var(--bg);
-  }
+  body.light-mode #chatPage { background: var(--bg); }
   #imagePage {
     transform: translateX(100%);
     z-index: 3;
     background: #0a0a0c;
   }
-  body.light-mode #imagePage {
-    background: var(--bg);
-  }
-  #chatPage.show, #imagePage.show {
-    transform: translateX(0);
-  }
+  body.light-mode #imagePage { background: var(--bg); }
+  #chatPage.show, #imagePage.show { transform: translateX(0); }
 
   .homeWrap {
     width: 100%;
@@ -292,14 +200,8 @@
     justify-content: space-between;
     margin-bottom: 20px;
   }
-  .homeTitle {
-    font-size: 22px;
-    font-weight: 700;
-  }
-  .homeActions {
-    display: flex;
-    gap: 12px;
-  }
+  .homeTitle { font-size: 22px; font-weight: 700; }
+  .homeActions { display: flex; gap: 12px; }
   .homeActionBtn {
     background: var(--primary-bg);
     color: #fff;
@@ -312,21 +214,11 @@
     transition: transform 0.15s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
-  body.light-mode .homeActionBtn {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  }
-  .homeActionBtn:active {
-    transform: scale(0.96);
-  }
-  #multiSelectBtn.active {
-    background: #3a2a1a;
-  }
-  #cancelMultiBtn {
-    display: none;
-  }
-  #cancelMultiBtn.show {
-    display: block;
-  }
+  body.light-mode .homeActionBtn { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+  .homeActionBtn:active { transform: scale(0.96); }
+  #multiSelectBtn.active { background: #3a2a1a; }
+  #cancelMultiBtn { display: none; }
+  #cancelMultiBtn.show { display: block; }
 
   #agentList {
     flex: 1;
@@ -348,19 +240,13 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     position: relative;
   }
-  body.light-mode .agent-card {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  }
-  .agent-card.pinned {
-    border-left: 4px solid #FFD700;
-  }
+  body.light-mode .agent-card { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); }
+  .agent-card.pinned { border-left: 4px solid #FFD700; }
   .agent-card.selected {
     background: #1a2a3a;
     border: 1px solid var(--primary);
   }
-  body.light-mode .agent-card.selected {
-    background: #e8f2fd;
-  }
+  body.light-mode .agent-card.selected { background: #e8f2fd; }
   .agent-checkbox {
     width: 24px;
     height: 24px;
@@ -374,16 +260,9 @@
     font-size: 16px;
     flex-shrink: 0;
   }
-  .multi-select-mode .agent-checkbox {
-    display: flex;
-  }
-  .agent-checkbox.checked {
-    background: var(--primary);
-    border-color: var(--primary);
-  }
-  .agent-checkbox.checked::after {
-    content: '✓';
-  }
+  .multi-select-mode .agent-checkbox { display: flex; }
+  .agent-checkbox.checked { background: var(--primary); border-color: var(--primary); }
+  .agent-checkbox.checked::after { content: '✓'; }
   .agent-avatar {
     width: 60px;
     height: 60px;
@@ -392,15 +271,8 @@
     border: 2px solid var(--border);
     flex-shrink: 0;
   }
-  .agent-info {
-    flex: 1;
-    overflow: hidden;
-  }
-  .agent-name {
-    font-size: calc(var(--font-size) + 0px);
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
+  .agent-info { flex: 1; overflow: hidden; }
+  .agent-name { font-size: calc(var(--font-size) + 0px); font-weight: 600; margin-bottom: 4px; }
   .agent-desc {
     font-size: calc(var(--font-size) - 4px);
     color: var(--subtext);
@@ -408,14 +280,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .agent-actions {
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-  .multi-select-mode .agent-actions {
-    display: none;
-  }
+  .agent-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .multi-select-mode .agent-actions { display: none; }
   .agent-actions span {
     width: 36px;
     height: 36px;
@@ -428,9 +294,7 @@
     font-size: 18px;
     border: 1px solid var(--border);
   }
-  .agent-actions span:active {
-    transform: scale(0.9);
-  }
+  .agent-actions span:active { transform: scale(0.9); }
 
   .fab-container {
     position: fixed;
@@ -456,20 +320,10 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     transition: transform 0.15s ease;
   }
-  body.light-mode .fab {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  .fab:active {
-    transform: scale(0.92);
-  }
-  .fab.gen-img {
-    background: #2a1a4a;
-    color: #fff;
-  }
-  body.light-mode .fab.gen-img {
-    background: #e8e0f7;
-    color: var(--text);
-  }
+  body.light-mode .fab { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+  .fab:active { transform: scale(0.92); }
+  .fab.gen-img { background: #2a1a4a; color: #fff; }
+  body.light-mode .fab.gen-img { background: #e8e0f7; color: var(--text); }
 
   .bottom-delete-bar {
     position: fixed;
@@ -484,12 +338,8 @@
     justify-content: space-between;
     z-index: 101;
   }
-  .bottom-delete-bar.show {
-    display: flex;
-  }
-  #selectedCount {
-    color: var(--primary);
-  }
+  .bottom-delete-bar.show { display: flex; }
+  #selectedCount { color: var(--primary); }
   #confirmDeleteBtn {
     background: var(--danger);
     padding: 12px 24px;
@@ -499,6 +349,56 @@
     font-weight: 600;
     cursor: pointer;
   }
+
+  /* ========== 协议弹窗 ========== */
+  #agreementOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  #agreementOverlay.hidden { display: none; }
+  #agreementBox {
+    background: #14161a;
+    border: 1px solid #2a2c33;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 420px;
+    height: 80vh;
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  }
+  body.light-mode #agreementBox { box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+  #agreementIframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+  }
+
+  /* ========== 图片下载按钮 ========== */
+  #downloadImgBtn {
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    padding: 14px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-bottom: 16px;
+    font-size: var(--font-size);
+    font-weight: 600;
+    display: none;
+    text-align: center;
+  }
+  #downloadImgBtn:active { transform: scale(0.97); }
 
   .imgPageWrap {
     width: 100%;
@@ -524,17 +424,9 @@
     font-weight: 500;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
-  body.light-mode #backBtnFromImg {
-    color: var(--text);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  }
-  #backBtnFromImg:active {
-    transform: scale(0.96);
-  }
-  .imgTitle {
-    font-size: 22px;
-    font-weight: 700;
-  }
+  body.light-mode #backBtnFromImg { color: var(--text); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+  #backBtnFromImg:active { transform: scale(0.96); }
+  .imgTitle { font-size: 22px; font-weight: 700; }
   #imgPrompt {
     padding: 16px;
     background: var(--surface);
@@ -548,9 +440,7 @@
     font-size: var(--font-size);
     box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.2);
   }
-  #imgPrompt::placeholder {
-    color: #5a5c64;
-  }
+  #imgPrompt::placeholder { color: #5a5c64; }
   #genImgBtn {
     background: #2a1a4a;
     color: #fff;
@@ -563,25 +453,7 @@
     font-weight: 600;
     box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
   }
-  #genImgBtn:active {
-    transform: scale(0.97);
-  }
-  #downloadImgBtn {
-    background: var(--primary-bg);
-    color: #fff;
-    border: 1px solid var(--border);
-    padding: 14px;
-    border-radius: 30px;
-    cursor: pointer;
-    margin-bottom: 16px;
-    font-size: var(--font-size);
-    font-weight: 600;
-    display: none;
-    text-align: center;
-  }
-  #downloadImgBtn:active {
-    transform: scale(0.97);
-  }
+  #genImgBtn:active { transform: scale(0.97); }
   #imgLoading {
     color: var(--subtext);
     text-align: center;
@@ -601,9 +473,7 @@
     max-width: 400px;
     margin: 0 auto;
   }
-  body.light-mode #imgResult {
-    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.06);
-  }
+  body.light-mode #imgResult { box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.06); }
   #resultImg {
     width: 100%;
     max-width: 360px;
@@ -616,13 +486,8 @@
     transition: opacity 0.3s ease, transform 0.3s ease;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
   }
-  body.light-mode #resultImg {
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  }
-  #resultImg.show {
-    opacity: 1;
-    transform: scale(1);
-  }
+  body.light-mode #resultImg { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+  #resultImg.show { opacity: 1; transform: scale(1); }
 
   #loginWrapper {
     position: fixed;
@@ -636,9 +501,7 @@
     flex-direction: column;
     padding: 0 24px;
   }
-  body.light-mode #loginWrapper {
-    background: var(--bg);
-  }
+  body.light-mode #loginWrapper { background: var(--bg); }
   .loginBox {
     width: 100%;
     max-width: 380px;
@@ -648,22 +511,9 @@
     border: 1px solid var(--border);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
   }
-  body.light-mode .loginBox {
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-  }
-  .loginTitle {
-    font-size: 20px;
-    margin-bottom: 16px;
-    text-align: center;
-    font-weight: 600;
-  }
-  .loginTip {
-    color: var(--subtext);
-    font-size: 13px;
-    text-align: center;
-    margin-bottom: 20px;
-    line-height: 1.5;
-  }
+  body.light-mode .loginBox { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); }
+  .loginTitle { font-size: 20px; margin-bottom: 16px; text-align: center; font-weight: 600; }
+  .loginTip { color: var(--subtext); font-size: 13px; text-align: center; margin-bottom: 20px; line-height: 1.5; }
   .loginInput {
     width: 100%;
     padding: 14px 16px;
@@ -689,9 +539,7 @@
     box-shadow: 0 8px 20px rgba(62, 154, 226, 0.2);
     transition: transform 0.15s ease;
   }
-  .loginBtn:active {
-    transform: scale(0.97);
-  }
+  .loginBtn:active { transform: scale(0.97); }
   .bottomInfo {
     position: fixed;
     bottom: 30px;
@@ -723,12 +571,8 @@
     border-right: 1px solid var(--border);
     box-shadow: 20px 0 40px rgba(0, 0, 0, 0.5);
   }
-  body.light-mode #sidebar {
-    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.08);
-  }
-  #sidebar.open {
-    transform: translateX(0);
-  }
+  body.light-mode #sidebar { box-shadow: 10px 0 20px rgba(0, 0, 0, 0.08); }
+  #sidebar.open { transform: translateX(0); }
   .side-header {
     padding: 20px 16px;
     font-size: calc(var(--font-size) + 4px);
@@ -751,13 +595,8 @@
     align-items: center;
     justify-content: center;
   }
-  .side-header-actions {
-    display: flex;
-    gap: 8px;
-  }
-  #collapseBtn:active, #homeBtn:active {
-    transform: scale(0.92);
-  }
+  .side-header-actions { display: flex; gap: 8px; }
+  #collapseBtn:active, #homeBtn:active { transform: scale(0.92); }
   .notice-btn {
     margin: 12px;
     padding: 12px;
@@ -769,13 +608,8 @@
     font-weight: 500;
     cursor: pointer;
   }
-  body.light-mode .notice-btn {
-    background: #fef3e4;
-    color: var(--text);
-  }
-  .notice-btn:active {
-    transform: scale(0.97);
-  }
+  body.light-mode .notice-btn { background: #fef3e4; color: var(--text); }
+  .notice-btn:active { transform: scale(0.97); }
   .new-chat {
     margin: 12px;
     padding: 12px;
@@ -787,12 +621,8 @@
     font-weight: 500;
     cursor: pointer;
   }
-  body.light-mode .new-chat {
-    color: var(--text);
-  }
-  .new-chat:active {
-    transform: scale(0.97);
-  }
+  body.light-mode .new-chat { color: var(--text); }
+  .new-chat:active { transform: scale(0.97); }
   .chat-list {
     flex: 1;
     overflow-y: auto;
@@ -810,61 +640,18 @@
     font-size: var(--font-size);
     border: 1px solid transparent;
   }
-  .chat-item.pinned {
-    background: #2a2a1a;
-    border-left: 3px solid #FFD700;
-  }
-  body.light-mode .chat-item.pinned {
-    background: #fefce8;
-  }
-  .chat-item.active {
-    background: #1a2a3a;
-    border: 1px solid var(--primary);
-  }
-  body.light-mode .chat-item.active {
-    background: #e8f2fd;
-  }
-  .chat-item-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
-    overflow: hidden;
-  }
-  .pin-icon {
-    color: #FFD700;
-    font-size: 14px;
-    cursor: pointer;
-    opacity: 0.4;
-    flex-shrink: 0;
-  }
-  .pin-icon.pinned {
-    opacity: 1;
-  }
-  .chat-title-text {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .chat-item-actions {
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-  .chat-item .del {
-    color: var(--danger);
-    font-size: var(--font-size);
-    cursor: pointer;
-  }
-  .chat-item .rename {
-    color: var(--primary);
-    font-size: var(--font-size);
-    cursor: pointer;
-  }
-  .side-bottom {
-    padding: 16px 12px;
-    border-top: 1px solid var(--border);
-  }
+  .chat-item.pinned { background: #2a2a1a; border-left: 3px solid #FFD700; }
+  body.light-mode .chat-item.pinned { background: #fefce8; }
+  .chat-item.active { background: #1a2a3a; border: 1px solid var(--primary); }
+  body.light-mode .chat-item.active { background: #e8f2fd; }
+  .chat-item-left { display: flex; align-items: center; gap: 8px; flex: 1; overflow: hidden; }
+  .pin-icon { color: #FFD700; font-size: 14px; cursor: pointer; opacity: 0.4; flex-shrink: 0; }
+  .pin-icon.pinned { opacity: 1; }
+  .chat-title-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chat-item-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .chat-item .del { color: var(--danger); font-size: var(--font-size); cursor: pointer; }
+  .chat-item .rename { color: var(--primary); font-size: var(--font-size); cursor: pointer; }
+  .side-bottom { padding: 16px 12px; border-top: 1px solid var(--border); }
   .side-btn {
     padding: 12px;
     background: var(--surface-light);
@@ -877,9 +664,7 @@
     font-weight: 500;
     cursor: pointer;
   }
-  .side-btn:active {
-    transform: scale(0.97);
-  }
+  .side-btn:active { transform: scale(0.97); }
 
   #overlay {
     position: fixed;
@@ -891,10 +676,7 @@
     transition: opacity 0.25s ease, visibility 0.25s;
     z-index: 999;
   }
-  #overlay.show {
-    opacity: 1;
-    visibility: visible;
-  }
+  #overlay.show { opacity: 1; visibility: visible; }
 
   #chat-container {
     width: 100%;
@@ -926,15 +708,8 @@
     align-items: center;
     justify-content: center;
   }
-  #toggleSidebar:active {
-    transform: scale(0.94);
-  }
-  .chat-title {
-    flex: 1;
-    text-align: center;
-    font-size: calc(var(--font-size) + 4px);
-    font-weight: 700;
-  }
+  #toggleSidebar:active { transform: scale(0.94); }
+  .chat-title { flex: 1; text-align: center; font-size: calc(var(--font-size) + 4px); font-weight: 700; }
   .api-tag {
     font-size: calc(var(--font-size) - 4px);
     color: var(--primary);
@@ -970,18 +745,8 @@
     transform: translateY(10px);
     animation: fadeInUp 0.25s ease forwards;
   }
-  .msg.user {
-    background: var(--bubble-user);
-    color: #fff;
-    align-self: flex-end;
-    border-bottom-right-radius: 8px;
-  }
-  .msg.ai {
-    background: var(--bubble-ai);
-    color: var(--text);
-    align-self: flex-start;
-    border-bottom-left-radius: 8px;
-  }
+  .msg.user { background: var(--bubble-user); color: #fff; align-self: flex-end; border-bottom-right-radius: 8px; }
+  .msg.ai { background: var(--bubble-ai); color: var(--text); align-self: flex-start; border-bottom-left-radius: 8px; }
   .loading {
     max-width: 85%;
     background: var(--bubble-ai);
@@ -994,16 +759,8 @@
     border: 1px solid var(--border);
   }
 
-  .input-bar {
-    padding: 16px 20px;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-  }
-  .input-wrapper {
-    display: flex;
-    gap: 12px;
-    align-items: flex-end;
-  }
+  .input-bar { padding: 16px 20px; background: var(--surface); border-top: 1px solid var(--border); }
+  .input-wrapper { display: flex; gap: 12px; align-items: flex-end; }
   #input {
     flex: 1;
     min-height: 48px;
@@ -1018,9 +775,7 @@
     font-size: var(--font-size);
     line-height: 1.5;
   }
-  #input::placeholder {
-    color: #5a5c64;
-  }
+  #input::placeholder { color: #5a5c64; }
   #send {
     width: 52px;
     height: 52px;
@@ -1035,9 +790,7 @@
     align-items: center;
     justify-content: center;
   }
-  #send:active {
-    transform: scale(0.92);
-  }
+  #send:active { transform: scale(0.92); }
 
   .base-modal, #chatConfigModal, #promptModal, #agentModal, #editAgentModal, #selectModal {
     position: fixed;
@@ -1052,10 +805,7 @@
     justify-content: center;
     z-index: 9999;
   }
-  .base-modal.show, #chatConfigModal.show, #promptModal.show, #agentModal.show, #editAgentModal.show, #selectModal.show {
-    opacity: 1;
-    visibility: visible;
-  }
+  .base-modal.show, #chatConfigModal.show, #promptModal.show, #agentModal.show, #editAgentModal.show, #selectModal.show { opacity: 1; visibility: visible; }
   .modal-box, .config-modal-box, #chatConfigDetail {
     background: var(--surface);
     width: 90%;
@@ -1069,18 +819,14 @@
   }
   body.light-mode .modal-box,
   body.light-mode .config-modal-box,
-  body.light-mode #chatConfigDetail {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  }
+  body.light-mode #chatConfigDetail { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
   .base-modal.show .modal-box,
   .base-modal.show .config-modal-box,
   #chatConfigModal.show .config-modal-box,
   #promptModal.show .modal-box,
   #agentModal.show .modal-box,
   #editAgentModal.show .modal-box,
-  #selectModal.show .modal-box {
-    transform: scale(1);
-  }
+  #selectModal.show .modal-box { transform: scale(1); }
 
   .modal-head, .config-detail-title {
     display: flex;
@@ -1090,13 +836,8 @@
     padding-bottom: 12px;
     border-bottom: 1px solid var(--border);
   }
-  .modal-head span, .config-detail-title span {
-    font-size: calc(var(--font-size) + 4px);
-    font-weight: 700;
-  }
-  .modal-close, .config-detail-close {
-    display: none;
-  }
+  .modal-head span, .config-detail-title span { font-size: calc(var(--font-size) + 4px); font-weight: 700; }
+  .modal-close, .config-detail-close { display: none; }
   .modal-body label, .config-item label {
     display: block;
     margin-top: 14px;
@@ -1115,10 +856,7 @@
     outline: none;
     font-size: var(--font-size);
   }
-  .modal-body textarea {
-    min-height: 80px;
-    resize: none;
-  }
+  .modal-body textarea { min-height: 80px; resize: none; }
 
   .select-btn {
     width: 100%;
@@ -1134,11 +872,7 @@
     justify-content: space-between;
     align-items: center;
   }
-  .select-btn::after {
-    content: '▼';
-    font-size: 12px;
-    color: var(--subtext);
-  }
+  .select-btn::after { content: '▼'; font-size: 12px; color: var(--subtext); }
 
   .select-options {
     position: fixed;
@@ -1153,9 +887,7 @@
     transform: translateY(100%);
     transition: transform 0.3s ease;
   }
-  .select-options.show {
-    transform: translateY(0);
-  }
+  .select-options.show { transform: translateY(0); }
   .select-option {
     padding: 16px;
     text-align: center;
@@ -1163,12 +895,8 @@
     border-bottom: 1px solid var(--border);
     cursor: pointer;
   }
-  .select-option:last-child {
-    border-bottom: none;
-  }
-  .select-option:active {
-    background: var(--surface-light);
-  }
+  .select-option:last-child { border-bottom: none; }
+  .select-option:active { background: var(--surface-light); }
   .select-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -1179,17 +907,9 @@
     visibility: hidden;
     transition: opacity 0.2s ease;
   }
-  .select-overlay.show {
-    opacity: 1;
-    visibility: visible;
-  }
+  .select-overlay.show { opacity: 1; visibility: visible; }
 
-  .switch-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 16px;
-  }
+  .switch-box { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; }
   .switch {
     position: relative;
     width: 50px;
@@ -1199,9 +919,7 @@
     cursor: pointer;
     border: 1px solid var(--border);
   }
-  body.light-mode .switch {
-    background: #d1d1d6;
-  }
+  body.light-mode .switch { background: #d1d1d6; }
   .switch::after {
     content: '';
     position: absolute;
@@ -1213,17 +931,9 @@
     border-radius: 50%;
     transition: transform 0.2s ease;
   }
-  .switch.checked {
-    background: var(--primary);
-  }
-  .switch.checked::after {
-    transform: translateX(22px);
-  }
-  .modal-foot, .config-btn-group {
-    display: flex;
-    gap: 12px;
-    margin-top: 24px;
-  }
+  .switch.checked { background: var(--primary); }
+  .switch.checked::after { transform: translateX(22px); }
+  .modal-foot, .config-btn-group { display: flex; gap: 12px; margin-top: 24px; }
   .modal-foot button, .config-btn {
     flex: 1;
     padding: 12px;
@@ -1235,38 +945,16 @@
     background: var(--surface-light);
     color: var(--text);
   }
-  .modal-foot .primary, .config-confirm {
-    background: var(--primary-bg);
-    color: #fff;
-    border: 1px solid var(--border);
-  }
+  .modal-foot .primary, .config-confirm { background: var(--primary-bg); color: #fff; border: 1px solid var(--border); }
   body.light-mode .modal-foot .primary,
-  body.light-mode .config-confirm {
-    color: var(--text);
-  }
-  .modal-foot button:active, .config-btn:active {
-    transform: scale(0.96);
-  }
+  body.light-mode .config-confirm { color: var(--text); }
+  .modal-foot button:active, .config-btn:active { transform: scale(0.96); }
 
-  .font-size-setting {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 16px;
-    padding: 8px 0;
-  }
-  .font-size-setting span:first-child {
-    font-size: calc(var(--font-size) - 2px);
-    color: var(--subtext);
-  }
-  .font-size-control {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
+  .font-size-setting { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding: 8px 0; }
+  .font-size-setting span:first-child { font-size: calc(var(--font-size) - 2px); color: var(--subtext); }
+  .font-size-control { display: flex; align-items: center; gap: 16px; }
   .font-size-control button {
-    width: 36px;
-    height: 36px;
+    width: 36px; height: 36px;
     border-radius: 30px;
     border: 1px solid var(--border);
     background: var(--surface-light);
@@ -1275,28 +963,11 @@
     font-weight: 600;
     cursor: pointer;
   }
-  body.light-mode .font-size-control button {
-    color: var(--text);
-  }
-  .font-size-control span {
-    min-width: 40px;
-    text-align: center;
-    font-size: var(--font-size);
-  }
+  body.light-mode .font-size-control button { color: var(--text); }
+  .font-size-control span { min-width: 40px; text-align: center; font-size: var(--font-size); }
 
-  .avatar-selector {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-top: 8px;
-  }
-  #avatarPreview, #editAvatarPreview {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--border);
-  }
+  .avatar-selector { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
+  #avatarPreview, #editAvatarPreview { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
   .avatar-btn {
     flex: 1;
     padding: 12px 16px;
@@ -1308,12 +979,8 @@
     cursor: pointer;
     text-align: center;
   }
-  .avatar-btn:active {
-    background: var(--surface);
-  }
-  #avatarFile, #editAvatarFile {
-    display: none;
-  }
+  .avatar-btn:active { background: var(--surface); }
+  #avatarFile, #editAvatarFile { display: none; }
 
   #chatConfigMask {
     z-index: 99999;
@@ -1329,19 +996,10 @@
     justify-content: center;
     padding: 16px;
   }
-  #chatConfigMask.show {
-    opacity: 1;
-    visibility: visible;
-  }
+  #chatConfigMask.show { opacity: 1; visibility: visible; }
 
-  .config-item-row {
-    margin-bottom: 16px;
-  }
-  .config-item-label {
-    font-size: calc(var(--font-size) - 2px);
-    color: var(--subtext);
-    margin-bottom: 6px;
-  }
+  .config-item-row { margin-bottom: 16px; }
+  .config-item-label { font-size: calc(var(--font-size) - 2px); color: var(--subtext); margin-bottom: 6px; }
   .config-item-value {
     font-size: var(--font-size);
     color: var(--text);
@@ -1350,9 +1008,7 @@
     border-radius: 16px;
     border: 1px solid var(--border);
   }
-  .prompt-wrap {
-    position: relative;
-  }
+  .prompt-wrap { position: relative; }
   .prompt-value {
     width: 100%;
     height: 80px;
@@ -1377,16 +1033,8 @@
     font-size: 12px;
     cursor: pointer;
   }
-  .copy-btn:active {
-    transform: scale(0.92);
-  }
-  .copy-tip {
-    font-size: 12px;
-    color: var(--primary);
-    margin-top: 4px;
-    display: none;
-    text-align: right;
-  }
+  .copy-btn:active { transform: scale(0.92); }
+  .copy-tip { font-size: 12px; color: var(--primary); margin-top: 4px; display: none; text-align: right; }
 
   #rewardModal {
     position: fixed;
@@ -1402,10 +1050,7 @@
     justify-content: center;
     padding: 20px;
   }
-  #rewardModal.show {
-    opacity: 1;
-    visibility: visible;
-  }
+  #rewardModal.show { opacity: 1; visibility: visible; }
   #rewardBox {
     background: var(--surface);
     border-radius: 32px;
@@ -1418,24 +1063,10 @@
     transform: scale(0.9);
     transition: transform 0.25s ease;
   }
-  body.light-mode #rewardBox {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  }
-  #rewardModal.show #rewardBox {
-    transform: scale(1);
-  }
-  #rewardTitle {
-    font-size: 18px;
-    color: var(--primary);
-    margin-bottom: 20px;
-    font-weight: 700;
-  }
-  #rewardImg {
-    width: 100%;
-    max-width: 260px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-  }
+  body.light-mode #rewardBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
+  #rewardModal.show #rewardBox { transform: scale(1); }
+  #rewardTitle { font-size: 18px; color: var(--primary); margin-bottom: 20px; font-weight: 700; }
+  #rewardImg { width: 100%; max-width: 260px; border-radius: 20px; border: 1px solid var(--border); }
   #closeReward {
     margin-top: 24px;
     padding: 12px 28px;
@@ -1447,9 +1078,7 @@
     font-weight: 600;
     cursor: pointer;
   }
-  #closeReward:active {
-    transform: scale(0.96);
-  }
+  #closeReward:active { transform: scale(0.96); }
 
   #noticeModal {
     position: fixed;
@@ -1465,10 +1094,7 @@
     justify-content: center;
     padding: 20px;
   }
-  #noticeModal.show {
-    opacity: 1;
-    visibility: visible;
-  }
+  #noticeModal.show { opacity: 1; visibility: visible; }
   #noticeBox {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -1483,14 +1109,9 @@
     transform: scale(0.9);
     transition: transform 0.25s ease;
   }
-  body.light-mode #noticeBox {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  }
-  #noticeModal.show #noticeBox {
-    transform: scale(1);
-  }
+  body.light-mode #noticeBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
+  #noticeModal.show #noticeBox { transform: scale(1); }
 
-  /* ========== 公告关闭按钮 ========== */
   #closeNotice {
     position: absolute;
     top: 16px;
@@ -1509,34 +1130,19 @@
     z-index: 10;
     transition: opacity 0.3s ease, background 0.3s ease;
   }
-  body.light-mode #closeNotice {
-    color: var(--text);
-  }
-  #closeNotice:active {
-    transform: scale(0.9);
-  }
+  body.light-mode #closeNotice { color: var(--text); }
+  #closeNotice:active { transform: scale(0.9); }
   #closeNotice.cooldown {
-  background: #2a2a2a;
-  color: #888;
-  cursor: not-allowed;
-  font-size: 16px;
-  font-weight: 600;
-}
-body.light-mode #closeNotice.cooldown {
-  background: #e0e0e0;
-  color: #999;
-}
-  #closeNotice.cooldown:active {
-    transform: none;
+    background: #2a2a2a;
+    color: #888;
+    cursor: not-allowed;
+    font-size: 16px;
+    font-weight: 600;
   }
+  body.light-mode #closeNotice.cooldown { background: #e0e0e0; color: #999; }
+  #closeNotice.cooldown:active { transform: none; }
 
-  #noticeIframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: transparent;
-    border-radius: 36px;
-  }
+  #noticeIframe { width: 100%; height: 100%; border: none; background: transparent; border-radius: 36px; }
 
   #titleLoading {
     position: fixed;
@@ -1553,14 +1159,9 @@ body.light-mode #closeNotice.cooldown {
     color: #fff;
     font-size: var(--font-size);
   }
-  #titleLoading.show {
-    opacity: 1;
-    visibility: visible;
-  }
+  #titleLoading.show { opacity: 1; visibility: visible; }
 
-  #renameModal .modal-box {
-    max-width: 360px;
-  }
+  #renameModal .modal-box { max-width: 360px; }
 
   .toast {
     position: fixed;
@@ -1584,47 +1185,20 @@ body.light-mode #closeNotice.cooldown {
     transition: opacity 0.2s ease, visibility 0.2s, transform 0.25s ease;
     pointer-events: none;
   }
-  body.light-mode .toast {
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-  }
-  .toast.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  .toast.error {
-    background: #441111;
-    border-color: #662222;
-  }
-  .toast.success {
-    background: #114444;
-    border-color: #226666;
-  }
+  body.light-mode .toast { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); }
+  .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+  .toast.error { background: #441111; border-color: #662222; }
+  .toast.success { background: #114444; border-color: #226666; }
 
-  .hide {
-    display: none !important;
-  }
+  .hide { display: none !important; }
 
-  ::-webkit-scrollbar {
-    width: 4px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #3a3c44;
-    border-radius: 4px;
-  }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #3a3c44; border-radius: 4px; }
 
   @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -1632,14 +1206,10 @@ body.light-mode #closeNotice.cooldown {
     .notice-btn:hover, #send:hover, #toggleSidebar:hover, #backBtnFromImg:hover,
     #genImgBtn:hover, #closeReward:hover, .loginBtn:hover,
     #confirmDeleteBtn:hover, .chat-item:hover, .agent-card:hover, .select-btn:hover,
-    .select-option:hover, .avatar-btn:hover, .copy-btn:hover, .api-tag:hover {
-      filter: brightness(1.15);
-    }
+    .select-option:hover, .avatar-btn:hover, .copy-btn:hover, .api-tag:hover { filter: brightness(1.15); }
     .chat-item .del:hover, .chat-item .rename:hover { transform: scale(1.15); }
     .agent-actions span:hover { background: #242830; }
-    #closeNotice.cooldown:hover {
-      filter: none;
-    }
+    #closeNotice.cooldown:hover { filter: none; }
   }
 </style>
 </head>
@@ -1647,6 +1217,13 @@ body.light-mode #closeNotice.cooldown {
 
 <div id="splash">
   <img id="splashIcon" src="appIcon.png" alt="APP图标">
+</div>
+
+<!-- ========== 协议弹窗 ========== -->
+<div id="agreementOverlay" class="hidden">
+  <div id="agreementBox">
+    <iframe id="agreementIframe" src=""></iframe>
+  </div>
 </div>
 
 <div id="pageContainer">
@@ -1760,11 +1337,12 @@ body.light-mode #closeNotice.cooldown {
         <div class="switch" id="pwdCheckSwitch"></div>
       </div>
       <div class="switch-box" id="devControlBox" style="margin-top:12px;display:none;">
-        <span style="font-size:14px">创作者模式</span>
+        <span style="font-size:14px">创造者模式</span>
         <div class="switch" id="devSwitch"></div>
       </div>
-      <button class="side-btn" style="margin-top:16px;width:100%;" id="openRewardBtn">打赏作者</button>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 1.7.4z</div>
+      <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn">查看用户协议</button>
+      <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn">打赏作者</button>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 1.7.3</div>
     </div>
     <div class="modal-foot">
       <button id="modalCancel">取消</button>
@@ -1986,18 +1564,15 @@ function showToast(message, type = 'info', duration = 2000) {
     clearTimeout(toastTimer);
     toastEl.classList.remove('show', 'error', 'success');
   }
-
   toastEl.textContent = message;
   toastEl.className = 'toast';
   if (type === 'error') toastEl.classList.add('error');
   if (type === 'success') toastEl.classList.add('success');
-
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       toastEl.classList.add('show');
     });
   });
-
   toastTimer = setTimeout(() => {
     toastEl.classList.remove('show');
     toastTimer = null;
@@ -2015,7 +1590,6 @@ function showSelect(options, targetBtn) {
   return new Promise((resolve) => {
     currentSelectTarget = targetBtn;
     selectResolve = resolve;
-
     selectOptionsList.innerHTML = '';
     options.forEach(opt => {
       const div = document.createElement('div');
@@ -2029,7 +1603,6 @@ function showSelect(options, targetBtn) {
       };
       selectOptionsList.appendChild(div);
     });
-
     selectOverlay.classList.add('show');
     selectOptions.classList.add('show');
   });
@@ -2046,13 +1619,11 @@ function hideSelect(value) {
 
 selectOverlay.onclick = () => hideSelect(null);
 
-// AI类型选择
 const aiTypeOptions = [
   { label: '情感陪伴', value: 'emotion' },
   { label: '工具', value: 'tool' }
 ];
 
-// AI性别选择
 const aiGenderOptions = [
   { label: '男性', value: 'male' },
   { label: '女性', value: 'female' },
@@ -2111,6 +1682,9 @@ const DEFAULT_STYLE = {
 const CORRECT_PWD = "2580";
 const AUTH_CODE = "258456";
 
+const AGREEMENT_URL = 'https://cnyszb.github.io/xy/xy.html';
+const AGREEMENT_STORAGE_KEY = 'dchat_agreement_version';
+
 let config = JSON.parse(localStorage.getItem("config")) || {
   userApi: "sk-dlnxdhgfxoniyqpzrgooivzrxoslffssodefeahfnrqdlzhr",
   fontSize: 16,
@@ -2118,6 +1692,86 @@ let config = JSON.parse(localStorage.getItem("config")) || {
   specialMode: false,
   lightMode: false
 };
+
+// ========== 协议系统 ==========
+let agreementCheckInterval = null;
+let currentAgreementVersion = '0'; // 本地默认为0，协议页面是1
+
+function getStoredAgreementVersion() {
+  return localStorage.getItem(AGREEMENT_STORAGE_KEY) || '0';
+}
+
+function setStoredAgreementVersion(version) {
+  localStorage.setItem(AGREEMENT_STORAGE_KEY, version);
+}
+
+// 打开协议弹窗
+// force=true: 首次/版本不一致时强制弹出，协议页面内必须滑到底部
+// force=false: 设置里查看，协议页面内按钮变成"关闭"
+function openAgreement(force) {
+  const overlay = document.getElementById('agreementOverlay');
+  const iframe = document.getElementById('agreementIframe');
+
+  overlay.classList.remove('hidden');
+  iframe.src = AGREEMENT_URL + '?t=' + Date.now();
+
+  // 等iframe加载完后，告诉协议页面当前模式
+  iframe.onload = function() {
+    iframe.contentWindow.postMessage({ type: 'setAgreementMode', force: force }, '*');
+  };
+}
+
+function closeAgreement() {
+  document.getElementById('agreementOverlay').classList.add('hidden');
+  document.getElementById('agreementIframe').src = '';
+}
+
+// 监听协议页面发来的消息
+window.addEventListener('message', function(e) {
+  if (!e.data || !e.data.type) return;
+
+  switch (e.data.type) {
+    case 'agreementAccepted':
+      // 用户点了同意，更新本地版本号
+      if (e.data.version) {
+        setStoredAgreementVersion(e.data.version);
+        currentAgreementVersion = e.data.version;
+      }
+      closeAgreement();
+      showToast('欢迎使用 Dchat', 'success');
+      break;
+
+    case 'agreementRejected':
+      // 用户点了不同意，版本号归零
+      setStoredAgreementVersion('0');
+      currentAgreementVersion = '0';
+      closeAgreement();
+      // 关闭弹窗后显示黑屏
+      document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:18px;color:#e0e0e0;margin-bottom:8px;">您不同意协议</div><div style="font-size:14px;color:#888;">请退出软件</div></div>';
+      break;
+
+    case 'agreementClosed':
+      // 查看模式下点了关闭
+      closeAgreement();
+      break;
+  }
+});
+// 每10秒检查一次协议版本
+function startAgreementCheck() {
+  agreementCheckInterval = setInterval(function() {
+    const stored = getStoredAgreementVersion();
+    // 版本不一致就弹窗（开屏强制模式）
+    if (stored !== currentAgreementVersion && currentAgreementVersion !== '0') {
+      // 更新currentAgreementVersion避免重复弹窗
+      // 不更新，让用户必须同意后才能停止弹窗
+    }
+    if (stored === '0') {
+      // 用户还没同意过协议，弹窗
+      openAgreement(true);
+      currentAgreementVersion = '1'; // 标记已弹过窗，避免10秒内反复弹
+    }
+  }, 600000);
+}
 
 // ========== 深色/浅色模式 ==========
 function applyTheme() {
@@ -2965,6 +2619,25 @@ async function initAll() {
   setFontSize(config.fontSize);
   updateFontSizeDisplay();
 
+  // 检查协议版本
+  const storedVersion = getStoredAgreementVersion();
+  if (storedVersion === '0') {
+    // 首次使用，弹出协议弹窗
+    openAgreement(true);
+    currentAgreementVersion = '1';
+  } else {
+    currentAgreementVersion = storedVersion;
+  }
+
+  // 每10秒检查一次
+  startAgreementCheck();
+
+  // 设置里查看协议按钮
+  document.getElementById('openAgreementBtn').onclick = () => {
+    hideModal(document.getElementById('modal'));
+    openAgreement(false);
+  };
+
   document.getElementById("apiTag").onclick = triggerSecret;
 
   document.getElementById("toggleSidebar").onclick = () => {
@@ -3024,7 +2697,6 @@ async function initAll() {
 
   document.getElementById('closeConfigDetailBtn').onclick = () => hideModal(document.getElementById('chatConfigMask'));
 
-  // 响应公告iframe发来的主题请求
   window.addEventListener('message', function(e) {
     if (e.data && e.data.type === 'themeRequest') {
       const noticeIframe = document.getElementById('noticeIframe');
@@ -3037,7 +2709,6 @@ async function initAll() {
     }
   });
 
-  // ESC关闭弹窗/侧边栏
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
       closeSidebar();
@@ -3056,7 +2727,6 @@ async function initAll() {
     }
   });
 
-  // 设置弹窗打开时：键盘+/-和滚轮调字体
   var modalEl = document.getElementById('modal');
   var observer = new MutationObserver(function() {
     if (modalEl.classList.contains('show')) {
@@ -3082,33 +2752,32 @@ async function initAll() {
 }
 
 window.onload = () => {
-  // ========== 为了特殊的人 ==========
   const now = new Date();
   const month = now.getMonth() + 1;
   const day = now.getDate();
 
- const mourningDays = [
-  { month: 1, day: 25, subtitle: '南方特大冰雪灾害遇难同胞' },
-  { month: 4, day: 4, subtitle: '新冠肺炎疫情逝者' },
-  { month: 4, day: 14, subtitle: '玉树大地震遇难同胞' },
-  { month: 4, day: 20, subtitle: '雅安大地震遇难同胞' },
-  { month: 5, day: 12, subtitle: '汶川大地震遇难同胞' },
-  { month: 6, day: 1, subtitle: '东方之星沉船遇难同胞' },
-  { month: 7, day: 20, subtitle: '郑州特大暴雨遇难同胞' },
-  { month: 7, day: 23, subtitle: '温州动车事故遇难同胞' },
-  { month: 7, day: 28, subtitle: '唐山大地震遇难同胞' },
-  { month: 8, day: 3, subtitle: '鲁甸大地震遇难同胞' },
-  { month: 8, day: 7, subtitle: '舟曲特大泥石流与九八抗洪遇难同胞' },
-  { month: 8, day: 12, subtitle: '天津滨海爆炸遇难同胞' },
-  { month: 9, day: 7, subtitle: '云南彝良地震遇难同胞' }
-];
+  const mourningDays = [
+    { month: 1, day: 25, subtitle: '南方特大冰雪灾害遇难同胞' },
+    { month: 4, day: 4, subtitle: '新冠肺炎疫情逝者' },
+    { month: 4, day: 14, subtitle: '玉树大地震遇难同胞' },
+    { month: 4, day: 20, subtitle: '雅安大地震遇难同胞' },
+    { month: 5, day: 12, subtitle: '汶川大地震遇难同胞' },
+    { month: 6, day: 1, subtitle: '东方之星沉船遇难同胞' },
+    { month: 7, day: 20, subtitle: '郑州特大暴雨遇难同胞' },
+    { month: 7, day: 23, subtitle: '温州动车事故遇难同胞' },
+    { month: 7, day: 28, subtitle: '唐山大地震遇难同胞' },
+    { month: 8, day: 3, subtitle: '鲁甸大地震遇难同胞' },
+    { month: 8, day: 7, subtitle: '舟曲特大泥石流与九八抗洪遇难同胞' },
+    { month: 8, day: 12, subtitle: '天津滨海爆炸遇难同胞' },
+    { month: 9, day: 7, subtitle: '云南彝良地震遇难同胞' }
+  ];
 
   const todayMourning = mourningDays.find(d => d.month === month && d.day === day);
-if (todayMourning) {
-  var sub = todayMourning.subtitle;
-  document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:48px;margin-bottom:20px;">🕯️</div><div style="font-size:20px;font-weight:600;color:#e0e0e0;margin-bottom:8px;">沉痛缅怀</div><div style="font-size:15px;color:#a0a0a0;margin-bottom:4px;">'+sub+'</div><div style="font-size:14px;color:#a0a0a0;">灾难纪念日，软件暂停使用一天</div></div>';
-  return;
-}
+  if (todayMourning) {
+    var sub = todayMourning.subtitle;
+    document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:48px;margin-bottom:20px;">🕯️</div><div style="font-size:20px;font-weight:600;color:#e0e0e0;margin-bottom:8px;">沉痛缅怀</div><div style="font-size:15px;color:#a0a0a0;margin-bottom:4px;">'+sub+'</div><div style="font-size:14px;color:#a0a0a0;">灾难纪念日，软件暂停使用一天</div></div>';
+    return;
+  }
   if (!config.needPwdCheck) {
     document.getElementById("loginWrapper").style.display = "none";
     document.getElementById("app").style.display = "block";
