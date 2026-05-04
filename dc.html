@@ -566,6 +566,22 @@
   #genImgBtn:active {
     transform: scale(0.97);
   }
+  #downloadImgBtn {
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    padding: 14px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-bottom: 16px;
+    font-size: var(--font-size);
+    font-weight: 600;
+    display: none;
+    text-align: center;
+  }
+  #downloadImgBtn:active {
+    transform: scale(0.97);
+  }
   #imgLoading {
     color: var(--subtext);
     text-align: center;
@@ -1683,6 +1699,7 @@ body.light-mode #closeNotice.cooldown {
       </div>
       <textarea id="imgPrompt" placeholder="输入画面描述，例如：一只可爱的橘猫，夕阳下，治愈风，高清，细节丰富"></textarea>
       <button id="genImgBtn">开始生成</button>
+      <button id="downloadImgBtn">下载图片</button>
       <div id="imgLoading">生成中...</div>
       <div id="imgResult">
         <img id="resultImg" alt="生成结果">
@@ -1747,7 +1764,7 @@ body.light-mode #closeNotice.cooldown {
         <div class="switch" id="devSwitch"></div>
       </div>
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openRewardBtn">打赏作者</button>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 1.7.3</div>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 1.7.4z</div>
     </div>
     <div class="modal-foot">
       <button id="modalCancel">取消</button>
@@ -2627,13 +2644,17 @@ document.getElementById('homeBtn').onclick = () => {
 };
 
 // ========== AI生图 ==========
+let lastGeneratedImageUrl = null;
+
 document.getElementById('genImgBtn').onclick = async () => {
   const prompt = document.getElementById('imgPrompt').value.trim();
   if (!prompt) { showToast('请输入描述', 'error'); return; }
   const loading = document.getElementById('imgLoading');
   const img = document.getElementById('resultImg');
+  const downloadBtn = document.getElementById('downloadImgBtn');
   loading.style.display = 'block';
   img.classList.remove('show');
+  downloadBtn.style.display = 'none';
 
   try {
     const res = await fetch('https://api.siliconflow.cn/v1/images/generations', {
@@ -2644,8 +2665,12 @@ document.getElementById('genImgBtn').onclick = async () => {
     const data = await res.json();
     const url = data.images?.[0]?.url;
     if (url) {
+      lastGeneratedImageUrl = url;
       img.src = url;
-      requestAnimationFrame(() => requestAnimationFrame(() => img.classList.add('show')));
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        img.classList.add('show');
+        downloadBtn.style.display = 'block';
+      }));
     } else {
       showToast('生成失败', 'error');
     }
@@ -2654,6 +2679,15 @@ document.getElementById('genImgBtn').onclick = async () => {
   } finally {
     loading.style.display = 'none';
   }
+};
+
+document.getElementById('downloadImgBtn').onclick = () => {
+  if (!lastGeneratedImageUrl) {
+    showToast('没有可下载的图片', 'error');
+    return;
+  }
+  window.open(lastGeneratedImageUrl, '_blank');
+  showToast('已跳转浏览器，长按图片即可保存', 'success');
 };
 
 // ========== 聊天功能 ==========
