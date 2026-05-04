@@ -1910,7 +1910,7 @@ function disableNoticeClose(text) {
 
 function startNoticeCooldown() {
   noticeCooldownActive = true;
-  noticeCooldownRemaining = 5;
+  noticeCooldownRemaining = 3;
   disableNoticeClose(String(noticeCooldownRemaining));
 
   noticeCooldownTimer = setInterval(() => {
