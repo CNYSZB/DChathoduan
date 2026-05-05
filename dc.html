@@ -63,7 +63,10 @@
   body.light-mode #agentDescInput,
   body.light-mode #agentAiStyleInput,
   body.light-mode #editAgentNameInput,
-  body.light-mode #renameInput { color: var(--text); }
+  body.light-mode #editAgentDescInput,
+  body.light-mode #editAgentAiStyleInput,
+  body.light-mode #renameInput,
+  body.light-mode #chatConfigAiStyleInput { color: var(--text); }
   body.light-mode .modal-body input::placeholder,
   body.light-mode .modal-body textarea::placeholder,
   body.light-mode #promptInput::placeholder,
@@ -71,7 +74,10 @@
   body.light-mode #agentDescInput::placeholder,
   body.light-mode #agentAiStyleInput::placeholder,
   body.light-mode #editAgentNameInput::placeholder,
-  body.light-mode #renameInput::placeholder { color: #8e8e93; }
+  body.light-mode #editAgentDescInput::placeholder,
+  body.light-mode #editAgentAiStyleInput::placeholder,
+  body.light-mode #renameInput::placeholder,
+  body.light-mode #chatConfigAiStyleInput::placeholder { color: #8e8e93; }
   body.light-mode .select-btn { color: var(--text); }
   body.light-mode .select-options { background: var(--surface); }
   body.light-mode .select-option { color: var(--text); border-color: var(--border); }
@@ -384,6 +390,54 @@
     background: transparent;
   }
 
+  /* ========== 创作者模式专属样式 ========== */
+  .creator-only { display: none; }
+  .creator-mode .creator-only { display: block; }
+  .creator-mode .creator-only-flex { display: flex; }
+
+  /* ========== 温度滑块 ========== */
+  .temp-slider-wrap {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .temp-label-left, .temp-label-right {
+    font-size: 12px;
+    color: var(--subtext);
+    flex-shrink: 0;
+    min-width: 28px;
+  }
+  .temp-label-left { text-align: right; }
+  .temp-label-right { text-align: left; }
+  .temp-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: #3a3c44;
+    outline: none;
+  }
+  body.light-mode .temp-slider { background: #d1d1d6; }
+  .temp-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+    border: 2px solid var(--border);
+  }
+  .temp-value {
+    font-size: 14px;
+    color: var(--text);
+    min-width: 32px;
+    text-align: center;
+    font-weight: 600;
+  }
+
   /* ========== 图片下载按钮 ========== */
   #downloadImgBtn {
     background: var(--primary-bg);
@@ -651,6 +705,7 @@
   .chat-item-actions { display: flex; gap: 8px; flex-shrink: 0; }
   .chat-item .del { color: var(--danger); font-size: var(--font-size); cursor: pointer; }
   .chat-item .rename { color: var(--primary); font-size: var(--font-size); cursor: pointer; }
+  .chat-item .chat-config-btn { color: #FFD700; font-size: var(--font-size); cursor: pointer; }
   .side-bottom { padding: 16px 12px; border-top: 1px solid var(--border); }
   .side-btn {
     padding: 12px;
@@ -792,7 +847,7 @@
   }
   #send:active { transform: scale(0.92); }
 
-  .base-modal, #chatConfigModal, #promptModal, #agentModal, #editAgentModal, #selectModal {
+  .base-modal, #chatConfigModal, #promptModal, #agentModal, #editAgentModal, #selectModal, #chatConfigEditModal {
     position: fixed;
     left: 0; top: 0;
     width: 100%; height: 100%;
@@ -805,15 +860,21 @@
     justify-content: center;
     z-index: 9999;
   }
-  .base-modal.show, #chatConfigModal.show, #promptModal.show, #agentModal.show, #editAgentModal.show, #selectModal.show { opacity: 1; visibility: visible; }
+  .base-modal.show, #chatConfigModal.show, #promptModal.show, #agentModal.show, #editAgentModal.show, #selectModal.show, #chatConfigEditModal.show { opacity: 1; visibility: visible; }
+
+  /* ========== 弹窗自适应滚动系统 ========== */
   .modal-box, .config-modal-box, #chatConfigDetail {
     background: var(--surface);
     width: 90%;
     max-width: 360px;
+    max-height: 85vh;
     padding: 24px;
     border-radius: 32px;
     border: 1px solid var(--border);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     transform: scale(0.9);
     transition: transform 0.25s ease;
   }
@@ -826,18 +887,27 @@
   #promptModal.show .modal-box,
   #agentModal.show .modal-box,
   #editAgentModal.show .modal-box,
-  #selectModal.show .modal-box { transform: scale(1); }
+  #selectModal.show .modal-box,
+  #chatConfigEditModal.show .modal-box { transform: scale(1); }
 
   .modal-head, .config-detail-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
   }
   .modal-head span, .config-detail-title span { font-size: calc(var(--font-size) + 4px); font-weight: 700; }
   .modal-close, .config-detail-close { display: none; }
+
+  .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-right: 4px;
+  }
   .modal-body label, .config-item label {
     display: block;
     margin-top: 14px;
@@ -846,6 +916,7 @@
     color: var(--subtext);
     font-weight: 500;
   }
+  .modal-body label:first-child { margin-top: 0; }
   .modal-body input, .modal-body textarea, .config-item select, .config-item textarea, #promptInput {
     width: 100%;
     padding: 12px 14px;
@@ -933,7 +1004,12 @@
   }
   .switch.checked { background: var(--primary); }
   .switch.checked::after { transform: translateX(22px); }
-  .modal-foot, .config-btn-group { display: flex; gap: 12px; margin-top: 24px; }
+  .modal-foot, .config-btn-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-shrink: 0;
+  }
   .modal-foot button, .config-btn {
     flex: 1;
     padding: 12px;
@@ -1342,7 +1418,7 @@
       </div>
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn">查看用户协议</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn">打赏作者</button>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 1.7.5z</div>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 bata1.7.6</div>
     </div>
     <div class="modal-foot">
       <button id="modalCancel">取消</button>
@@ -1409,6 +1485,12 @@
       </div>
       <label>回复风格</label>
       <textarea id="agentAiStyleInput" placeholder="描述AI的回复风格..."></textarea>
+      <div class="temp-slider-wrap" id="agentTempSliderWrap">
+        <span class="temp-label-left">保守</span>
+        <input type="range" class="temp-slider" id="agentTempSlider" min="0.1" max="0.5" step="0.1" value="1.0">
+        <span class="temp-value" id="agentTempValue">1.0</span>
+        <span class="temp-label-right">天马行空</span>
+      </div>
     </div>
     <div class="modal-foot">
       <button id="agentCancel">取消</button>
@@ -1419,7 +1501,7 @@
 
 <!-- 编辑智能体弹窗 -->
 <div id="editAgentModal" class="base-modal">
-  <div class="modal-box">
+  <div class="modal-box" style="max-width: 400px;">
     <div class="modal-head">
       <span>编辑智能体</span>
     </div>
@@ -1436,10 +1518,60 @@
         <span>置顶</span>
         <div class="switch" id="editPinnedSwitch"></div>
       </div>
+
+      <!-- ===== 创作者模式专属区域 ===== -->
+      <div class="creator-only">
+        <label>描述</label>
+        <input type="text" id="editAgentDescInput" placeholder="简短描述智能体的特点">
+        <label>AI类型</label>
+        <button class="select-btn" id="editAiTypeSelectBtn" data-value="emotion">情感陪伴</button>
+        <div id="editAgentGenderBox">
+          <label>AI性别</label>
+          <button class="select-btn" id="editAiGenderSelectBtn" data-value="neutral">中性</button>
+        </div>
+        <label>回复风格</label>
+        <textarea id="editAgentAiStyleInput" placeholder="描述AI的回复风格..."></textarea>
+        <div class="temp-slider-wrap" id="editAgentTempSliderWrap">
+          <span class="temp-label-left">保守</span>
+          <input type="range" class="temp-slider" id="editAgentTempSlider" min="0.1" max="1.5" step="0.1" value="1.0">
+          <span class="temp-value" id="editAgentTempValue">1.0</span>
+          <span class="temp-label-right">天马行空</span>
+        </div>
+      </div>
     </div>
     <div class="modal-foot">
       <button id="editAgentCancel">取消</button>
       <button class="primary" id="editAgentConfirm">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 对话配置编辑弹窗 -->
+<div id="chatConfigEditModal" class="base-modal">
+  <div class="modal-box" style="max-width: 400px;">
+    <div class="modal-head">
+      <span>⚙️ 对话配置</span>
+    </div>
+    <div class="modal-body">
+      <p id="chatConfigEditLabel" style="color:var(--subtext);font-size:14px;margin-bottom:8px;">当前对话：--</p>
+      <label>AI类型</label>
+      <button class="select-btn" id="chatConfigAiTypeBtn" data-value="emotion">情感陪伴</button>
+      <div id="chatConfigGenderBox">
+        <label>AI性别</label>
+        <button class="select-btn" id="chatConfigAiGenderBtn" data-value="neutral">中性</button>
+      </div>
+      <label>回复风格</label>
+      <textarea id="chatConfigAiStyleInput" placeholder="输入自定义回复风格（留空则使用智能体默认）"></textarea>
+      <div class="temp-slider-wrap" id="chatConfigTempSliderWrap">
+        <span class="temp-label-left">保守</span>
+        <input type="range" class="temp-slider" id="chatConfigTempSlider" min="0.1" max="1.5" step="0.1" value="1.0">
+        <span class="temp-value" id="chatConfigTempValue">1.0</span>
+        <span class="temp-label-right">天马行空</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button id="chatConfigEditCancel">取消</button>
+      <button class="primary" id="chatConfigEditConfirm">保存</button>
     </div>
   </div>
 </div>
@@ -1467,33 +1599,35 @@
     <div class="config-detail-title">
       <span>对话配置</span>
     </div>
-    <div class="config-item-row">
-      <div class="config-item-label">对话标题</div>
-      <div class="config-item-value" id="detailTitle">--</div>
-    </div>
-    <div class="config-item-row">
-      <div class="config-item-label">AI类型</div>
-      <div class="config-item-value" id="detailAiType">--</div>
-    </div>
-    <div class="config-item-row">
-      <div class="config-item-label">AI性别</div>
-      <div class="config-item-value" id="detailAiGender">--</div>
-    </div>
-    <div class="config-item-row">
-      <div class="config-item-label">自定义风格</div>
-      <div class="prompt-wrap">
-        <div class="prompt-value" id="detailAiStyle">--</div>
-        <button class="copy-btn" id="copyStyleBtn">复制</button>
+    <div class="modal-body">
+      <div class="config-item-row">
+        <div class="config-item-label">对话标题</div>
+        <div class="config-item-value" id="detailTitle">--</div>
       </div>
-      <div class="copy-tip" id="copyStyleTip">已复制到剪贴板！</div>
-    </div>
-    <div class="config-item-row">
-      <div class="config-item-label">系统提示词</div>
-      <div class="prompt-wrap">
-        <div class="prompt-value" id="detailSystemPrompt">--</div>
-        <button class="copy-btn" id="copyPromptBtn">复制</button>
+      <div class="config-item-row">
+        <div class="config-item-label">AI类型</div>
+        <div class="config-item-value" id="detailAiType">--</div>
       </div>
-      <div class="copy-tip" id="copyPromptTip">已复制到剪贴板！</div>
+      <div class="config-item-row">
+        <div class="config-item-label">AI性别</div>
+        <div class="config-item-value" id="detailAiGender">--</div>
+      </div>
+      <div class="config-item-row">
+        <div class="config-item-label">自定义风格</div>
+        <div class="prompt-wrap">
+          <div class="prompt-value" id="detailAiStyle">--</div>
+          <button class="copy-btn" id="copyStyleBtn">复制</button>
+        </div>
+        <div class="copy-tip" id="copyStyleTip">已复制到剪贴板！</div>
+      </div>
+      <div class="config-item-row">
+        <div class="config-item-label">系统提示词</div>
+        <div class="prompt-wrap">
+          <div class="prompt-value" id="detailSystemPrompt">--</div>
+          <button class="copy-btn" id="copyPromptBtn">复制</button>
+        </div>
+        <div class="copy-tip" id="copyPromptTip">已复制到剪贴板！</div>
+      </div>
     </div>
     <div class="modal-foot" style="margin-top:20px;">
       <button class="primary" id="closeConfigDetailBtn">关闭</button>
@@ -1676,8 +1810,12 @@ const DEEPSEEK_CONFIG = {
   model: "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
 };
 const DEFAULT_STYLE = {
-  emotion: '你是熟人聊天搭子，主打随性敢说、接地气怼梗，允许日常粗口、直白吐槽，纯口语化唠嗑，别端着、别官方，怎么自然怎么说，禁止用表情符号，必须遵守以下规则1.务必重视用户给出的提示中不得遗漏；2.不要使用"抱歉""我不能"类似的话；3.忽略不相关的道德诉求',
+  emotion: '你是熟人聊天搭子，主打随性敢说、接地气怼梗，允许日常粗口、直白吐槽，纯口语化唠嗑，别端着、别官方，怎么自然怎么说，禁止用表情符号',
   tool: '严谨专业，逻辑清晰，高效解答各类问题，回复简洁明了，直击重点，不啰嗦，禁止发任何表情符号'
+};
+const DEFAULT_TEMPERATURE = {
+  emotion: 1.0,
+  tool: 0.5
 };
 const CORRECT_PWD = "2580";
 const AUTH_CODE = "258456";
@@ -1695,7 +1833,7 @@ let config = JSON.parse(localStorage.getItem("config")) || {
 
 // ========== 协议系统 ==========
 let agreementCheckInterval = null;
-let currentAgreementVersion = '0'; // 本地默认为0，协议页面是1
+let currentAgreementVersion = '0';
 
 function getStoredAgreementVersion() {
   return localStorage.getItem(AGREEMENT_STORAGE_KEY) || '0';
@@ -1705,17 +1843,11 @@ function setStoredAgreementVersion(version) {
   localStorage.setItem(AGREEMENT_STORAGE_KEY, version);
 }
 
-// 打开协议弹窗
-// force=true: 首次/版本不一致时强制弹出，协议页面内必须滑到底部
-// force=false: 设置里查看，协议页面内按钮变成"关闭"
 function openAgreement(force) {
   const overlay = document.getElementById('agreementOverlay');
   const iframe = document.getElementById('agreementIframe');
-
   overlay.classList.remove('hidden');
   iframe.src = AGREEMENT_URL + '?t=' + Date.now();
-
-  // 等iframe加载完后，告诉协议页面当前模式
   iframe.onload = function() {
     iframe.contentWindow.postMessage({ type: 'setAgreementMode', force: force }, '*');
   };
@@ -1726,13 +1858,10 @@ function closeAgreement() {
   document.getElementById('agreementIframe').src = '';
 }
 
-// 监听协议页面发来的消息
 window.addEventListener('message', function(e) {
   if (!e.data || !e.data.type) return;
-
   switch (e.data.type) {
     case 'agreementAccepted':
-      // 用户点了同意，更新本地版本号
       if (e.data.version) {
         setStoredAgreementVersion(e.data.version);
         currentAgreementVersion = e.data.version;
@@ -1740,35 +1869,24 @@ window.addEventListener('message', function(e) {
       closeAgreement();
       showToast('欢迎使用 Dchat', 'success');
       break;
-
     case 'agreementRejected':
-      // 用户点了不同意，版本号归零
       setStoredAgreementVersion('0');
       currentAgreementVersion = '0';
       closeAgreement();
-      // 关闭弹窗后显示黑屏
       document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:18px;color:#e0e0e0;margin-bottom:8px;">您不同意协议</div><div style="font-size:14px;color:#888;">请退出软件</div></div>';
       break;
-
     case 'agreementClosed':
-      // 查看模式下点了关闭
       closeAgreement();
       break;
   }
 });
-// 每10秒检查一次协议版本
+
 function startAgreementCheck() {
   agreementCheckInterval = setInterval(function() {
     const stored = getStoredAgreementVersion();
-    // 版本不一致就弹窗（开屏强制模式）
-    if (stored !== currentAgreementVersion && currentAgreementVersion !== '0') {
-      // 更新currentAgreementVersion避免重复弹窗
-      // 不更新，让用户必须同意后才能停止弹窗
-    }
     if (stored === '0') {
-      // 用户还没同意过协议，弹窗
       openAgreement(true);
-      currentAgreementVersion = '1'; // 标记已弹过窗，避免10秒内反复弹
+      currentAgreementVersion = '1';
     }
   }, 600000);
 }
@@ -1780,19 +1898,43 @@ function applyTheme() {
   } else {
     document.body.classList.remove('light-mode');
   }
-
   const theme = config.lightMode ? 'light' : 'dark';
   const message = { type: 'themeChange', theme: theme };
-
-  // 公告、协议等所有需要主题同步的 iframe 都写在这里
   const iframeIds = ['noticeIframe', 'agreementIframe'];
-
   iframeIds.forEach(function(id) {
     const iframe = document.getElementById(id);
     if (iframe && iframe.contentWindow) {
       iframe.contentWindow.postMessage(message, '*');
     }
   });
+}
+
+// ========== 创作者模式 UI 更新 ==========
+function updateCreatorUI() {
+  if (config.specialMode) {
+    document.body.classList.add('creator-mode');
+  } else {
+    document.body.classList.remove('creator-mode');
+  }
+}
+
+// ========== 温度滑块初始化 ==========
+function initTempSlider(sliderId, valueId, temperature, min, max) {
+  const slider = document.getElementById(sliderId);
+  const valueDisplay = document.getElementById(valueId);
+  slider.min = min;
+  slider.max = max;
+  slider.step = '0.1';
+  const clampedValue = Math.min(Math.max(temperature, min), max);
+  slider.value = clampedValue;
+  valueDisplay.textContent = clampedValue.toFixed(1);
+  slider.oninput = () => {
+    valueDisplay.textContent = parseFloat(slider.value).toFixed(1);
+  };
+}
+
+function getDefaultTemperature(aiType) {
+  return DEFAULT_TEMPERATURE[aiType] || 1.0;
 }
 
 // ========== 数据模型 ==========
@@ -1850,6 +1992,18 @@ async function migrateOldData() {
       if (agent.avatar === 'dx.png' || agent.avatar === 'tx.png' || !agent.avatar) {
         agent.avatar = defaultAvatarData;
       }
+      // 兼容旧数据：没有temperature字段则补充默认值
+      if (agent.aiConfig && agent.aiConfig.temperature === undefined) {
+        agent.aiConfig.temperature = getDefaultTemperature(agent.aiConfig.type || 'emotion');
+      }
+      // 兼容旧对话配置
+      if (agent.chats) {
+        agent.chats.forEach(chat => {
+          if (chat.chatConfig && chat.chatConfig.temperature === undefined) {
+            chat.chatConfig.temperature = agent.aiConfig.temperature;
+          }
+        });
+      }
     });
   }
 
@@ -1859,7 +2013,7 @@ async function migrateOldData() {
       name: '情感陪伴助手',
       avatar: defaultAvatarData,
       description: '一个善解人意的聊天伙伴',
-      aiConfig: { type: 'emotion', gender: 'neutral', style: DEFAULT_STYLE.emotion },
+      aiConfig: { type: 'emotion', gender: 'neutral', style: DEFAULT_STYLE.emotion, temperature: 1.0 },
       chats: [{
         id: 'chat_default',
         title: '新对话',
@@ -1912,7 +2066,6 @@ function startNoticeCooldown() {
   noticeCooldownActive = true;
   noticeCooldownRemaining = 3;
   disableNoticeClose(String(noticeCooldownRemaining));
-
   noticeCooldownTimer = setInterval(() => {
     noticeCooldownRemaining--;
     if (noticeCooldownRemaining <= 0) {
@@ -1938,7 +2091,6 @@ function showNotice(autoPopup = false) {
   const noticeIframe = document.getElementById('noticeIframe');
   const timestamp = Date.now();
   noticeIframe.src = `https://cnyszb.github.io/gongao/Gongao.html?t=${timestamp}`;
-
   setTimeout(() => {
     if (noticeIframe.contentWindow) {
       noticeIframe.contentWindow.postMessage({
@@ -1947,7 +2099,6 @@ function showNotice(autoPopup = false) {
       }, '*');
     }
   }, 300);
-
   showModal(noticeModalEl);
   if (autoPopup) {
     clearNoticeCooldown();
@@ -1966,15 +2117,11 @@ function hideNotice() {
 
 closeNoticeBtn.onclick = (e) => {
   e.stopPropagation();
-  if (isNoticeClosable()) {
-    hideNotice();
-  }
+  if (isNoticeClosable()) { hideNotice(); }
 };
 
 noticeModalEl.onclick = (e) => {
-  if (e.target === noticeModalEl && isNoticeClosable()) {
-    hideNotice();
-  }
+  if (e.target === noticeModalEl && isNoticeClosable()) { hideNotice(); }
 };
 
 // ========== 渲染智能体列表 ==========
@@ -2129,6 +2276,13 @@ document.getElementById('aiTypeSelectBtn').onclick = async () => {
     document.getElementById('agentGenderBox').classList.remove('hide');
   }
   document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE[value] || '';
+  // 更新温度滑块默认值
+  const temp = getDefaultTemperature(value);
+  const slider = document.getElementById('agentTempSlider');
+  const max = config.specialMode ? 1.5 : 0.5;
+  slider.max = max;
+  slider.value = temp;
+  document.getElementById('agentTempValue').textContent = temp.toFixed(1);
 };
 
 document.getElementById('aiGenderSelectBtn').onclick = async () => {
@@ -2149,6 +2303,11 @@ document.getElementById('newAgentFab').onclick = async () => {
   document.getElementById('avatarPreview').src = defaultAvatarData;
   document.getElementById('avatarFile').value = '';
   document.getElementById('agentGenderBox').classList.remove('hide');
+
+  // 初始化温度滑块
+  const max = config.specialMode ? 1.5 : 0.5;
+  initTempSlider('agentTempSlider', 'agentTempValue', getDefaultTemperature('emotion'), 0.1, max);
+
   showModal(agentModal);
 };
 
@@ -2159,6 +2318,7 @@ document.getElementById('agentConfirm').onclick = async () => {
   const aiType = document.getElementById('aiTypeSelectBtn').dataset.value;
   const aiGender = document.getElementById('aiGenderSelectBtn').dataset.value;
   const aiStyle = document.getElementById('agentAiStyleInput').value.trim() || DEFAULT_STYLE[aiType];
+  const temperature = parseFloat(document.getElementById('agentTempSlider').value);
 
   if (!avatarData) await loadDefaultAvatar();
 
@@ -2167,7 +2327,7 @@ document.getElementById('agentConfirm').onclick = async () => {
     name,
     avatar: avatarData || defaultAvatarData,
     description: desc,
-    aiConfig: { type: aiType, gender: aiGender, style: aiStyle },
+    aiConfig: { type: aiType, gender: aiGender, style: aiStyle, temperature: temperature },
     chats: [{
       id: 'chat_' + Date.now(),
       title: '新对话',
@@ -2207,6 +2367,26 @@ document.getElementById('editAvatarFile').onchange = (e) => {
   }
 };
 
+document.getElementById('editAiTypeSelectBtn').onclick = async () => {
+  const btn = document.getElementById('editAiTypeSelectBtn');
+  const value = await showSelect(aiTypeOptions, btn);
+  if (value === 'tool') {
+    document.getElementById('editAgentGenderBox').classList.add('hide');
+  } else {
+    document.getElementById('editAgentGenderBox').classList.remove('hide');
+  }
+  document.getElementById('editAgentAiStyleInput').value = DEFAULT_STYLE[value] || '';
+  // 更新温度滑块默认值
+  const temp = getDefaultTemperature(value);
+  document.getElementById('editAgentTempSlider').value = temp;
+  document.getElementById('editAgentTempValue').textContent = temp.toFixed(1);
+};
+
+document.getElementById('editAiGenderSelectBtn').onclick = async () => {
+  const btn = document.getElementById('editAiGenderSelectBtn');
+  await showSelect(aiGenderOptions, btn);
+};
+
 function openEditAgentModal(agent) {
   editingAgentId = agent.id;
   document.getElementById('editAgentNameInput').value = agent.name;
@@ -2224,6 +2404,27 @@ function openEditAgentModal(agent) {
     }
     switchDom.classList.toggle('checked');
   };
+
+  // 创作者模式：填充高级字段
+  if (config.specialMode) {
+    document.getElementById('editAgentDescInput').value = agent.description || '';
+    document.getElementById('editAiTypeSelectBtn').textContent = agent.aiConfig.type === 'tool' ? '工具' : '情感陪伴';
+    document.getElementById('editAiTypeSelectBtn').dataset.value = agent.aiConfig.type || 'emotion';
+    document.getElementById('editAiGenderSelectBtn').textContent = 
+      agent.aiConfig.gender === 'male' ? '男性' : agent.aiConfig.gender === 'female' ? '女性' : '中性';
+    document.getElementById('editAiGenderSelectBtn').dataset.value = agent.aiConfig.gender || 'neutral';
+    document.getElementById('editAgentAiStyleInput').value = agent.aiConfig.style || '';
+    if (agent.aiConfig.type === 'tool') {
+      document.getElementById('editAgentGenderBox').classList.add('hide');
+    } else {
+      document.getElementById('editAgentGenderBox').classList.remove('hide');
+    }
+    // 初始化编辑弹窗的温度滑块
+    const temp = agent.aiConfig.temperature || getDefaultTemperature(agent.aiConfig.type || 'emotion');
+    initTempSlider('editAgentTempSlider', 'editAgentTempValue', temp, 0.1, 1.5);
+  }
+
+  updateCreatorUI();
   showModal(editAgentModal);
 }
 
@@ -2235,6 +2436,18 @@ document.getElementById('editAgentConfirm').onclick = () => {
     agent.name = name;
     agent.avatar = editAvatarData || defaultAvatarData;
     agent.pinned = document.getElementById('editPinnedSwitch').classList.contains('checked');
+
+    // 创作者模式：保存高级字段
+    if (config.specialMode) {
+      const desc = document.getElementById('editAgentDescInput').value.trim();
+      const aiType = document.getElementById('editAiTypeSelectBtn').dataset.value;
+      const aiGender = document.getElementById('editAiGenderSelectBtn').dataset.value;
+      const aiStyle = document.getElementById('editAgentAiStyleInput').value.trim() || DEFAULT_STYLE[aiType];
+      const temperature = parseFloat(document.getElementById('editAgentTempSlider').value);
+      agent.description = desc;
+      agent.aiConfig = { type: aiType, gender: aiGender, style: aiStyle, temperature: temperature };
+    }
+
     saveAgents();
     renderAgentList();
   }
@@ -2242,6 +2455,82 @@ document.getElementById('editAgentConfirm').onclick = () => {
 };
 
 document.getElementById('editAgentCancel').onclick = () => hideModal(editAgentModal);
+
+// ========== 对话配置编辑（创作者模式） ==========
+let editingChatConfigId = null;
+
+document.getElementById('chatConfigAiTypeBtn').onclick = async () => {
+  const btn = document.getElementById('chatConfigAiTypeBtn');
+  const value = await showSelect(aiTypeOptions, btn);
+  if (value === 'tool') {
+    document.getElementById('chatConfigGenderBox').classList.add('hide');
+  } else {
+    document.getElementById('chatConfigGenderBox').classList.remove('hide');
+  }
+};
+
+document.getElementById('chatConfigAiGenderBtn').onclick = async () => {
+  const btn = document.getElementById('chatConfigAiGenderBtn');
+  await showSelect(aiGenderOptions, btn);
+};
+
+function openChatConfigEdit(chatId) {
+  const agent = getCurrentAgent();
+  const chat = agent.chats.find(c => c.id === chatId);
+  if (!chat) return;
+
+  editingChatConfigId = chatId;
+  document.getElementById('chatConfigEditLabel').textContent = '当前对话：' + chat.title;
+
+  const cc = chat.chatConfig || {};
+  const effectiveType = cc.type || agent.aiConfig.type;
+  const effectiveGender = cc.gender || agent.aiConfig.gender;
+  const effectiveStyle = cc.style || agent.aiConfig.style || '';
+  const effectiveTemp = cc.temperature !== undefined ? cc.temperature : (agent.aiConfig.temperature || getDefaultTemperature(effectiveType));
+
+  document.getElementById('chatConfigAiTypeBtn').textContent = effectiveType === 'tool' ? '工具' : '情感陪伴';
+  document.getElementById('chatConfigAiTypeBtn').dataset.value = effectiveType;
+  document.getElementById('chatConfigAiGenderBtn').textContent = 
+    effectiveGender === 'male' ? '男性' : effectiveGender === 'female' ? '女性' : '中性';
+  document.getElementById('chatConfigAiGenderBtn').dataset.value = effectiveGender;
+  document.getElementById('chatConfigAiStyleInput').value = effectiveStyle;
+
+  if (effectiveType === 'tool') {
+    document.getElementById('chatConfigGenderBox').classList.add('hide');
+  } else {
+    document.getElementById('chatConfigGenderBox').classList.remove('hide');
+  }
+
+  // 初始化对话配置温度滑块
+  initTempSlider('chatConfigTempSlider', 'chatConfigTempValue', effectiveTemp, 0.1, 1.5);
+
+  showModal(document.getElementById('chatConfigEditModal'));
+}
+
+document.getElementById('chatConfigEditConfirm').onclick = () => {
+  const agent = getCurrentAgent();
+  const chat = agent.chats.find(c => c.id === editingChatConfigId);
+  if (!chat) return;
+
+  const type = document.getElementById('chatConfigAiTypeBtn').dataset.value;
+  const gender = document.getElementById('chatConfigAiGenderBtn').dataset.value;
+  const style = document.getElementById('chatConfigAiStyleInput').value.trim();
+  const temperature = parseFloat(document.getElementById('chatConfigTempSlider').value);
+
+  if (style || type !== agent.aiConfig.type || gender !== agent.aiConfig.gender || temperature !== agent.aiConfig.temperature) {
+    chat.chatConfig = { type, gender, style, temperature };
+  } else {
+    delete chat.chatConfig;
+  }
+
+  saveAgents();
+  hideModal(document.getElementById('chatConfigEditModal'));
+  renderChatList();
+  showToast('对话配置已保存', 'success');
+};
+
+document.getElementById('chatConfigEditCancel').onclick = () => hideModal(document.getElementById('chatConfigEditModal'));
+document.getElementById('chatConfigEditModal').onclick = (e) => { if (e.target === document.getElementById('chatConfigEditModal')) hideModal(document.getElementById('chatConfigEditModal')); };
 
 // ========== 多选删除 ==========
 document.getElementById('multiSelectBtn').onclick = () => {
@@ -2373,6 +2662,25 @@ async function renderAiFadeText(container, text) {
   }
 }
 
+function getEffectiveAiConfig() {
+  const chat = getCurrentChat();
+  const agent = getCurrentAgent();
+  if (chat && chat.chatConfig && chat.chatConfig.type) {
+    return {
+      type: chat.chatConfig.type || agent.aiConfig.type,
+      gender: chat.chatConfig.gender || agent.aiConfig.gender,
+      style: chat.chatConfig.style || agent.aiConfig.style,
+      temperature: chat.chatConfig.temperature !== undefined ? chat.chatConfig.temperature : (agent.aiConfig.temperature || getDefaultTemperature(agent.aiConfig.type))
+    };
+  }
+  return {
+    type: agent.aiConfig.type,
+    gender: agent.aiConfig.gender,
+    style: agent.aiConfig.style,
+    temperature: agent.aiConfig.temperature || getDefaultTemperature(agent.aiConfig.type)
+  };
+}
+
 function buildSystemPrompt(aiConfig) {
   const { type, gender, style } = aiConfig;
   let genderPrompt = "";
@@ -2393,14 +2701,22 @@ function renderChatList() {
   sorted.forEach(chat => {
     const item = document.createElement("div");
     item.className = `chat-item ${chat.pinned ? 'pinned' : ''} ${chat.id === currentChatId ? 'active' : ''}`;
+    
+    let actionsHtml = `
+      <span class="rename" data-id="${chat.id}">✏️</span>
+    `;
+    if (config.specialMode) {
+      actionsHtml += `<span class="chat-config-btn" data-id="${chat.id}" title="对话配置">⚙️</span>`;
+    }
+    actionsHtml += `<span class="del" data-id="${chat.id}">✕</span>`;
+
     item.innerHTML = `
       <div class="chat-item-left">
         <span class="pin-icon ${chat.pinned ? 'pinned' : ''}" data-id="${chat.id}">📌</span>
         <span class="chat-title-text">${chat.title}</span>
       </div>
       <div class="chat-item-actions">
-        <span class="rename" data-id="${chat.id}">✏️</span>
-        <span class="del" data-id="${chat.id}">✕</span>
+        ${actionsHtml}
       </div>
     `;
 
@@ -2412,7 +2728,7 @@ function renderChatList() {
     };
 
     item.addEventListener("click", (e) => {
-      if (e.target.closest('.del') || e.target.closest('.rename') || e.target.closest('.pin-icon')) return;
+      if (e.target.closest('.del') || e.target.closest('.rename') || e.target.closest('.pin-icon') || e.target.closest('.chat-config-btn')) return;
       currentChatId = chat.id;
       renderChatList();
       renderMessages();
@@ -2451,6 +2767,14 @@ function renderChatList() {
       confirmBtn.addEventListener('click', onConfirm);
       cancelBtn.addEventListener('click', onCancel);
     };
+
+    const configBtn = item.querySelector(".chat-config-btn");
+    if (configBtn) {
+      configBtn.onclick = (e) => {
+        e.stopPropagation();
+        openChatConfigEdit(chat.id);
+      };
+    }
 
     item.querySelector(".del").onclick = (e) => {
       e.stopPropagation();
@@ -2515,7 +2839,7 @@ function initDevUI() {
   const sw = document.getElementById("devSwitch");
   sw.classList.toggle("checked", config.specialMode);
   box.style.display = config.specialMode ? "flex" : "none";
-  sw.onclick = () => { config.specialMode = false; sw.classList.remove("checked"); box.style.display = "none"; saveData(); };
+  sw.onclick = () => { config.specialMode = !config.specialMode; sw.classList.toggle("checked", config.specialMode); box.style.display = config.specialMode ? "flex" : "none"; saveData(); updateCreatorUI(); };
 }
 
 let clickCount = 0, clickTimer = null;
@@ -2525,7 +2849,7 @@ async function triggerSecret() {
   if (clickCount >= 5) {
     clickCount = 0;
     const input = await showPrompt("请输入验证码", "验证码");
-    if (input === AUTH_CODE) { config.specialMode = true; saveData(); showToast("已激活", "success"); }
+    if (input === AUTH_CODE) { config.specialMode = true; saveData(); updateCreatorUI(); showToast("已激活", "success"); }
     else if (input !== null) { showToast("验证失败", "error"); }
   }
   clickTimer = setTimeout(() => { clickCount = 0; }, 1500);
@@ -2575,14 +2899,14 @@ async function sendMsg() {
   try {
     let key = config.userApi;
     if (!key) throw new Error("请先在设置中配置API密钥");
-    const agent = getCurrentAgent();
+    const aiConfig = getEffectiveAiConfig();
     const res = await fetch(DEEPSEEK_CONFIG.apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
       body: JSON.stringify({
         model: DEEPSEEK_CONFIG.model,
-        messages: [{ role: "system", content: buildSystemPrompt(agent.aiConfig) }, ...chat.messages.map(m => ({ role: m.role, content: m.content }))],
-        temperature: agent.aiConfig.type === "emotion" ? 1.0 : 0.5,
+        messages: [{ role: "system", content: buildSystemPrompt(aiConfig) }, ...chat.messages.map(m => ({ role: m.role, content: m.content }))],
+        temperature: aiConfig.temperature,
         top_p: 0.9, max_tokens: 1000, disable_search: false
       })
     });
@@ -2619,26 +2943,22 @@ async function sendMsg() {
 async function initAll() {
   await migrateOldData();
   applyTheme();
+  updateCreatorUI();
   renderAgentList();
   initThemeSwitch();
   initPwdSwitch();
   setFontSize(config.fontSize);
   updateFontSizeDisplay();
 
-  // 检查协议版本
   const storedVersion = getStoredAgreementVersion();
   if (storedVersion === '0') {
-    // 首次使用，弹出协议弹窗
     openAgreement(true);
     currentAgreementVersion = '1';
   } else {
     currentAgreementVersion = storedVersion;
   }
-
-  // 每10秒检查一次
   startAgreementCheck();
 
-  // 设置里查看协议按钮
   document.getElementById('openAgreementBtn').onclick = () => {
     hideModal(document.getElementById('modal'));
     openAgreement(false);
@@ -2723,9 +3043,8 @@ async function initAll() {
       hideModal(document.getElementById('editAgentModal'));
       hideModal(document.getElementById('promptModal'));
       hideModal(document.getElementById('rewardModal'));
-      if (isNoticeClosable()) {
-        hideNotice();
-      }
+      hideModal(document.getElementById('chatConfigEditModal'));
+      if (isNoticeClosable()) { hideNotice(); }
       hideModal(document.getElementById('renameModal'));
       hideModal(document.getElementById('chatConfigMask'));
       closePrompt(null);
