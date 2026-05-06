@@ -1418,7 +1418,7 @@
       </div>
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn">查看用户协议</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn">打赏作者</button>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 bata1.7.7</div>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 bata1.7.8</div>
     </div>
     <div class="modal-foot">
       <button id="modalCancel">取消</button>
@@ -1546,35 +1546,7 @@
   </div>
 </div>
 
-<!-- 对话配置编辑弹窗 -->
-<div id="chatConfigEditModal" class="base-modal">
-  <div class="modal-box" style="max-width: 400px;">
-    <div class="modal-head">
-      <span>⚙️ 对话配置</span>
-    </div>
-    <div class="modal-body">
-      <p id="chatConfigEditLabel" style="color:var(--subtext);font-size:14px;margin-bottom:8px;">当前对话：--</p>
-      <label>AI类型</label>
-      <button class="select-btn" id="chatConfigAiTypeBtn" data-value="emotion">情感陪伴</button>
-      <div id="chatConfigGenderBox">
-        <label>AI性别</label>
-        <button class="select-btn" id="chatConfigAiGenderBtn" data-value="neutral">中性</button>
-      </div>
-      <label>回复风格</label>
-      <textarea id="chatConfigAiStyleInput" placeholder="输入自定义回复风格（留空则使用智能体默认）"></textarea>
-      <div class="temp-slider-wrap" id="chatConfigTempSliderWrap">
-        <span class="temp-label-left">保守</span>
-        <input type="range" class="temp-slider" id="chatConfigTempSlider" min="0.1" max="1.5" step="0.1" value="1.0">
-        <span class="temp-value" id="chatConfigTempValue">1.0</span>
-        <span class="temp-label-right">天马行空</span>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button id="chatConfigEditCancel">取消</button>
-      <button class="primary" id="chatConfigEditConfirm">保存</button>
-    </div>
-  </div>
-</div>
+
 
 <!-- 重命名对话弹窗 -->
 <div id="renameModal" class="base-modal">
@@ -1615,7 +1587,7 @@
       <div class="config-item-row">
         <div class="config-item-label">自定义风格</div>
         <div class="prompt-wrap">
-          <div class="prompt-value" id="detailAiStyle">--</div>
+          <div class="prompt-value" id="detailAityle">--</div>
           <button class="copy-btn" id="copyStyleBtn">复制</button>
         </div>
         <div class="copy-tip" id="copyStyleTip">已复制到剪贴板！</div>
@@ -2456,81 +2428,7 @@ document.getElementById('editAgentConfirm').onclick = () => {
 
 document.getElementById('editAgentCancel').onclick = () => hideModal(editAgentModal);
 
-// ========== 对话配置编辑（创作者模式） ==========
-let editingChatConfigId = null;
 
-document.getElementById('chatConfigAiTypeBtn').onclick = async () => {
-  const btn = document.getElementById('chatConfigAiTypeBtn');
-  const value = await showSelect(aiTypeOptions, btn);
-  if (value === 'tool') {
-    document.getElementById('chatConfigGenderBox').classList.add('hide');
-  } else {
-    document.getElementById('chatConfigGenderBox').classList.remove('hide');
-  }
-};
-
-document.getElementById('chatConfigAiGenderBtn').onclick = async () => {
-  const btn = document.getElementById('chatConfigAiGenderBtn');
-  await showSelect(aiGenderOptions, btn);
-};
-
-function openChatConfigEdit(chatId) {
-  const agent = getCurrentAgent();
-  const chat = agent.chats.find(c => c.id === chatId);
-  if (!chat) return;
-
-  editingChatConfigId = chatId;
-  document.getElementById('chatConfigEditLabel').textContent = '当前对话：' + chat.title;
-
-  const cc = chat.chatConfig || {};
-  const effectiveType = cc.type || agent.aiConfig.type;
-  const effectiveGender = cc.gender || agent.aiConfig.gender;
-  const effectiveStyle = cc.style || agent.aiConfig.style || '';
-  const effectiveTemp = cc.temperature !== undefined ? cc.temperature : (agent.aiConfig.temperature || getDefaultTemperature(effectiveType));
-
-  document.getElementById('chatConfigAiTypeBtn').textContent = effectiveType === 'tool' ? '工具' : '情感陪伴';
-  document.getElementById('chatConfigAiTypeBtn').dataset.value = effectiveType;
-  document.getElementById('chatConfigAiGenderBtn').textContent = 
-    effectiveGender === 'male' ? '男性' : effectiveGender === 'female' ? '女性' : '中性';
-  document.getElementById('chatConfigAiGenderBtn').dataset.value = effectiveGender;
-  document.getElementById('chatConfigAiStyleInput').value = effectiveStyle;
-
-  if (effectiveType === 'tool') {
-    document.getElementById('chatConfigGenderBox').classList.add('hide');
-  } else {
-    document.getElementById('chatConfigGenderBox').classList.remove('hide');
-  }
-
-  // 初始化对话配置温度滑块
-  initTempSlider('chatConfigTempSlider', 'chatConfigTempValue', effectiveTemp, 0.1, 1.5);
-
-  showModal(document.getElementById('chatConfigEditModal'));
-}
-
-document.getElementById('chatConfigEditConfirm').onclick = () => {
-  const agent = getCurrentAgent();
-  const chat = agent.chats.find(c => c.id === editingChatConfigId);
-  if (!chat) return;
-
-  const type = document.getElementById('chatConfigAiTypeBtn').dataset.value;
-  const gender = document.getElementById('chatConfigAiGenderBtn').dataset.value;
-  const style = document.getElementById('chatConfigAiStyleInput').value.trim();
-  const temperature = parseFloat(document.getElementById('chatConfigTempSlider').value);
-
-  if (style || type !== agent.aiConfig.type || gender !== agent.aiConfig.gender || temperature !== agent.aiConfig.temperature) {
-    chat.chatConfig = { type, gender, style, temperature };
-  } else {
-    delete chat.chatConfig;
-  }
-
-  saveAgents();
-  hideModal(document.getElementById('chatConfigEditModal'));
-  renderChatList();
-  showToast('对话配置已保存', 'success');
-};
-
-document.getElementById('chatConfigEditCancel').onclick = () => hideModal(document.getElementById('chatConfigEditModal'));
-document.getElementById('chatConfigEditModal').onclick = (e) => { if (e.target === document.getElementById('chatConfigEditModal')) hideModal(document.getElementById('chatConfigEditModal')); };
 
 // ========== 多选删除 ==========
 document.getElementById('multiSelectBtn').onclick = () => {
@@ -2631,7 +2529,7 @@ document.getElementById('genImgBtn').onclick = async () => {
 };
 
 document.getElementById('downloadImgBtn').onclick = () => {
-  if (!lastGeneratedImageUrl) {
+  if (!lastGeneratedImaUrl) {
     showToast('没有可下载的图片', 'error');
     return;
   }
@@ -2706,7 +2604,7 @@ function renderChatList() {
       <span class="rename" data-id="${chat.id}">✏️</span>
     `;
     if (config.specialMode) {
-      actionsHtml += `<span class="chat-config-btn" data-id="${chat.id}" title="对话配置">⚙️</span>`;
+
     }
     actionsHtml += `<span class="del" data-id="${chat.id}">✕</span>`;
 
