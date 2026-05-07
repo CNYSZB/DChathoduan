@@ -1418,7 +1418,7 @@
       </div>
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn">查看用户协议</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn">打赏作者</button>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 bata1.7.8</div>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 bata1.7.9</div>
     </div>
     <div class="modal-foot">
       <button id="modalCancel">取消</button>
@@ -1794,6 +1794,7 @@ const AUTH_CODE = "258456";
 
 const AGREEMENT_URL = 'https://cnyszb.github.io/xy/xy.html';
 const AGREEMENT_STORAGE_KEY = 'dchat_agreement_version';
+let latestCloudVersion = '0';  // 存储从云端读取的最新版本号
 
 let config = JSON.parse(localStorage.getItem("config")) || {
   userApi: "sk-dlnxdhgfxoniyqpzrgooivzrxoslffssodefeahfnrqdlzhr",
@@ -1854,13 +1855,35 @@ window.addEventListener('message', function(e) {
 });
 
 function startAgreementCheck() {
+  // 立即检查一次
+  checkAgreementVersion();
+  // 每10分钟检查一次
   agreementCheckInterval = setInterval(function() {
-    const stored = getStoredAgreementVersion();
-    if (stored === '0') {
-      openAgreement(true);
-      currentAgreementVersion = '1';
-    }
+    checkAgreementVersion();
   }, 600000);
+}
+
+function checkAgreementVersion() {
+  // 去云端页面读取版本号
+  fetch(AGREEMENT_URL + '?t=' + Date.now())
+    .then(function(response) {
+      return response.text();
+    })
+    .then(function(html) {
+      // 从云端页面里提取版本号
+      var match = html.match(/const AGREEMENT_VERSION = '(\d+)'/);
+      if (match && match[1]) {
+        latestCloudVersion = match[1];
+        var stored = getStoredAgreementVersion();
+        // 如果本地版本号小于云端版本号，弹窗
+        if (stored !== latestCloudVersion) {
+          openAgreement(true);
+        }
+      }
+    })
+    .catch(function() {
+      // 读取失败就算了，下次再试
+    });
 }
 
 // ========== 深色/浅色模式 ==========
