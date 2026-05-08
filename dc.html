@@ -1418,7 +1418,7 @@
       </div>
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn">查看用户协议</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn">打赏作者</button>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 bata1.7.9</div>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 bata1.8.0</div>
     </div>
     <div class="modal-foot">
       <button id="modalCancel">取消</button>
@@ -2529,7 +2529,7 @@ document.getElementById('genImgBtn').onclick = async () => {
   try {
     const res = await fetch('https://api.siliconflow.cn/v1/images/generations', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer sk-dlnxdhgfxoniyqpzrgooivzrxoslffssodefeahfnrqdlzhr' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + config.userApi },
       body: JSON.stringify({ model: 'Kwai-Kolors/Kolors', prompt, image_size: '1024x1024', num_inference_steps: 28 })
     });
     const data = await res.json();
@@ -3017,6 +3017,7 @@ window.onload = () => {
   if (!config.needPwdCheck) {
     document.getElementById("loginWrapper").style.display = "none";
     document.getElementById("app").style.display = "block";
+    config = JSON.parse(localStorage.getItem("config")) || config;
     initAll();
     setTimeout(() => showNotice(true), 500);
   }
