@@ -33,7 +33,6 @@
     --font-size: 16px;
   }
 
-  /* ========== 浅色模式变量 ========== */
   body.light-mode {
     --bg: #f5f5f7;
     --surface: #ffffff;
@@ -356,7 +355,6 @@
     cursor: pointer;
   }
 
-  /* ========== 协议弹窗 ========== */
   #agreementOverlay {
     position: fixed;
     top: 0; left: 0;
@@ -390,12 +388,10 @@
     background: transparent;
   }
 
-  /* ========== 创作者模式专属样式 ========== */
   .creator-only { display: none; }
   .creator-mode .creator-only { display: block; }
   .creator-mode .creator-only-flex { display: flex; }
 
-  /* ========== 温度滑块 ========== */
   .temp-slider-wrap {
     margin-top: 16px;
     display: flex;
@@ -438,7 +434,6 @@
     font-weight: 600;
   }
 
-  /* ========== 图片下载按钮 ========== */
   #downloadImgBtn {
     background: var(--primary-bg);
     color: #fff;
@@ -847,7 +842,7 @@
   }
   #send:active { transform: scale(0.92); }
 
-  .base-modal, #chatConfigModal, #promptModal, #agentModal, #editAgentModal, #selectModal, #chatConfigEditModal {
+  .base-modal, #chatConfigModal, #promptModal, #agentModal, #editAgentModal, #selectModal, #chatConfigEditModal, #confirmAgeModal, #restReminderModal {
     position: fixed;
     left: 0; top: 0;
     width: 100%; height: 100%;
@@ -860,9 +855,8 @@
     justify-content: center;
     z-index: 9999;
   }
-  .base-modal.show, #chatConfigModal.show, #promptModal.show, #agentModal.show, #editAgentModal.show, #selectModal.show, #chatConfigEditModal.show { opacity: 1; visibility: visible; }
+  .base-modal.show, #chatConfigModal.show, #promptModal.show, #agentModal.show, #editAgentModal.show, #selectModal.show, #chatConfigEditModal.show, #confirmAgeModal.show, #restReminderModal.show { opacity: 1; visibility: visible; }
 
-  /* ========== 弹窗自适应滚动系统 ========== */
   .modal-box, .config-modal-box, #chatConfigDetail {
     background: var(--surface);
     width: 90%;
@@ -888,7 +882,9 @@
   #agentModal.show .modal-box,
   #editAgentModal.show .modal-box,
   #selectModal.show .modal-box,
-  #chatConfigEditModal.show .modal-box { transform: scale(1); }
+  #chatConfigEditModal.show .modal-box,
+  #confirmAgeModal.show .modal-box,
+  #restReminderModal.show .modal-box { transform: scale(1); }
 
   .modal-head, .config-detail-title {
     display: flex;
@@ -1239,6 +1235,98 @@
 
   #renameModal .modal-box { max-width: 360px; }
 
+  /* ========== 年龄确认弹窗样式 ========== */
+  #confirmAgeBox {
+    background: var(--surface);
+    border-radius: 32px;
+    padding: 28px;
+    width: 90%;
+    max-width: 340px;
+    text-align: center;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+  body.light-mode #confirmAgeBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
+  #confirmAgeModal.show #confirmAgeBox { transform: scale(1); }
+  #confirmAgeTitle {
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  #confirmAgeDesc {
+    font-size: 14px;
+    color: var(--subtext);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  #confirmAgeBtnAdult {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 12px;
+  }
+  #confirmAgeBtnMinor {
+    width: 100%;
+    padding: 14px;
+    background: var(--surface-light);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  #confirmAgeBtnAdult:active, #confirmAgeBtnMinor:active { transform: scale(0.97); }
+
+  /* ========== 休息提醒弹窗样式 ========== */
+  #restReminderBox {
+    background: var(--surface);
+    border-radius: 32px;
+    padding: 28px;
+    width: 90%;
+    max-width: 340px;
+    text-align: center;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+  body.light-mode #restReminderBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
+  #restReminderModal.show #restReminderBox { transform: scale(1); }
+  #restReminderTitle {
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  #restReminderDesc {
+    font-size: 14px;
+    color: var(--subtext);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  #restReminderCloseBtn {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #restReminderCloseBtn:active { transform: scale(0.97); }
+
   .toast {
     position: fixed;
     top: 50%;
@@ -1295,7 +1383,6 @@
   <img id="splashIcon" src="appIcon.png" alt="APP图标">
 </div>
 
-<!-- ========== 协议弹窗 ========== -->
 <div id="agreementOverlay" class="hidden">
   <div id="agreementBox">
     <iframe id="agreementIframe" src=""></iframe>
@@ -1384,6 +1471,25 @@
   <div id="selectOptionsList"></div>
 </div>
 
+<!-- 年龄确认弹窗 -->
+<div id="confirmAgeModal" class="base-modal" style="z-index:100000;">
+  <div id="confirmAgeBox">
+    <div id="confirmAgeTitle">请问您是否已成年？</div>
+    <div id="confirmAgeDesc">未成年用户将无法使用情感陪伴功能，并受到使用时长限制。</div>
+    <button id="confirmAgeBtnAdult">我已成年</button>
+    <button id="confirmAgeBtnMinor">我未成年</button>
+  </div>
+</div>
+
+<!-- 休息提醒弹窗 -->
+<div id="restReminderModal" class="base-modal" style="z-index:100001;">
+  <div id="restReminderBox">
+    <div id="restReminderTitle">⏰ 休息提醒</div>
+    <div id="restReminderDesc">您已使用两个小时，建议休息一会。</div>
+    <button id="restReminderCloseBtn">关闭</button>
+  </div>
+</div>
+
 <!-- 设置弹窗 -->
 <div id="modal" class="base-modal">
   <div class="modal-box">
@@ -1412,13 +1518,15 @@
         <span style="font-size:14px">下次进入需确认身份</span>
         <div class="switch" id="pwdCheckSwitch"></div>
       </div>
+
       <div class="switch-box" id="devControlBox" style="margin-top:12px;display:none;">
         <span style="font-size:14px">创造者模式</span>
         <div class="switch" id="devSwitch"></div>
       </div>
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn">查看用户协议</button>
+      <button class="side-btn" style="margin-top:8px;width:100%;" id="changeAgeBtn">再次验证年龄</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn">打赏作者</button>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 1.8.1</div>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 bata1.8.3</div>
     </div>
     <div class="modal-foot">
       <button id="modalCancel">取消</button>
@@ -1519,7 +1627,6 @@
         <div class="switch" id="editPinnedSwitch"></div>
       </div>
 
-      <!-- ===== 创作者模式专属区域 ===== -->
       <div class="creator-only">
         <label>描述</label>
         <input type="text" id="editAgentDescInput" placeholder="简短描述智能体的特点">
@@ -1545,8 +1652,6 @@
     </div>
   </div>
 </div>
-
-
 
 <!-- 重命名对话弹窗 -->
 <div id="renameModal" class="base-modal">
@@ -1730,6 +1835,10 @@ const aiTypeOptions = [
   { label: '工具', value: 'tool' }
 ];
 
+const aiTypeOptionsMinor = [
+  { label: '工具', value: 'tool' }
+];
+
 const aiGenderOptions = [
   { label: '男性', value: 'male' },
   { label: '女性', value: 'female' },
@@ -1808,14 +1917,54 @@ async function loadWhiteList() {
 
 const AGREEMENT_URL = 'https://cnyszb.github.io/xy/xy.html';
 const AGREEMENT_STORAGE_KEY = 'dchat_agreement_version';
-let latestCloudVersion = '0';  // 存储从云端读取的最新版本号
+let latestCloudVersion = '0';
 
 let config = JSON.parse(localStorage.getItem("config")) || {
   userApi: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd",
   fontSize: 16,
   needPwdCheck: true,
-  speialMode: false,
+  specialMode: false,
   lightMode: false
+  // isAdult 不设默认值，老用户没有这个字段
+};
+
+// ========== 使用时长监测 ==========
+let sessionStartTime = 0;
+let usageTimerInterval = null;
+const TWO_HOURS_MS = 7200000;
+
+function startUsageTimer() {
+  stopUsageTimer();
+  sessionStartTime = Date.now();
+  usageTimerInterval = setInterval(() => {
+    if (Date.now() - sessionStartTime >= TWO_HOURS_MS) {
+      showRestReminder();
+      // 弹窗后重新开始计时
+      sessionStartTime = Date.now();
+    }
+  }, 10000);
+}
+
+function stopUsageTimer() {
+  if (usageTimerInterval) {
+    clearInterval(usageTimerInterval);
+    usageTimerInterval = null;
+  }
+  sessionStartTime = 0;
+}
+
+function showRestReminder() {
+  showModal(document.getElementById('restReminderModal'));
+}
+
+// ========== 休息提醒弹窗事件 ==========
+document.getElementById('restReminderCloseBtn').onclick = () => {
+  hideModal(document.getElementById('restReminderModal'));
+};
+document.getElementById('restReminderModal').onclick = (e) => {
+  if (e.target === document.getElementById('restReminderModal')) {
+    hideModal(document.getElementById('restReminderModal'));
+  }
 };
 
 // ========== 协议系统 ==========
@@ -1869,34 +2018,28 @@ window.addEventListener('message', function(e) {
 });
 
 function startAgreementCheck() {
-  // 立即检查一次
   checkAgreementVersion();
-  // 每10分钟检查一次
   agreementCheckInterval = setInterval(function() {
     checkAgreementVersion();
   }, 600000);
 }
 
 function checkAgreementVersion() {
-  // 去云端页面读取版本号
   fetch(AGREEMENT_URL + '?t=' + Date.now())
     .then(function(response) {
       return response.text();
     })
     .then(function(html) {
-      // 从云端页面里提取版本号
       var match = html.match(/const AGREEMENT_VERSION = '(\d+)'/);
       if (match && match[1]) {
         latestCloudVersion = match[1];
         var stored = getStoredAgreementVersion();
-        // 如果本地版本号小于云端版本号，弹窗
         if (stored !== latestCloudVersion) {
           openAgreement(true);
         }
       }
     })
     .catch(function() {
-      // 读取失败就算了，下次再试
     });
 }
 
@@ -1944,6 +2087,11 @@ function initTempSlider(sliderId, valueId, temperature, min, max) {
 
 function getDefaultTemperature(aiType) {
   return DEFAULT_TEMPERATURE[aiType] || 1.0;
+}
+
+// ========== 判断是否是未成年 ==========
+function isMinor() {
+  return config.isAdult === false;
 }
 
 // ========== 数据模型 ==========
@@ -2001,11 +2149,9 @@ async function migrateOldData() {
       if (agent.avatar === 'dx.png' || agent.avatar === 'tx.png' || !agent.avatar) {
         agent.avatar = defaultAvatarData;
       }
-      // 兼容旧数据：没有temperature字段则补充默认值
       if (agent.aiConfig && agent.aiConfig.temperature === undefined) {
         agent.aiConfig.temperature = getDefaultTemperature(agent.aiConfig.type || 'emotion');
       }
-      // 兼容旧对话配置
       if (agent.chats) {
         agent.chats.forEach(chat => {
           if (chat.chatConfig && chat.chatConfig.temperature === undefined) {
@@ -2241,8 +2387,15 @@ function updateDeleteBar() {
 }
 
 function enterChat(agentId) {
+  const agent = agents.find(a => a.id === agentId);
+  if (!agent) return;
+
+  if (isMinor() && agent.aiConfig.type === 'emotion') {
+    showToast('未成年人模式下情感陪伴功能不可用', 'error');
+    return;
+  }
+
   currentAgentId = agentId;
-  const agent = getCurrentAgent();
   currentChatId = agent.chats[0]?.id;
   if (!currentChatId) {
     const newChat = { id: 'chat_' + Date.now(), title: '新对话', messages: [], pinned: false };
@@ -2278,14 +2431,14 @@ document.getElementById('avatarFile').onchange = (e) => {
 
 document.getElementById('aiTypeSelectBtn').onclick = async () => {
   const btn = document.getElementById('aiTypeSelectBtn');
-  const value = await showSelect(aiTypeOptions, btn);
+  const options = isMinor() ? aiTypeOptionsMinor : aiTypeOptions;
+  const value = await showSelect(options, btn);
   if (value === 'tool') {
     document.getElementById('agentGenderBox').classList.add('hide');
   } else {
     document.getElementById('agentGenderBox').classList.remove('hide');
   }
   document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE[value] || '';
-  // 更新温度滑块默认值
   const temp = getDefaultTemperature(value);
   const slider = document.getElementById('agentTempSlider');
   const max = config.specialMode ? 1.5 : 0.5;
@@ -2302,20 +2455,29 @@ document.getElementById('aiGenderSelectBtn').onclick = async () => {
 document.getElementById('newAgentFab').onclick = async () => {
   if (!defaultAvatarData) await loadDefaultAvatar();
   avatarData = defaultAvatarData;
+
+  if (isMinor()) {
+    document.getElementById('aiTypeSelectBtn').textContent = '工具';
+    document.getElementById('aiTypeSelectBtn').dataset.value = 'tool';
+    document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE.tool;
+    document.getElementById('agentGenderBox').classList.add('hide');
+  } else {
+    document.getElementById('aiTypeSelectBtn').textContent = '情感陪伴';
+    document.getElementById('aiTypeSelectBtn').dataset.value = 'emotion';
+    document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE.emotion;
+    document.getElementById('agentGenderBox').classList.remove('hide');
+  }
+
   document.getElementById('agentNameInput').value = '';
   document.getElementById('agentDescInput').value = '';
-  document.getElementById('aiTypeSelectBtn').textContent = '情感陪伴';
-  document.getElementById('aiTypeSelectBtn').dataset.value = 'emotion';
   document.getElementById('aiGenderSelectBtn').textContent = '中性';
   document.getElementById('aiGenderSelectBtn').dataset.value = 'neutral';
-  document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE.emotion;
   document.getElementById('avatarPreview').src = defaultAvatarData;
   document.getElementById('avatarFile').value = '';
-  document.getElementById('agentGenderBox').classList.remove('hide');
 
-  // 初始化温度滑块
+  const aiType = document.getElementById('aiTypeSelectBtn').dataset.value;
   const max = config.specialMode ? 1.5 : 0.5;
-  initTempSlider('agentTempSlider', 'agentTempValue', getDefaultTemperature('emotion'), 0.1, max);
+  initTempSlider('agentTempSlider', 'agentTempValue', getDefaultTemperature(aiType), 0.1, max);
 
   showModal(agentModal);
 };
@@ -2328,6 +2490,11 @@ document.getElementById('agentConfirm').onclick = async () => {
   const aiGender = document.getElementById('aiGenderSelectBtn').dataset.value;
   const aiStyle = document.getElementById('agentAiStyleInput').value.trim() || DEFAULT_STYLE[aiType];
   const temperature = parseFloat(document.getElementById('agentTempSlider').value);
+
+  if (isMinor() && aiType === 'emotion') {
+    showToast('未成年人模式下不能创建情感陪伴智能体', 'error');
+    return;
+  }
 
   if (!avatarData) await loadDefaultAvatar();
 
@@ -2378,14 +2545,14 @@ document.getElementById('editAvatarFile').onchange = (e) => {
 
 document.getElementById('editAiTypeSelectBtn').onclick = async () => {
   const btn = document.getElementById('editAiTypeSelectBtn');
-  const value = await showSelect(aiTypeOptions, btn);
+  const options = isMinor() ? aiTypeOptionsMinor : aiTypeOptions;
+  const value = await showSelect(options, btn);
   if (value === 'tool') {
     document.getElementById('editAgentGenderBox').classList.add('hide');
   } else {
     document.getElementById('editAgentGenderBox').classList.remove('hide');
   }
   document.getElementById('editAgentAiStyleInput').value = DEFAULT_STYLE[value] || '';
-  // 更新温度滑块默认值
   const temp = getDefaultTemperature(value);
   document.getElementById('editAgentTempSlider').value = temp;
   document.getElementById('editAgentTempValue').textContent = temp.toFixed(1);
@@ -2414,7 +2581,6 @@ function openEditAgentModal(agent) {
     switchDom.classList.toggle('checked');
   };
 
-  // 创作者模式：填充高级字段
   if (config.specialMode) {
     document.getElementById('editAgentDescInput').value = agent.description || '';
     document.getElementById('editAiTypeSelectBtn').textContent = agent.aiConfig.type === 'tool' ? '工具' : '情感陪伴';
@@ -2428,7 +2594,6 @@ function openEditAgentModal(agent) {
     } else {
       document.getElementById('editAgentGenderBox').classList.remove('hide');
     }
-    // 初始化编辑弹窗的温度滑块
     const temp = agent.aiConfig.temperature || getDefaultTemperature(agent.aiConfig.type || 'emotion');
     initTempSlider('editAgentTempSlider', 'editAgentTempValue', temp, 0.1, 1.5);
   }
@@ -2446,13 +2611,18 @@ document.getElementById('editAgentConfirm').onclick = () => {
     agent.avatar = editAvatarData || defaultAvatarData;
     agent.pinned = document.getElementById('editPinnedSwitch').classList.contains('checked');
 
-    // 创作者模式：保存高级字段
     if (config.specialMode) {
       const desc = document.getElementById('editAgentDescInput').value.trim();
       const aiType = document.getElementById('editAiTypeSelectBtn').dataset.value;
       const aiGender = document.getElementById('editAiGenderSelectBtn').dataset.value;
       const aiStyle = document.getElementById('editAgentAiStyleInput').value.trim() || DEFAULT_STYLE[aiType];
       const temperature = parseFloat(document.getElementById('editAgentTempSlider').value);
+
+      if (isMinor() && aiType === 'emotion') {
+        showToast('未成年人模式下不能设置为情感陪伴', 'error');
+        return;
+      }
+
       agent.description = desc;
       agent.aiConfig = { type: aiType, gender: aiGender, style: aiStyle, temperature: temperature };
     }
@@ -2464,8 +2634,6 @@ document.getElementById('editAgentConfirm').onclick = () => {
 };
 
 document.getElementById('editAgentCancel').onclick = () => hideModal(editAgentModal);
-
-
 
 // ========== 多选删除 ==========
 document.getElementById('multiSelectBtn').onclick = () => {
@@ -2769,6 +2937,52 @@ function initPwdSwitch() {
   sw.onclick = () => { config.needPwdCheck = !config.needPwdCheck; sw.classList.toggle("checked", config.needPwdCheck); };
 }
 
+// ========== 年龄确认弹窗 ==========
+let ageConfirmCallback = null;
+
+function showAgeConfirmModal(callback) {
+  ageConfirmCallback = callback || null;
+  showModal(document.getElementById('confirmAgeModal'));
+}
+
+function handleAgeChoice(isAdult) {
+  config.isAdult = isAdult;
+  saveData();
+  hideModal(document.getElementById('confirmAgeModal'));
+
+  if (isAdult) {
+    // 成年：如果之前在情感陪伴智能体里被踢出去了，不用管
+  } else {
+    // 未成年：关闭情感陪伴，如果当前在情感陪伴智能体则返回首页
+    const currentAgent = getCurrentAgent();
+    if (currentAgent && currentAgent.aiConfig && currentAgent.aiConfig.type === 'emotion') {
+      document.getElementById('chatPage').classList.remove('show');
+      renderAgentList();
+    }
+  }
+
+  if (ageConfirmCallback) {
+    ageConfirmCallback();
+    ageConfirmCallback = null;
+  }
+}
+
+document.getElementById('confirmAgeBtnAdult').onclick = () => {
+  handleAgeChoice(true);
+};
+
+document.getElementById('confirmAgeBtnMinor').onclick = () => {
+  handleAgeChoice(false);
+};
+
+// ========== 设置里的切换按钮 ==========
+document.getElementById('changeAgeBtn').onclick = () => {
+  hideModal(document.getElementById('modal'));
+  showAgeConfirmModal(() => {
+    showToast('状态已更新', 'success');
+  });
+};
+
 function initDevUI() {
   const box = document.getElementById("devControlBox");
   const sw = document.getElementById("devSwitch");
@@ -2885,6 +3099,9 @@ async function initAll() {
   setFontSize(config.fontSize);
   updateFontSizeDisplay();
 
+  // 启动使用时长监测
+  startUsageTimer();
+
   const storedVersion = getStoredAgreementVersion();
   if (storedVersion === '0') {
     openAgreement(true);
@@ -2979,6 +3196,8 @@ async function initAll() {
       hideModal(document.getElementById('promptModal'));
       hideModal(document.getElementById('rewardModal'));
       hideModal(document.getElementById('chatConfigEditModal'));
+      hideModal(document.getElementById('restReminderModal'));
+      hideModal(document.getElementById('confirmAgeModal'));
       if (isNoticeClosable()) { hideNotice(); }
       hideModal(document.getElementById('renameModal'));
       hideModal(document.getElementById('chatConfigMask'));
@@ -3012,7 +3231,6 @@ async function initAll() {
 }
 
 window.onload = async () => {
-  // 加载白名单
   await loadWhiteList();
 
   const now = new Date();
@@ -3031,20 +3249,39 @@ window.onload = async () => {
     document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:48px;margin-bottom:20px;">🕯️</div><div style="font-size:20px;font-weight:600;color:#e0e0e0;margin-bottom:8px;">沉痛缅怀</div><div style="font-size:15px;color:#a0a0a0;margin-bottom:4px;">'+sub+'</div><div style="font-size:14px;color:#a0a0a0;">灾难纪念日，软件暂停使用一天</div></div>';
     return;
   }
+
+  // 判断是否需要弹年龄确认弹窗
+  const needAgeConfirm = (config.isAdult === undefined || config.isAdult === null);
+
   if (!config.needPwdCheck) {
     document.getElementById("loginWrapper").style.display = "none";
     document.getElementById("app").style.display = "block";
     config = JSON.parse(localStorage.getItem("config")) || config;
-    initAll();
-    setTimeout(() => showNotice(true), 500);
+    if (needAgeConfirm) {
+      showAgeConfirmModal(() => { initAll(); setTimeout(() => showNotice(true), 500); });
+    } else {
+      initAll();
+      setTimeout(() => showNotice(true), 500);
+    }
+    return;
   }
+
   document.getElementById("loginBtn").onclick = () => {
     const inputPwd = document.getElementById("loginPwd").value.trim();
     if (whiteListQQ.includes(inputPwd)) {
-      document.getElementById("loginWrapper").style.display = "none";
-      document.getElementById("app").style.display = "block";
-      initAll();
-      setTimeout(() => showNotice(true), 500);
+      if (needAgeConfirm) {
+        showAgeConfirmModal(() => {
+          document.getElementById("loginWrapper").style.display = "none";
+          document.getElementById("app").style.display = "block";
+          initAll();
+          setTimeout(() => showNotice(true), 500);
+        });
+      } else {
+        document.getElementById("loginWrapper").style.display = "none";
+        document.getElementById("app").style.display = "block";
+        initAll();
+        setTimeout(() => showNotice(true), 500);
+      }
     } else { showToast("好像不在白名单内", "error"); }
   };
 };
