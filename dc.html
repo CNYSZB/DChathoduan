@@ -1526,7 +1526,7 @@
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn">查看用户协议</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="changeAgeBtn">再次验证年龄</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn">打赏作者</button>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 bata1.8.3</div>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;">当前版本 bata1.8.4</div>
     </div>
     <div class="modal-foot">
       <button id="modalCancel">取消</button>
@@ -2282,6 +2282,32 @@ noticeModalEl.onclick = (e) => {
 // ========== 渲染智能体列表 ==========
 let multiSelectMode = false;
 let selectedAgentIds = new Set();
+let loadingChatId = null;
+let loadingDotsTimer = null;
+
+function startLoadingDots() {
+  if (loadingDotsTimer) return;
+  loadingDotsTimer = setInterval(() => {
+    const loadingEl = document.querySelector("#messages .loading");
+    if (!loadingEl) {
+      clearInterval(loadingDotsTimer);
+      loadingDotsTimer = null;
+      return;
+    }
+    let count = parseInt(loadingEl.dataset.dotCount) || 0;
+    count = (count + 1) % 4;
+    loadingEl.dataset.dotCount = count;
+    const base = loadingEl.dataset.baseText || loadingEl.textContent.replace(/\.+$/, '');
+    loadingEl.textContent = base + '.'.repeat(count);
+  }, 500);
+}
+
+function stopLoadingDots() {
+  if (loadingDotsTimer) {
+    clearInterval(loadingDotsTimer);
+    loadingDotsTimer = null;
+  }
+}
 
 function renderAgentList() {
   const list = document.getElementById('agentList');
@@ -2904,6 +2930,7 @@ function renderMessages() {
     div.textContent = msg.content;
     box.appendChild(div);
   });
+
   box.scrollTop = box.scrollHeight;
 }
 
@@ -3024,6 +3051,11 @@ async function sendMsg() {
   const text = document.getElementById("input").value.trim();
   if (!text) return;
 
+  const agentId = currentAgentId;
+  const chatId = currentChatId;
+  const agent = agents.find(a => a.id === agentId);
+  const chat = agent.chats.find(c => c.id === chatId);
+
   const ok = await checkText(text);
   if (!ok) {
     const box = document.getElementById("messages");
@@ -3033,29 +3065,35 @@ async function sendMsg() {
     return;
   }
 
-  const chat = getCurrentChat();
   chat.messages.push({ role: "user", content: text });
   document.getElementById("input").value = "";
-  renderMessages();
   saveAgents();
 
-  const loading = document.createElement("div");
-  loading.className = "loading";
-  loading.textContent = getCurrentAgent().aiConfig.type === "emotion" ? "该咋回呢" : "正在思考...";
-  document.getElementById("messages").appendChild(loading);
-  document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+  loadingChatId = chatId;
+
+  if (currentAgentId === agentId && currentChatId === chatId) {
+    renderMessages();
+    const loading = document.createElement("div");
+    loading.className = "loading";
+    loading.textContent = agent.aiConfig.type === "emotion" ? "该咋回呢" : "正在思考...";
+    loading.dataset.baseText = loading.textContent;
+    loading.dataset.dotCount = "0";
+    document.getElementById("messages").appendChild(loading);
+    startLoadingDots();
+    document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+  }
 
   try {
     let key = config.userApi;
     if (!key) throw new Error("请先在设置中配置API密钥");
-    const aiConfig = getEffectiveAiConfig();
+    const aiConfig = chat.chatConfig && chat.chatConfig.type ? chat.chatConfig : agent.aiConfig;
     const res = await fetch(DEEPSEEK_CONFIG.apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
       body: JSON.stringify({
         model: DEEPSEEK_CONFIG.model,
         messages: [{ role: "system", content: buildSystemPrompt(aiConfig) }, ...chat.messages.map(m => ({ role: m.role, content: m.content }))],
-        temperature: aiConfig.temperature,
+        temperature: aiConfig.temperature || 1.0,
         top_p: 0.9, max_tokens: 1000, disable_search: false
       })
     });
@@ -3064,27 +3102,44 @@ async function sendMsg() {
     reply = formatAiReply(reply);
 
     const rok = await checkText(reply);
-    if (!rok) {
-      loading.remove();
-      const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = "换个内容试试吧";
-      document.getElementById("messages").appendChild(tip);
-      document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
-      return;
+
+    stopLoadingDots();
+    loadingChatId = null;
+
+    if (rok) {
+      chat.messages.push({ role: "assistant", content: reply });
+      saveAgents();
     }
 
-    loading.remove();
-    const aiMsg = document.createElement("div"); aiMsg.className = "msg ai";
-    document.getElementById("messages").appendChild(aiMsg);
-    document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
-    await renderAiFadeText(aiMsg, reply);
-    chat.messages.push({ role: "assistant", content: reply });
-    saveAgents();
+    if (currentAgentId === agentId && currentChatId === chatId) {
+      const loadingEl = document.querySelector("#messages .loading");
+      if (loadingEl) loadingEl.remove();
+
+      if (!rok) {
+        const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = "换个内容试试吧";
+        document.getElementById("messages").appendChild(tip);
+        document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+        return;
+      }
+
+      const aiMsg = document.createElement("div"); aiMsg.className = "msg ai";
+      document.getElementById("messages").appendChild(aiMsg);
+      document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+      await renderAiFadeText(aiMsg, reply);
+    }
+
   } catch (e) {
-    loading.remove();
-    const err = document.createElement("div"); err.className = "msg ai";
-    err.textContent = getCurrentAgent().aiConfig.type === "emotion" ? "网断了吧 连不上了" : `请求失败：${e.message}`;
-    document.getElementById("messages").appendChild(err);
-    document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+    stopLoadingDots();
+    loadingChatId = null;
+
+    if (currentAgentId === agentId && currentChatId === chatId) {
+      const loadingEl = document.querySelector("#messages .loading");
+      if (loadingEl) loadingEl.remove();
+      const err = document.createElement("div"); err.className = "msg ai";
+      err.textContent = agent.aiConfig.type === "emotion" ? "网断了吧 连不上了" : `请求失败：${e.message}`;
+      document.getElementById("messages").appendChild(err);
+      document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+    }
   }
 }
 
