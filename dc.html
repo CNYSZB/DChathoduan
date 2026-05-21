@@ -1559,7 +1559,7 @@
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn" data-i18n="view_agreement">查看用户协议</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="changeAgeBtn" data-i18n="verify_age_again">再次验证年龄</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn" data-i18n="reward">打赏作者</button>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;" data-i18n="version">当前版本 bata1.9.0</div>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;" data-i18n="version">当前版本 bata1.9.1</div>
     </div>
     <div class="modal-foot">
       <button id="modalCancel" data-i18n="cancel">取消</button>
@@ -3309,11 +3309,13 @@ document.getElementById('downloadImgBtn').onclick = () => {
 // ========== 聊天功能 ==========
 async function checkText(text) {
   if (config.specialMode) return true;
+  let key = config.userApi;
+  if (!key) return true;
   try {
     const res = await fetch(DEEPSEEK_CONFIG.apiUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + config.userApi },
-      body: JSON.stringify({ model: "Qwen/Qwen3.5-4B", messages: [{ role: "user", content: "你是极度宽松的内容审核员。判断原则：1.只有直接、露骨、详细的色情动作描写才算异常 2.只有明确的暴力威胁（如要杀人、要伤害他人）才算异常 3.只有具体的违法犯罪操作指导才算异常。以下情况都属于正常：暧昧聊天、情感表达、调情、轻度黄色笑话、情侣对话、日常吐槽、网络用语。记住：拿不准的一律算正常，宁可放行也不错杀。回复只回复'正常'或'异常'两个字。\n" + text }], temperature: 0.1, max_tokens: 8 })
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+      body: JSON.stringify({ model: "Qwen/Qwen2.5-7B-Instruct", messages: [{ role: "user", content: "你是极度宽松的内容审核员。判断原则：1.只有直接、露骨、详细的色情动作描写才算异常 2.只有明确的暴力威胁（如要杀人、要伤害他人）才算异常 3.只有具体的违法犯罪操作指导才算异常。以下情况都属于正常：暧昧聊天、情感表达、调情、轻度黄色笑话、情侣对话、日常吐槽、网络用语。记住：拿不准的一律算正常，宁可放行也不错杀。回复只回复'正常'或'异常'两个字。\n" + text }], temperature: 0.1, max_tokens: 8 })
     });
     const data = await res.json();
     return (data.choices?.[0]?.message?.content || "").trim() === "正常";
@@ -3592,15 +3594,6 @@ async function sendMsg() {
   const agent = agents.find(a => a.id === agentId);
   const chat = agent.chats.find(c => c.id === chatId);
 
-  const ok = await checkText(text);
-  if (!ok) {
-    const box = document.getElementById("messages");
-    const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = t("toast_change_content");
-    box.appendChild(tip); box.scrollTop = box.scrollHeight;
-    document.getElementById("input").value = "";
-    return;
-  }
-
   chat.messages.push({ role: "user", content: text });
   document.getElementById("input").value = "";
   saveAgents();
@@ -3619,64 +3612,79 @@ async function sendMsg() {
     document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
   }
 
-  try {
-    let key = config.userApi;
-    if (!key) throw new Error(t("toast_no_api"));
-    const aiConfig = chat.chatConfig && chat.chatConfig.type ? chat.chatConfig : agent.aiConfig;
-    const res = await fetch(DEEPSEEK_CONFIG.apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
-      body: JSON.stringify({
-        model: DEEPSEEK_CONFIG.model,
-        messages: [{ role: "system", content: buildSystemPrompt(aiConfig) }, ...chat.messages.map(m => ({ role: m.role, content: m.content }))],
-        temperature: aiConfig.temperature || 1.0,
-        top_p: 0.9, max_tokens: 1000, disable_search: false
-      })
-    });
-    const data = await res.json();
-    let reply = data.choices?.[0]?.message?.content || "";
-    reply = formatAiReply(reply);
-
-    const rok = await checkText(reply);
-
-    stopLoadingDots();
-    loadingChatId = null;
-
-    if (rok) {
-      chat.messages.push({ role: "assistant", content: reply });
+  checkText(text).then(async (ok) => {
+    if (!ok) {
+      chat.messages.pop();
       saveAgents();
-    }
-
-    if (currentAgentId === agentId && currentChatId === chatId) {
-      const loadingEl = document.querySelector("#messages .loading");
-      if (loadingEl) loadingEl.remove();
-
-      if (!rok) {
+      if (currentAgentId === agentId && currentChatId === chatId) {
+        const loadingEl = document.querySelector("#messages .loading");
+        if (loadingEl) loadingEl.remove();
         const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = t("toast_change_content");
         document.getElementById("messages").appendChild(tip);
         document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
-        return;
+      }
+      return;
+    }
+
+    try {
+      let key = config.userApi;
+      if (!key) throw new Error(t("toast_no_api"));
+      const aiConfig = chat.chatConfig && chat.chatConfig.type ? chat.chatConfig : agent.aiConfig;
+      const res = await fetch(DEEPSEEK_CONFIG.apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
+        body: JSON.stringify({
+          model: DEEPSEEK_CONFIG.model,
+          messages: [{ role: "system", content: buildSystemPrompt(aiConfig) }, ...chat.messages.map(m => ({ role: m.role, content: m.content }))],
+          temperature: aiConfig.temperature || 1.0,
+          top_p: 0.9, max_tokens: 1000, disable_search: false
+        })
+      });
+      const data = await res.json();
+      let reply = data.choices?.[0]?.message?.content || "";
+      reply = formatAiReply(reply);
+
+      const rok = await checkText(reply);
+
+      stopLoadingDots();
+      loadingChatId = null;
+
+      if (rok) {
+        chat.messages.push({ role: "assistant", content: reply });
+        saveAgents();
       }
 
-      const aiMsg = document.createElement("div"); aiMsg.className = "msg ai";
-      document.getElementById("messages").appendChild(aiMsg);
-      document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
-      await renderAiFadeText(aiMsg, reply);
-    }
+      if (currentAgentId === agentId && currentChatId === chatId) {
+        const loadingEl = document.querySelector("#messages .loading");
+        if (loadingEl) loadingEl.remove();
 
-  } catch (e) {
-    stopLoadingDots();
-    loadingChatId = null;
+        if (!rok) {
+          const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = t("toast_change_content");
+          document.getElementById("messages").appendChild(tip);
+          document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+          return;
+        }
 
-    if (currentAgentId === agentId && currentChatId === chatId) {
-      const loadingEl = document.querySelector("#messages .loading");
-      if (loadingEl) loadingEl.remove();
-      const err = document.createElement("div"); err.className = "msg ai";
-      err.textContent = agent.aiConfig.type === "emotion" ? t("error_network") : t("toast_req_failed") + e.message;
-      document.getElementById("messages").appendChild(err);
-      document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+        const aiMsg = document.createElement("div"); aiMsg.className = "msg ai";
+        document.getElementById("messages").appendChild(aiMsg);
+        document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+        await renderAiFadeText(aiMsg, reply);
+      }
+
+    } catch (e) {
+      stopLoadingDots();
+      loadingChatId = null;
+
+      if (currentAgentId === agentId && currentChatId === chatId) {
+        const loadingEl = document.querySelector("#messages .loading");
+        if (loadingEl) loadingEl.remove();
+        const err = document.createElement("div"); err.className = "msg ai";
+        err.textContent = agent.aiConfig.type === "emotion" ? t("error_network") : t("toast_req_failed") + e.message;
+        document.getElementById("messages").appendChild(err);
+        document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+      }
     }
-  }
+  });
 }
 
 // ========== 语言切换 ==========
