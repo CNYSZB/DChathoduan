@@ -77,8 +77,6 @@
   body.light-mode .fab { color: var(--text); }
   body.light-mode #imgPrompt { color: var(--text); }
   body.light-mode #imgPrompt::placeholder { color: #8e8e93; }
-  body.light-mode .loginInput { color: var(--text); }
-  body.light-mode .loginInput::placeholder { color: #8e8e93; }
   body.light-mode #input { color: var(--text); }
   body.light-mode #input::placeholder { color: #8e8e93; }
   body.light-mode .modal-body input,
@@ -120,9 +118,6 @@
   body.light-mode #toggleSidebar,
   body.light-mode #homeBtn,
   body.light-mode #collapseBtn { color: var(--text); }
-  body.light-mode .loginBox .loginTitle { color: var(--text); }
-  body.light-mode .loginBox .loginTip { color: var(--subtext); }
-  body.light-mode .bottomInfo { color: var(--subtext); }
   body.light-mode #genImgBtn { color: #fff; }
   body.light-mode .api-tag { color: var(--primary); }
   body.light-mode #closeReward { color: #fff; }
@@ -648,69 +643,8 @@
   body.light-mode #resultImg { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
   #resultImg.show { opacity: 1; transform: scale(1); }
 
-  #loginWrapper {
-    position: fixed;
-    z-index: 99999;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: #0a0a0c;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding: 0 24px;
-  }
-  body.light-mode #loginWrapper { background: var(--bg); }
-  .loginBox {
-    width: 100%;
-    max-width: 380px;
-    background: var(--surface);
-    padding: 28px;
-    border-radius: 32px;
-    border: 1px solid var(--border);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-  }
-  body.light-mode .loginBox { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); }
-  .loginTitle { font-size: 20px; margin-bottom: 16px; text-align: center; font-weight: 600; }
-  .loginTip { color: var(--subtext); font-size: 13px; text-align: center; margin-bottom: 20px; line-height: 1.5; }
-  .loginInput {
-    width: 100%;
-    padding: 14px 16px;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    color: #fff;
-    font-size: var(--font-size);
-    margin-bottom: 20px;
-    outline: none;
-    box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-  .loginBtn {
-    width: 100%;
-    padding: 14px;
-    background: var(--primary-bg);
-    color: #fff;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    font-size: var(--font-size);
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(62, 154, 226, 0.2);
-    transition: transform 0.15s ease;
-  }
-  .loginBtn:active { transform: scale(0.97); }
-  .bottomInfo {
-    position: fixed;
-    bottom: 30px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    font-size: 13px;
-    color: var(--subtext);
-  }
-
   #app {
-    display: none;
+    display: block;
     width: 100%;
     height: 100vh;
     position: relative;
@@ -1505,7 +1439,7 @@
   @media (hover: hover) and (pointer: fine) {
     button:hover, .fab:hover, .homeActionBtn:hover, .side-btn:hover, .new-chat:hover,
     .notice-btn:hover, #send:hover, #toggleSidebar:hover, #backBtnFromImg:hover,
-    #genImgBtn:hover, #closeReward:hover, .loginBtn:hover,
+    #genImgBtn:hover, #closeReward:hover,
     #confirmDeleteBtn:hover, .chat-item:hover, .agent-card:hover, .select-btn:hover,
     .select-option:hover, .avatar-btn:hover, .copy-btn:hover, .api-tag:hover,
     .bg-btn:hover { filter: brightness(1.15); }
@@ -1671,7 +1605,7 @@
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn" data-i18n="view_agreement">查看用户协议</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="changeAgeBtn" data-i18n="verify_age_again">再次验证年龄</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn" data-i18n="reward">打赏作者</button>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;" data-i18n="version">当前版本 2.0.0</div>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;" data-i18n="version">当前版本 2.1.0</div>
     </div>
     <div class="modal-foot">
       <button id="modalCancel" data-i18n="cancel">取消</button>
@@ -1893,20 +1827,6 @@
 <div id="titleLoading" data-i18n="creating">创建中...</div>
 <div id="toast" class="toast"></div>
 
-<div id="loginWrapper">
-  <div class="loginBox">
-    <div class="loginTitle" data-i18n="login_title">请输入白名单内的QQ号登录<br>如果提示错误，请联系作者开通权限<br>我不会将你的QQ号用于任何其他用途</div>
-    <div class="loginTip" style="margin-bottom:16px;">
-      <a href="https://qm.qq.com/q/4qgTJnr54A" 
-         style="display:block;width:100%;padding:10px 14px;background:#3E9AE2;color:#fff;border:none;border-radius:10px;font-size:14px;text-decoration:none;text-align:center;cursor:pointer;"
-         data-i18n="join_group">点我进官方Q群</a>
-    </div>
-    <input type="password" class="loginInput" id="loginPwd" data-i18n-placeholder="login_placeholder" placeholder="请输入" autocomplete="off">
-    <button class="loginBtn" id="loginBtn" data-i18n="login">登录</button>
-  </div>
-  <div class="bottomInfo" data-i18n="bottom_info">如果觉得不错的话，打赏一下吧😭</div>
-</div>
-
 <script>
 const i18nData = {
   'zh-CN': {
@@ -1921,7 +1841,7 @@ const i18nData = {
     api_key_label: '自己的API密钥', api_key_placeholder: '填写你自己的API', language: '语言 / Language',
     font_size: '字体大小', light_mode: '浅色模式', need_confirm: '下次进入需确认身份',
     creator_mode: '创造者模式', view_agreement: '查看用户协议', verify_age_again: '再次验证年龄',
-    reward: '打赏作者', version: '当前版本 2.0.0', save: '保存', please_input: '请输入', confirm: '确认',
+    reward: '打赏作者', version: '当前版本 2.1.0', save: '保存', please_input: '请输入', confirm: '确认',
     new_agent: '新建智能体', avatar: '头像', select_image: '选择图片', name: '名称',
     agent_name_placeholder: '例如：情感陪伴助手', description: '描述', agent_desc_placeholder: '简短描述智能体的特点',
     ai_type: 'AI类型', emotion: '情感陪伴', ai_gender: 'AI性别', neutral: '中性', reply_style: '回复风格',
@@ -1932,8 +1852,6 @@ const i18nData = {
     chat_config: '对话配置', custom_style: '自定义风格', copy: '复制', copied: '已复制到剪贴板！',
     system_prompt: '系统提示词', config_chat: '配置对话', tool: '工具', male: '男性', female: '女性',
     style_placeholder3: '请输入AI回复风格描述...', confirm_create: '确认创建', creating: '创建中...',
-    login_title: '请输入白名单内的QQ号登录<br>如果提示错误，请联系作者开通权限<br>我不会将你的QQ号用于任何其他用途',
-    join_group: '点我进官方Q群', login_placeholder: '请输入', login: '登录', bottom_info: '如果觉得不错的话，打赏一下吧😭',
     reward_title: '自愿打赏 支持作者继续更新😋', home_bg: '主菜单背景', change_home_bg: '更换主菜单背景',
     reset_home_bg: '重置为默认背景', agent_chat_bg: '默认对话背景', change_chat_bg: '更换默认对话背景',
     reset_chat_bg: '重置',
@@ -1944,7 +1862,7 @@ const i18nData = {
     toast_minor_set_emotion: '未成年人模式下不能设置为情感陪伴', toast_change_content: '换个内容试试吧',
     toast_no_api: '请先在设置中配置API密钥', toast_gen_failed: '生成失败', toast_req_failed: '请求失败：',
     toast_network_error: '网断了吧 连不上了', toast_no_download: '没有可下载的图片',
-    toast_download_tip: '已跳转浏览器，长按图片即可保存', toast_not_whitelist: '好像不在白名单内',
+    toast_download_tip: '已跳转浏览器，长按图片即可保存',
     toast_activated: '已激活', toast_verify_failed: '验证失败', toast_status_updated: '状态已更新',
     toast_bg_updated: '背景已更新', toast_bg_reset: '背景已重置',
     loading_emotion: '该咋回呢', loading_tool: '正在思考...', error_network: '网断了吧 连不上了',
@@ -1961,7 +1879,7 @@ const i18nData = {
     api_key_label: '自己嘅API密鑰', api_key_placeholder: '填寫你自己嘅API', language: '語言 / Language',
     font_size: '字體大小', light_mode: '淺色模式', need_confirm: '下次進入需確認身份',
     creator_mode: '創造者模式', view_agreement: '查看用戶協議', verify_age_again: '再次驗證年齡',
-    reward: '打賞作者', version: '當前版本 2.0.0', save: '儲存', please_input: '請輸入', confirm: '確認',
+    reward: '打賞作者', version: '當前版本 2.1.0', save: '儲存', please_input: '請輸入', confirm: '確認',
     new_agent: '新增智能體', avatar: '頭像', select_image: '選擇圖片', name: '名稱',
     agent_name_placeholder: '例如：情感陪伴助手', description: '描述', agent_desc_placeholder: '簡短描述智能體嘅特點',
     ai_type: 'AI類型', emotion: '情感陪伴', ai_gender: 'AI性別', neutral: '中性', reply_style: '回覆風格',
@@ -1972,8 +1890,6 @@ const i18nData = {
     chat_config: '對話配置', custom_style: '自訂風格', copy: '複製', copied: '已複製到剪貼板！',
     system_prompt: '系統提示詞', config_chat: '配置對話', tool: '工具', male: '男性', female: '女性',
     style_placeholder3: '請輸入AI回覆風格描述...', confirm_create: '確認創建', creating: '創建中...',
-    login_title: '請輸入白名單內嘅QQ號登錄<br>如果提示錯誤，請聯繫作者開通權限<br>我唔會將你嘅QQ號用於任何其他用途',
-    join_group: '㩒我入官方Q群', login_placeholder: '請輸入', login: '登錄', bottom_info: '如果覺得唔錯嘅話，打賞下啦😭',
     reward_title: '自願打賞 支持作者繼續更新😋', home_bg: '主菜單背景', change_home_bg: '更換主菜單背景',
     reset_home_bg: '重設為預設背景', agent_chat_bg: '預設對話背景', change_chat_bg: '更換預設對話背景',
     reset_chat_bg: '重設',
@@ -1984,7 +1900,7 @@ const i18nData = {
     toast_minor_set_emotion: '未成年人模式下唔可以設置為情感陪伴', toast_change_content: '換個內容試下啦',
     toast_no_api: '請先在設定中配置API密鑰', toast_gen_failed: '生成失敗', toast_req_failed: '請求失敗：',
     toast_network_error: '網絡斷咗 連唔到', toast_no_download: '冇可下載嘅圖片',
-    toast_download_tip: '已跳轉瀏覽器，長按圖片即可儲存', toast_not_whitelist: '好似唔喺白名單內',
+    toast_download_tip: '已跳轉瀏覽器，長按圖片即可儲存',
     toast_activated: '已激活', toast_verify_failed: '驗證失敗', toast_status_updated: '狀態已更新',
     toast_bg_updated: '背景已更新', toast_bg_reset: '背景已重設',
     loading_emotion: '點樣覆呢', loading_tool: '正在思考...', error_network: '網絡斷咗 連唔到',
@@ -2001,7 +1917,7 @@ const i18nData = {
     api_key_label: '自己的API金鑰', api_key_placeholder: '填寫你自己的API', language: '語言 / Language',
     font_size: '字型大小', light_mode: '淺色模式', need_confirm: '下次進入需確認身分',
     creator_mode: '創造者模式', view_agreement: '檢視使用者協議', verify_age_again: '再次驗證年齡',
-    reward: '打賞作者', version: '當前版本 2.0.0', save: '儲存', please_input: '請輸入', confirm: '確認',
+    reward: '打賞作者', version: '當前版本 2.1.0', save: '儲存', please_input: '請輸入', confirm: '確認',
     new_agent: '新增智能體', avatar: '頭像', select_image: '選擇圖片', name: '名稱',
     agent_name_placeholder: '例如：情感陪伴助手', description: '描述', agent_desc_placeholder: '簡短描述智能體的特點',
     ai_type: 'AI類型', emotion: '情感陪伴', ai_gender: 'AI性別', neutral: '中性', reply_style: '回覆風格',
@@ -2012,8 +1928,6 @@ const i18nData = {
     chat_config: '對話配置', custom_style: '自訂風格', copy: '複製', copied: '已複製到剪貼簿！',
     system_prompt: '系統提示詞', config_chat: '配置對話', tool: '工具', male: '男性', female: '女性',
     style_placeholder3: '請輸入AI回覆風格描述...', confirm_create: '確認建立', creating: '建立中...',
-    login_title: '請輸入白名單內的QQ號登入<br>如果提示錯誤，請聯繫作者開通權限<br>我不會將你的QQ號用於任何其他用途',
-    join_group: '點我進官方Q群', login_placeholder: '請輸入', login: '登入', bottom_info: '如果覺得不錯的話，打賞一下吧😭',
     reward_title: '自願打賞 支持作者繼續更新😋', home_bg: '主選單背景', change_home_bg: '更換主選單背景',
     reset_home_bg: '重設為預設背景', agent_chat_bg: '預設對話背景', change_chat_bg: '更換預設對話背景',
     reset_chat_bg: '重設',
@@ -2024,7 +1938,7 @@ const i18nData = {
     toast_minor_set_emotion: '未成年人模式下不能設定為情感陪伴', toast_change_content: '換個內容試試吧',
     toast_no_api: '請先在設定中配置API金鑰', toast_gen_failed: '生成失敗', toast_req_failed: '請求失敗：',
     toast_network_error: '網路斷了 連不上了', toast_no_download: '沒有可下載的圖片',
-    toast_download_tip: '已跳轉瀏覽器，長按圖片即可儲存', toast_not_whitelist: '好像不在白名單內',
+    toast_download_tip: '已跳轉瀏覽器，長按圖片即可儲存',
     toast_activated: '已啟用', toast_verify_failed: '驗證失敗', toast_status_updated: '狀態已更新',
     toast_bg_updated: '背景已更新', toast_bg_reset: '背景已重設',
     loading_emotion: '該怎麼回呢', loading_tool: '正在思考...', error_network: '網路斷了 連不上了',
@@ -2042,7 +1956,7 @@ const i18nData = {
     api_key_label: 'Your API Key', api_key_placeholder: 'Enter your API key', language: 'Language / 语言',
     font_size: 'Font Size', light_mode: 'Light Mode', need_confirm: 'Require identity confirmation next time',
     creator_mode: 'Creator Mode', view_agreement: 'View User Agreement', verify_age_again: 'Verify Age Again',
-    reward: 'Tip the Author', version: 'Current Version 2.0.0', save: 'Save', please_input: 'Please Input',
+    reward: 'Tip the Author', version: 'Current Version 2.1.0', save: 'Save', please_input: 'Please Input',
     confirm: 'Confirm', new_agent: 'New Agent', avatar: 'Avatar', select_image: 'Select Image', name: 'Name',
     agent_name_placeholder: 'e.g.: Emotional Companion', description: 'Description',
     agent_desc_placeholder: 'Brief description of the agent', ai_type: 'AI Type', emotion: 'Emotional Companion',
@@ -2054,9 +1968,7 @@ const i18nData = {
     chat_config: 'Chat Config', custom_style: 'Custom Style', copy: 'Copy', copied: 'Copied to clipboard!',
     system_prompt: 'System Prompt', config_chat: 'Configure Chat', tool: 'Tool', male: 'Male', female: 'Female',
     style_placeholder3: 'Enter AI reply style description...', confirm_create: 'Confirm Create', creating: 'Creating...',
-    login_title: 'Please enter your whitelisted QQ number to login<br>If you get an error, contact the author for access<br>I will not use your QQ number for any other purpose',
-    join_group: 'Join Official QQ Group', login_placeholder: 'Please enter', login: 'Login',
-    bottom_info: 'If you like it, please tip 😭', reward_title: 'Voluntary tip to support the author 😋',
+    reward_title: 'Voluntary tip to support the author 😋',
     home_bg: 'Home Background', change_home_bg: 'Change Home Background', reset_home_bg: 'Reset to Default',
     agent_chat_bg: 'Default Chat Background', change_chat_bg: 'Change Default Chat Background', reset_chat_bg: 'Reset',
     toast_welcome: 'Welcome to Dchat', toast_create_success: 'Created successfully',
@@ -2068,7 +1980,7 @@ const i18nData = {
     toast_change_content: 'Try something else', toast_no_api: 'Please configure API key in settings first',
     toast_gen_failed: 'Generation failed', toast_req_failed: 'Request failed: ',
     toast_network_error: 'Network disconnected', toast_no_download: 'No image to download',
-    toast_download_tip: 'Browser opened, long press image to save', toast_not_whitelist: 'Not in whitelist',
+    toast_download_tip: 'Browser opened, long press image to save',
     toast_activated: 'Activated', toast_verify_failed: 'Verification failed', toast_status_updated: 'Status updated',
     toast_bg_updated: 'Background updated', toast_bg_reset: 'Background reset',
     loading_emotion: 'Thinking what to say...', loading_tool: 'Thinking...', error_network: 'Network disconnected',
@@ -2088,7 +2000,6 @@ function showSelect(options, targetBtn) { return new Promise((resolve) => { curr
 function hideSelect(value) { selectOverlay.classList.remove('show'); selectOptions.classList.remove('show'); if (selectResolve) { selectResolve(value); selectResolve = null; } }
 selectOverlay.onclick = () => hideSelect(null);
 const aiTypeOptions = [{ label: '情感陪伴', value: 'emotion' }, { label: '工具', value: 'tool' }];
-const aiTypeOptionsMinor = [{ label: '工具', value: 'tool' }];
 const aiGenderOptions = [{ label: '男性', value: 'male' }, { label: '女性', value: 'female' }, { label: '中性', value: 'neutral' }];
 
 const promptModal = document.getElementById('promptModal'), promptTitle = document.getElementById('promptTitle'), promptInput = document.getElementById('promptInput');
@@ -2108,13 +2019,7 @@ const DEEPSEEK_CONFIG = { apiUrl: "https://api.siliconflow.cn/v1/chat/completion
 const DEFAULT_STYLE = { emotion: '你是熟人聊天搭子，主打随性敢说、接地气怼梗，允许日常粗口、直白吐槽，纯口语化唠嗑，别端着、别官方，怎么自然怎么说，禁止用表情符号', tool: '严谨专业，逻辑清晰，高效解答各类问题，回复简洁明了，直击重点，不啰嗦，禁止发任何表情符号' };
 const DEFAULT_TEMPERATURE = { emotion: 1.0, tool: 0.5 };
 const AUTH_CODE = "258456";
-const WHITELIST_URL = "https://cnyszb.github.io/DChathoduan/whitelist.json";
-let whiteListQQ = [];
-async function loadWhiteList() { try { const res = await fetch(WHITELIST_URL + "?t=" + Date.now()); const data = await res.json(); whiteListQQ = data.qq_numbers || []; } catch (e) { whiteListQQ = []; } }
 
-const AGREEMENT_URL = 'https://cnyszb.github.io/xy/xy.html';
-const AGREEMENT_STORAGE_KEY = 'dchat_agreement_version';
-let latestCloudVersion = '0', currentAgreementVersion = '0';
 let config = JSON.parse(localStorage.getItem("config")) || { userApi: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd", fontSize: 16, needPwdCheck: true, specialMode: false, lightMode: false, homeBackground: null };
 
 let sessionStartTime = 0, usageTimerInterval = null;
@@ -2124,6 +2029,10 @@ function stopUsageTimer() { if (usageTimerInterval) { clearInterval(usageTimerIn
 function showRestReminder() { showModal(document.getElementById('restReminderModal')); }
 document.getElementById('restReminderCloseBtn').onclick = () => hideModal(document.getElementById('restReminderModal'));
 document.getElementById('restReminderModal').onclick = (e) => { if (e.target === document.getElementById('restReminderModal')) hideModal(document.getElementById('restReminderModal')); };
+
+const AGREEMENT_URL = 'https://cnyszb.github.io/xy/xy.html';
+const AGREEMENT_STORAGE_KEY = 'dchat_agreement_version';
+let latestCloudVersion = '0', currentAgreementVersion = '0';
 
 function getStoredAgreementVersion() { return localStorage.getItem(AGREEMENT_STORAGE_KEY) || '0'; }
 function setStoredAgreementVersion(version) { localStorage.setItem(AGREEMENT_STORAGE_KEY, version); }
@@ -2179,12 +2088,10 @@ function enterChat(agentId) { const agent = agents.find(a => a.id === agentId); 
 
 function readImageFile(file) { return new Promise((resolve, reject) => { if (!file) { reject(new Error('No file')); return; } const reader = new FileReader(); reader.onload = (ev) => resolve(ev.target.result); reader.onerror = reject; reader.readAsDataURL(file); }); }
 
-// 主菜单背景
 document.getElementById('changeHomeBgBtn').onclick = () => document.getElementById('homeBgFile').click();
 document.getElementById('homeBgFile').onchange = async (e) => { const file = e.target.files[0]; if (file) { try { config.homeBackground = await readImageFile(file); saveData(); applyHomeBackground(); showToast(t('toast_bg_updated'), 'success'); } catch (err) { showToast('图片读取失败', 'error'); } e.target.value = ''; } };
 document.getElementById('resetHomeBgBtn').onclick = () => { config.homeBackground = null; saveData(); applyHomeBackground(); showToast(t('toast_bg_reset'), 'success'); };
 
-// 智能体背景
 let agentChatBgData = null, editAgentChatBgData = null;
 
 function triggerImagePick(callback) {
@@ -2214,7 +2121,6 @@ document.getElementById('changeEditAgentChatBgBtn').onclick = () => {
 };
 document.getElementById('resetEditAgentChatBgBtn').onclick = () => { editAgentChatBgData = null; const p = document.getElementById('editAgentChatBgPreview'); p.style.backgroundImage = 'none'; p.textContent = '未设置'; };
 
-// 智能体弹窗
 const agentModal = document.getElementById('agentModal'); let avatarData = null;
 document.getElementById('avatarSelectBtn').onclick = () => document.getElementById('avatarFile').click();
 document.getElementById('avatarFile').onchange = (e) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (ev) => { avatarData = ev.target.result; document.getElementById('avatarPreview').src = avatarData; }; reader.readAsDataURL(file); } };
@@ -2222,7 +2128,6 @@ document.getElementById('newAgentFab').onclick = async () => { if (!defaultAvata
 document.getElementById('agentConfirm').onclick = async () => { const name = document.getElementById('agentNameInput').value.trim(); if (!name) { showToast(t('toast_name_required'), 'error'); return; } if (isMinor() && document.getElementById('aiTypeSelectBtn').dataset.value === 'emotion') { showToast(t('toast_minor_create_emotion'), 'error'); return; } if (!avatarData) await loadDefaultAvatar(); agents.push({ id: 'agent_' + Date.now(), name, avatar: avatarData || defaultAvatarData, description: document.getElementById('agentDescInput').value.trim(), aiConfig: { type: document.getElementById('aiTypeSelectBtn').dataset.value, gender: document.getElementById('aiGenderSelectBtn').dataset.value, style: document.getElementById('agentAiStyleInput').value.trim() || DEFAULT_STYLE[document.getElementById('aiTypeSelectBtn').dataset.value], temperature: parseFloat(document.getElementById('agentTempSlider').value) }, chats: [{ id: 'chat_' + Date.now(), title: t('new_chat'), messages: [], pinned: false }], pinned: false, createdAt: Date.now(), chatBackground: agentChatBgData || null }); saveAgents(); renderAgentList(); hideModal(agentModal); showToast(t('toast_create_success'), 'success'); };
 document.getElementById('agentCancel').onclick = () => hideModal(agentModal);
 
-// 编辑智能体
 const editAgentModal = document.getElementById('editAgentModal'); let editingAgentId = null, editAvatarData = '';
 document.getElementById('editAvatarSelectBtn').onclick = () => document.getElementById('editAvatarFile').click();
 document.getElementById('editAvatarFile').onchange = (e) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (ev) => { editAvatarData = ev.target.result; document.getElementById('editAvatarPreview').src = editAvatarData; }; reader.readAsDataURL(file); } };
@@ -2230,18 +2135,15 @@ function openEditAgentModal(agent) { editingAgentId = agent.id; document.getElem
 document.getElementById('editAgentConfirm').onclick = () => { const name = document.getElementById('editAgentNameInput').value.trim(); if (!name) { showToast(t('toast_name_required'), 'error'); return; } const agent = agents.find(a => a.id === editingAgentId); if (agent) { agent.name = name; agent.avatar = editAvatarData || defaultAvatarData; agent.pinned = document.getElementById('editPinnedSwitch').classList.contains('checked'); agent.chatBackground = editAgentChatBgData; if (config.specialMode) { const aiType = document.getElementById('editAiTypeSelectBtn').dataset.value; if (isMinor() && aiType === 'emotion') { showToast(t('toast_minor_set_emotion'), 'error'); return; } agent.description = document.getElementById('editAgentDescInput').value.trim(); agent.aiConfig = { type: aiType, gender: document.getElementById('editAiGenderSelectBtn').dataset.value, style: document.getElementById('editAgentAiStyleInput').value.trim() || DEFAULT_STYLE[aiType], temperature: parseFloat(document.getElementById('editAgentTempSlider').value) }; } saveAgents(); renderAgentList(); if (currentAgentId === agent.id) applyChatBackground(); } hideModal(editAgentModal); };
 document.getElementById('editAgentCancel').onclick = () => hideModal(editAgentModal);
 
-// 多选删除
 document.getElementById('multiSelectBtn').onclick = () => { multiSelectMode = true; selectedAgentIds.clear(); document.getElementById('multiSelectBtn').style.display = 'none'; document.getElementById('cancelMultiBtn').classList.add('show'); renderAgentList(); updateDeleteBar(); };
 document.getElementById('cancelMultiBtn').onclick = () => { multiSelectMode = false; selectedAgentIds.clear(); document.getElementById('multiSelectBtn').style.display = 'block'; document.getElementById('cancelMultiBtn').classList.remove('show'); renderAgentList(); updateDeleteBar(); };
 document.getElementById('confirmDeleteBtn').onclick = () => { if (selectedAgentIds.size === 0) return; const remaining = agents.filter(a => !selectedAgentIds.has(a.id)); if (remaining.length === 0) { showToast(t('toast_min_agents'), 'error'); return; } agents = remaining; saveAgents(); multiSelectMode = false; selectedAgentIds.clear(); document.getElementById('multiSelectBtn').style.display = 'block'; document.getElementById('cancelMultiBtn').classList.remove('show'); renderAgentList(); updateDeleteBar(); showToast(t('toast_delete_success'), 'success'); };
 
-// 页面切换
 document.getElementById('homeSettingsBtn').onclick = () => { document.getElementById('userApiInput').value = config.userApi; document.getElementById('langSelect').value = currentLang; updateFontSizeDisplay(); updateThemeSwitch(); updateHomeBgPreview(); document.body.classList.toggle('creator-mode', config.specialMode); document.getElementById('devControlBox').style.display = config.specialMode ? 'flex' : 'none'; document.getElementById('devSwitch').classList.toggle('checked', config.specialMode); showModal(document.getElementById('modal')); };
 document.getElementById('goToImageFab').onclick = () => document.getElementById('imagePage').classList.add('show');
 document.getElementById('backBtnFromImg').onclick = () => document.getElementById('imagePage').classList.remove('show');
 document.getElementById('homeBtn').onclick = () => { document.getElementById('chatPage').classList.remove('show'); closeSidebar(); renderAgentList(); };
 
-// 聊天
 async function checkText(text) { if (config.specialMode) return true; const key = config.userApi; if (!key) return true; try { const res = await fetch(DEEPSEEK_CONFIG.apiUrl, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key }, body: JSON.stringify({ model: "Qwen/Qwen2.5-7B-Instruct", messages: [{ role: "user", content: "你是极度宽松的内容审核员。判断原则：1.只有直接、露骨、详细的色情动作描写才算异常 2.只有明确的暴力威胁才算异常 3.只有具体的违法犯罪操作指导才算异常。回复只回复'正常'或'异常'两个字。\n" + text }], temperature: 0.1, max_tokens: 8 }) }); return ((await res.json()).choices?.[0]?.message?.content || "").trim() === "正常"; } catch (e) { return true; } }
 function buildSystemPrompt(aiConfig) { let gp = ""; if (aiConfig.type === "emotion") gp = aiConfig.gender === "male" ? "你的性别为男性，语气贴合男性说话方式并且认为自己是男性；" : aiConfig.gender === "female" ? "你的性别为女性，语气贴合女性说话方式并且认为自己是女性；" : "你的性别为中性，语气无明显性别特征；"; return `${gp}你是${aiConfig.type === "emotion" ? "情感陪伴AI" : "工具型AI"}，${aiConfig.style}；禁止使用任何表情符号，单个句号可保留，连续句号请删除，回复贴合设定风格。`; }
 
@@ -2252,6 +2154,8 @@ function closeSidebar() { document.getElementById("sidebar").classList.remove("o
 function updateThemeSwitch() { document.getElementById("themeSwitch").classList.toggle("checked", config.lightMode); }
 function updateFontSizeDisplay() { document.getElementById('fontSizeValue').textContent = config.fontSize; }
 function isMinor() { return config.isAdult === false; }
+
+let lastGeneratedImageUrl = null;
 
 async function sendMsg() { const text = document.getElementById("input").value.trim(); if (!text) return; const agentId = currentAgentId, chatId = currentChatId, agent = agents.find(a => a.id === agentId), chat = agent.chats.find(c => c.id === chatId); chat.messages.push({ role: "user", content: text }); document.getElementById("input").value = ""; saveAgents(); loadingChatId = chatId; if (currentAgentId === agentId && currentChatId === chatId) { renderMessages(); const loading = document.createElement("div"); loading.className = "loading"; loading.textContent = agent.aiConfig.type === "emotion" ? t("loading_emotion") : t("loading_tool"); loading.dataset.baseText = loading.textContent; loading.dataset.dotCount = "0"; document.getElementById("messages").appendChild(loading); startLoadingDots(); document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight; } checkText(text).then(async (ok) => { if (!ok) { chat.messages.pop(); saveAgents(); if (currentAgentId === agentId && currentChatId === chatId) { const le = document.querySelector("#messages .loading"); if (le) le.remove(); const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = t("toast_change_content"); document.getElementById("messages").appendChild(tip); } return; } try { const key = config.userApi; if (!key) throw new Error(t("toast_no_api")); const aiConfig = chat.chatConfig && chat.chatConfig.type ? chat.chatConfig : agent.aiConfig; const res = await fetch(DEEPSEEK_CONFIG.apiUrl, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` }, body: JSON.stringify({ model: DEEPSEEK_CONFIG.model, messages: [{ role: "system", content: buildSystemPrompt(aiConfig) }, ...chat.messages.map(m => ({ role: m.role, content: m.content }))], temperature: aiConfig.temperature || 1.0, top_p: 0.9, max_tokens: 1000, stream: true }) }); stopLoadingDots(); loadingChatId = null; const le = document.querySelector("#messages .loading"); if (le) le.remove(); const aiMsg = document.createElement("div"); aiMsg.className = "msg ai"; aiMsg.style.animation = 'none'; aiMsg.style.opacity = '1'; aiMsg.style.transform = 'none'; document.getElementById("messages").appendChild(aiMsg); const reader = res.body.getReader(); const decoder = new TextDecoder(); let reply = ''; while (true) { const { done, value } = await reader.read(); if (done) break; const lines = decoder.decode(value, { stream: true }).split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const js = line.slice(6).trim(); if (js === '[DONE]') continue; try { const content = JSON.parse(js).choices?.[0]?.delta?.content || ''; if (content) { reply += content; aiMsg.textContent = reply.replace(/^\n+/, ''); document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight; } } catch(e) {} } } } reply = reply.replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, '').replace(/[。.]{2,}/g, '').trim() || (agent.aiConfig.type === "emotion" ? "咋了啊" : "暂无解答"); aiMsg.textContent = reply; if (await checkText(reply)) { chat.messages.push({ role: "assistant", content: reply }); saveAgents(); } } catch (e) { stopLoadingDots(); loadingChatId = null; if (currentAgentId === agentId && currentChatId === chatId) { const le2 = document.querySelector("#messages .loading"); if (le2) le2.remove(); const err = document.createElement("div"); err.className = "msg ai"; err.textContent = agent.aiConfig.type === "emotion" ? t("error_network") : t("toast_req_failed") + e.message; document.getElementById("messages").appendChild(err); } } }); }
 
@@ -2271,46 +2175,8 @@ async function initAll() {
   document.getElementById("modalSave").onclick = () => { config.userApi = document.getElementById("userApiInput").value.trim(); saveData(); hideModal(document.getElementById("modal")); };
   document.getElementById("modalCancel").onclick = () => hideModal(document.getElementById("modal"));
   document.getElementById("send").onclick = sendMsg;
-  // AI生图按钮
-document.getElementById('genImgBtn').onclick = async () => {
-  const prompt = document.getElementById('imgPrompt').value.trim();
-  if (!prompt) { showToast(t('please_input'), 'error'); return; }
-  const loading = document.getElementById('imgLoading');
-  const img = document.getElementById('resultImg');
-  const downloadBtn = document.getElementById('downloadImgBtn');
-  loading.style.display = 'block';
-  img.classList.remove('show');
-  downloadBtn.style.display = 'none';
-  try {
-    const res = await fetch('https://api.siliconflow.cn/v1/images/generations', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + config.userApi },
-      body: JSON.stringify({ model: 'Kwai-Kolors/Kolors', prompt, image_size: '1024x1024', num_inference_steps: 28 })
-    });
-    const data = await res.json();
-    const url = data.images?.[0]?.url;
-    if (url) {
-      lastGeneratedImageUrl = url;
-      img.src = url;
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        img.classList.add('show');
-        downloadBtn.style.display = 'block';
-      }));
-    } else {
-      showToast(t('toast_gen_failed'), 'error');
-    }
-  } catch (e) {
-    showToast(t('toast_req_failed') + e.message, 'error');
-  } finally {
-    loading.style.display = 'none';
-  }
-};
-
-document.getElementById('downloadImgBtn').onclick = () => {
-  if (!lastGeneratedImageUrl) { showToast(t('toast_no_download'), 'error'); return; }
-  window.open(lastGeneratedImageUrl, '_blank');
-  showToast(t('toast_download_tip'), 'success');
-};
+  document.getElementById('genImgBtn').onclick = async () => { const prompt = document.getElementById('imgPrompt').value.trim(); if (!prompt) { showToast(t('please_input'), 'error'); return; } const loading = document.getElementById('imgLoading'); const img = document.getElementById('resultImg'); const downloadBtn = document.getElementById('downloadImgBtn'); loading.style.display = 'block'; img.classList.remove('show'); downloadBtn.style.display = 'none'; try { const res = await fetch('https://api.siliconflow.cn/v1/images/generations', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + config.userApi }, body: JSON.stringify({ model: 'Kwai-Kolors/Kolors', prompt, image_size: '1024x1024', num_inference_steps: 28 }) }); const data = await res.json(); const url = data.images?.[0]?.url; if (url) { lastGeneratedImageUrl = url; img.src = url; requestAnimationFrame(() => requestAnimationFrame(() => { img.classList.add('show'); downloadBtn.style.display = 'block'; })); } else { showToast(t('toast_gen_failed'), 'error'); } } catch (e) { showToast(t('toast_req_failed') + e.message, 'error'); } finally { loading.style.display = 'none'; } };
+  document.getElementById('downloadImgBtn').onclick = () => { if (!lastGeneratedImageUrl) { showToast(t('toast_no_download'), 'error'); return; } window.open(lastGeneratedImageUrl, '_blank'); showToast(t('toast_download_tip'), 'success'); };
   document.getElementById("input").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMsg(); } });
   document.getElementById("openRewardBtn").onclick = () => { showModal(document.getElementById("rewardModal")); hideModal(document.getElementById("modal")); };
   document.getElementById("closeReward").onclick = () => hideModal(document.getElementById("rewardModal"));
@@ -2330,13 +2196,15 @@ document.getElementById('confirmAgeBtnAdult').onclick = () => handleAgeChoice(tr
 document.getElementById('confirmAgeBtnMinor').onclick = () => handleAgeChoice(false);
 
 window.onload = async () => {
-  await loadWhiteList(); const now = new Date(), month = now.getMonth() + 1, day = now.getDate();
+  const now = new Date(), month = now.getMonth() + 1, day = now.getDate();
   const mourningDays = [{ month: 4, day: 4, subtitle: '新冠肺炎疫情逝者' }, { month: 5, day: 12, subtitle: '汶川大地震遇难同胞' }, { month: 7, day: 27, subtitle: '唐山大地震遇难同胞' }];
   const today = mourningDays.find(d => d.month === month && d.day === day);
   if (today) { document.body.innerHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:48px;margin-bottom:20px;">🕯️</div><div style="font-size:20px;font-weight:600;color:#e0e0e0;margin-bottom:8px;">沉痛缅怀</div><div style="font-size:15px;color:#a0a0a0;">${today.subtitle}</div><div style="font-size:14px;color:#a0a0a0;">灾难纪念日，软件暂停使用一天</div></div>`; return; }
+  document.getElementById("app").style.display = "block";
+  config = JSON.parse(localStorage.getItem("config")) || config;
   const needAgeConfirm = (config.isAdult === undefined || config.isAdult === null);
-  if (!config.needPwdCheck) { document.getElementById("loginWrapper").style.display = "none"; document.getElementById("app").style.display = "block"; config = JSON.parse(localStorage.getItem("config")) || config; if (needAgeConfirm) showAgeConfirmModal(() => { initAll(); setTimeout(() => showNotice(true), 500); }); else { initAll(); setTimeout(() => showNotice(true), 500); } return; }
-  document.getElementById("loginBtn").onclick = () => { if (whiteListQQ.includes(document.getElementById("loginPwd").value.trim())) { if (needAgeConfirm) showAgeConfirmModal(() => { document.getElementById("loginWrapper").style.display = "none"; document.getElementById("app").style.display = "block"; initAll(); setTimeout(() => showNotice(true), 500); }); else { document.getElementById("loginWrapper").style.display = "none"; document.getElementById("app").style.display = "block"; initAll(); setTimeout(() => showNotice(true), 500); } } else showToast(t("toast_not_whitelist"), "error"); };
+  if (needAgeConfirm) { showAgeConfirmModal(() => { initAll(); setTimeout(() => showNotice(true), 500); }); }
+  else { initAll(); setTimeout(() => showNotice(true), 500); }
 };
 document.addEventListener('DOMContentLoaded', () => { history.pushState(null, null, location.href); window.addEventListener('popstate', () => { window.close(); }); });
 </script>
