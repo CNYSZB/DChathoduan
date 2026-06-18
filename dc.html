@@ -38,7 +38,7 @@
     cursor: pointer;
   }
 
-  .page, #sidebar, .modal-box, .msg, .toast, .chat-item, button, .agent-card {
+  .page, .modal-box, .msg, .toast, .chat-item, button, .agent-card {
     will-change: transform;
     transform: translateZ(0);
     backface-visibility: hidden;
@@ -136,7 +136,7 @@
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: 
+    background:
       radial-gradient(circle at 20% 30%, rgba(62, 154, 226, 0.08) 0%, transparent 50%),
       radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
     pointer-events: none;
@@ -144,7 +144,7 @@
   }
 
   body.light-mode::before {
-    background: 
+    background:
       radial-gradient(circle at 20% 30%, rgba(0, 113, 227, 0.06) 0%, transparent 50%),
       radial-gradient(circle at 80% 70%, rgba(0, 113, 227, 0.04) 0%, transparent 50%);
   }
@@ -497,48 +497,6 @@
   .creator-mode .creator-only { display: block; }
   .creator-mode .creator-only-flex { display: flex; }
 
-  .temp-slider-wrap {
-    margin-top: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .temp-label-left, .temp-label-right {
-    font-size: 12px;
-    color: var(--subtext);
-    flex-shrink: 0;
-    min-width: 28px;
-  }
-  .temp-label-left { text-align: right; }
-  .temp-label-right { text-align: left; }
-  .temp-slider {
-    -webkit-appearance: none;
-    appearance: none;
-    flex: 1;
-    height: 6px;
-    border-radius: 3px;
-    background: #3a3c44;
-    outline: none;
-  }
-  body.light-mode .temp-slider { background: #d1d1d6; }
-  .temp-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--primary);
-    cursor: pointer;
-    border: 2px solid var(--border);
-  }
-  .temp-value {
-    font-size: 14px;
-    color: var(--text);
-    min-width: 32px;
-    text-align: center;
-    font-weight: 600;
-  }
-
   #downloadImgBtn {
     background: var(--primary-bg);
     color: #fff;
@@ -663,6 +621,7 @@
     flex-direction: column;
     border-right: 1px solid var(--border);
     box-shadow: 20px 0 40px rgba(0, 0, 0, 0.5);
+    will-change: auto;
   }
   body.light-mode #sidebar { box-shadow: 10px 0 20px rgba(0, 0, 0, 0.08); }
   #sidebar.open { transform: translateX(0); }
@@ -687,6 +646,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    backface-visibility: visible;
+    will-change: auto;
+    transform: none;
   }
   .side-header-actions { display: flex; gap: 8px; }
   #collapseBtn:active, #homeBtn:active { transform: scale(0.92); }
@@ -1398,6 +1360,77 @@
   }
   #restReminderCloseBtn:active { transform: scale(0.97); }
 
+  .help-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    color: var(--subtext);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 6px;
+    flex-shrink: 0;
+  }
+  .help-btn:active { transform: scale(0.9); }
+
+  .help-tooltip-modal {
+    position: fixed;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 16px;
+  }
+  .help-tooltip-modal.show { opacity: 1; visibility: visible; }
+  .help-tooltip-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 24px;
+    width: 90%;
+    max-width: 340px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+  .help-tooltip-modal.show .help-tooltip-box { transform: scale(1); }
+  .help-tooltip-title {
+    font-size: calc(var(--font-size) + 2px);
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .help-tooltip-desc {
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .help-tooltip-close {
+    padding: 10px 28px;
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: var(--font-size);
+    font-weight: 500;
+    cursor: pointer;
+  }
+  body.light-mode .help-tooltip-close { color: var(--text); }
+  .help-tooltip-close:active { transform: scale(0.96); }
+
   .toast {
     position: fixed;
     top: 50%;
@@ -1589,13 +1622,13 @@
         <span style="font-size:14px;" data-i18n="light_mode">浅色模式</span>
         <div class="switch" id="themeSwitch"></div>
       </div>
-      <div class="switch-box">
-        <span style="font-size:14px" data-i18n="need_confirm">下次进入需确认身份</span>
-        <div class="switch" id="pwdCheckSwitch"></div>
-      </div>
       <div class="switch-box" id="devControlBox" style="margin-top:12px;display:none;">
         <span style="font-size:14px" data-i18n="creator_mode">创造者模式</span>
         <div class="switch" id="devSwitch"></div>
+      </div>
+      <div class="switch-box">
+        <span style="font-size:14px;" data-i18n="enter_to_send">回车键发送消息</span>
+        <div class="switch checked" id="enterSendSwitch"></div>
       </div>
       <label data-i18n="home_bg" style="margin-top:16px;">主菜单背景</label>
       <div class="bg-preview" id="homeBgPreview" style="background-image: none;">未设置背景</div>
@@ -1604,8 +1637,9 @@
       <input type="file" id="homeBgFile" accept="image/*">
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn" data-i18n="view_agreement">查看用户协议</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="changeAgeBtn" data-i18n="verify_age_again">再次验证年龄</button>
+      <button class="side-btn" style="margin-top:8px;width:100%;" id="openShortcutBtn" data-i18n="shortcut_guide">电脑端快捷键指南</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn" data-i18n="reward">打赏作者</button>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;" data-i18n="version">当前版本 2.1.0</div>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;" id="versionDisplay"></div>
     </div>
     <div class="modal-foot">
       <button id="modalCancel" data-i18n="cancel">取消</button>
@@ -1668,12 +1702,6 @@
       </div>
       <label data-i18n="reply_style">回复风格</label>
       <textarea id="agentAiStyleInput" data-i18n-placeholder="style_placeholder" placeholder="描述AI的回复风格..."></textarea>
-      <div class="temp-slider-wrap" id="agentTempSliderWrap">
-        <span class="temp-label-left" data-i18n="conservative">保守</span>
-        <input type="range" class="temp-slider" id="agentTempSlider" min="0.1" max="0.5" step="0.1" value="1.0">
-        <span class="temp-value" id="agentTempValue">1.0</span>
-        <span class="temp-label-right" data-i18n="creative">天马行空</span>
-      </div>
       <label data-i18n="agent_chat_bg" style="margin-top:16px;">默认对话背景</label>
       <div class="bg-preview" id="agentChatBgPreview" style="background-image: none;">未设置</div>
       <button class="bg-btn" id="changeAgentChatBgBtn" data-i18n="change_chat_bg">更换默认对话背景</button>
@@ -1715,12 +1743,6 @@
         </div>
         <label data-i18n="reply_style">回复风格</label>
         <textarea id="editAgentAiStyleInput" data-i18n-placeholder="style_placeholder2" placeholder="描述AI的回复风格..."></textarea>
-        <div class="temp-slider-wrap" id="editAgentTempSliderWrap">
-          <span class="temp-label-left" data-i18n="conservative">保守</span>
-          <input type="range" class="temp-slider" id="editAgentTempSlider" min="0.1" max="1.5" step="0.1" value="1.0">
-          <span class="temp-value" id="editAgentTempValue">1.0</span>
-          <span class="temp-label-right" data-i18n="creative">天马行空</span>
-        </div>
       </div>
       <label data-i18n="agent_chat_bg" style="margin-top:16px;">默认对话背景</label>
       <div class="bg-preview" id="editAgentChatBgPreview" style="background-image: none;">未设置</div>
@@ -1824,10 +1846,28 @@
   </div>
 </div>
 
+<div id="helpTooltipModal" class="help-tooltip-modal">
+  <div class="help-tooltip-box">
+    <div class="help-tooltip-title" id="helpTooltipTitle"></div>
+    <div class="help-tooltip-desc" id="helpTooltipDesc"></div>
+    <button class="help-tooltip-close" id="helpTooltipClose" data-i18n="close">关闭</button>
+  </div>
+</div>
+
+<div id="shortcutModal" class="help-tooltip-modal">
+  <div class="help-tooltip-box" style="max-width: 380px;">
+    <div class="help-tooltip-title" data-i18n="shortcut_guide">电脑端快捷键指南</div>
+    <div class="help-tooltip-desc" id="shortcutDesc" style="text-align:left;white-space:pre-line;"></div>
+    <button class="help-tooltip-close" id="shortcutClose" data-i18n="close">关闭</button>
+  </div>
+</div>
+
 <div id="titleLoading" data-i18n="creating">创建中...</div>
 <div id="toast" class="toast"></div>
 
 <script>
+const APP_VERSION = '2.3.1';
+
 const i18nData = {
   'zh-CN': {
     agents: '智能体', delete: '删除', cancel: '取消', settings: '设置', selected: '已选择',
@@ -1839,13 +1879,13 @@ const i18nData = {
     age_desc: '未成年用户将无法使用情感陪伴功能，并受到使用时长限制。', adult: '我已成年', minor: '我未成年',
     rest_title: '⏰ 休息提醒', rest_desc: '您已使用两个小时，建议休息一会。', close: '关闭',
     api_key_label: '自己的API密钥', api_key_placeholder: '填写你自己的API', language: '语言 / Language',
-    font_size: '字体大小', light_mode: '浅色模式', need_confirm: '下次进入需确认身份',
+    font_size: '字体大小', light_mode: '浅色模式',
     creator_mode: '创造者模式', view_agreement: '查看用户协议', verify_age_again: '再次验证年龄',
-    reward: '打赏作者', version: '当前版本 2.1.0', save: '保存', please_input: '请输入', confirm: '确认',
+    reward: '打赏作者', version: '当前版本 ' + APP_VERSION, save: '保存', please_input: '请输入', confirm: '确认',
     new_agent: '新建智能体', avatar: '头像', select_image: '选择图片', name: '名称',
     agent_name_placeholder: '例如：情感陪伴助手', description: '描述', agent_desc_placeholder: '简短描述智能体的特点',
     ai_type: 'AI类型', emotion: '情感陪伴', ai_gender: 'AI性别', neutral: '中性', reply_style: '回复风格',
-    style_placeholder: '描述AI的回复风格...', conservative: '保守', creative: '天马行空', create: '创建',
+    style_placeholder: '描述AI的回复风格...', create: '创建',
     edit_agent: '编辑智能体', pin: '置顶', agent_name_placeholder2: '智能体名称',
     agent_desc_placeholder2: '简短描述智能体的特点', style_placeholder2: '描述AI的回复风格...',
     rename_chat: '修改对话标题', chat_title_label: '对话标题', custom_title_placeholder: '输入自定义标题',
@@ -1865,7 +1905,11 @@ const i18nData = {
     toast_download_tip: '已跳转浏览器，长按图片即可保存',
     toast_activated: '已激活', toast_verify_failed: '验证失败', toast_status_updated: '状态已更新',
     toast_bg_updated: '背景已更新', toast_bg_reset: '背景已重置',
-    loading_emotion: '该咋回呢', loading_tool: '正在思考...', error_network: '网断了吧 连不上了',
+    loading_emotion: '该咋回呢', loading_tool: '正在思考', error_network: '网断了吧 连不上了',
+    enter_to_send: '回车键发送消息',
+    shortcut_guide: '电脑端快捷键指南',
+    shortcut_content: 'Esc — 关闭当前弹窗 / 返回上一页面\nEnter — 发送消息（需开启回车发送）\nShift + Enter — 换行\nCtrl + 加号 — 放大字体\nCtrl + 减号 — 缩小字体',
+    thinking: '思考中',
   },
   'zh-HK': {
     agents: '智能體', delete: '刪除', cancel: '取消', settings: '設定', selected: '已選擇',
@@ -1877,13 +1921,13 @@ const i18nData = {
     age_desc: '未成年用戶將無法使用情感陪伴功能，並受到使用時長限制。', adult: '我已成年', minor: '我未成年',
     rest_title: '⏰ 休息提醒', rest_desc: '您已使用兩個小時，建議休息一陣。', close: '關閉',
     api_key_label: '自己嘅API密鑰', api_key_placeholder: '填寫你自己嘅API', language: '語言 / Language',
-    font_size: '字體大小', light_mode: '淺色模式', need_confirm: '下次進入需確認身份',
+    font_size: '字體大小', light_mode: '淺色模式',
     creator_mode: '創造者模式', view_agreement: '查看用戶協議', verify_age_again: '再次驗證年齡',
-    reward: '打賞作者', version: '當前版本 2.1.0', save: '儲存', please_input: '請輸入', confirm: '確認',
+    reward: '打賞作者', version: '當前版本 ' + APP_VERSION, save: '儲存', please_input: '請輸入', confirm: '確認',
     new_agent: '新增智能體', avatar: '頭像', select_image: '選擇圖片', name: '名稱',
     agent_name_placeholder: '例如：情感陪伴助手', description: '描述', agent_desc_placeholder: '簡短描述智能體嘅特點',
     ai_type: 'AI類型', emotion: '情感陪伴', ai_gender: 'AI性別', neutral: '中性', reply_style: '回覆風格',
-    style_placeholder: '描述AI嘅回覆風格...', conservative: '保守', creative: '天馬行空', create: '創建',
+    style_placeholder: '描述AI嘅回覆風格...', create: '創建',
     edit_agent: '編輯智能體', pin: '置頂', agent_name_placeholder2: '智能體名稱',
     agent_desc_placeholder2: '簡短描述智能體嘅特點', style_placeholder2: '描述AI嘅回覆風格...',
     rename_chat: '修改對話標題', chat_title_label: '對話標題', custom_title_placeholder: '輸入自訂標題',
@@ -1903,7 +1947,11 @@ const i18nData = {
     toast_download_tip: '已跳轉瀏覽器，長按圖片即可儲存',
     toast_activated: '已激活', toast_verify_failed: '驗證失敗', toast_status_updated: '狀態已更新',
     toast_bg_updated: '背景已更新', toast_bg_reset: '背景已重設',
-    loading_emotion: '點樣覆呢', loading_tool: '正在思考...', error_network: '網絡斷咗 連唔到',
+    loading_emotion: '點樣覆呢', loading_tool: '思考', error_network: '網絡斷咗 連唔到',
+    enter_to_send: 'Enter鍵發送訊息',
+    shortcut_guide: '電腦端快捷鍵指南',
+    shortcut_content: 'Esc — 關閉當前彈窗 / 返回上一頁面\nEnter — 發送訊息（需開啟Enter發送）\nShift + Enter — 換行\nCtrl + 加號 — 放大字體\nCtrl + 減號 — 縮小字體',
+    thinking: '思考中',
   },
   'zh-TW': {
     agents: '智能體', delete: '刪除', cancel: '取消', settings: '設定', selected: '已選擇',
@@ -1915,13 +1963,13 @@ const i18nData = {
     age_desc: '未成年使用者將無法使用情感陪伴功能，並受到使用時間限制。', adult: '我已成年', minor: '我未成年',
     rest_title: '⏰ 休息提醒', rest_desc: '您已使用兩個小時，建議休息一會。', close: '關閉',
     api_key_label: '自己的API金鑰', api_key_placeholder: '填寫你自己的API', language: '語言 / Language',
-    font_size: '字型大小', light_mode: '淺色模式', need_confirm: '下次進入需確認身分',
+    font_size: '字型大小', light_mode: '淺色模式',
     creator_mode: '創造者模式', view_agreement: '檢視使用者協議', verify_age_again: '再次驗證年齡',
-    reward: '打賞作者', version: '當前版本 2.1.0', save: '儲存', please_input: '請輸入', confirm: '確認',
+    reward: '打賞作者', version: '當前版本 ' + APP_VERSION, save: '儲存', please_input: '請輸入', confirm: '確認',
     new_agent: '新增智能體', avatar: '頭像', select_image: '選擇圖片', name: '名稱',
     agent_name_placeholder: '例如：情感陪伴助手', description: '描述', agent_desc_placeholder: '簡短描述智能體的特點',
     ai_type: 'AI類型', emotion: '情感陪伴', ai_gender: 'AI性別', neutral: '中性', reply_style: '回覆風格',
-    style_placeholder: '描述AI的回覆風格...', conservative: '保守', creative: '天馬行空', create: '建立',
+    style_placeholder: '描述AI的回覆風格...', create: '建立',
     edit_agent: '編輯智能體', pin: '置頂', agent_name_placeholder2: '智能體名稱',
     agent_desc_placeholder2: '簡短描述智能體的特點', style_placeholder2: '描述AI的回覆風格...',
     rename_chat: '修改對話標題', chat_title_label: '對話標題', custom_title_placeholder: '輸入自訂標題',
@@ -1941,7 +1989,11 @@ const i18nData = {
     toast_download_tip: '已跳轉瀏覽器，長按圖片即可儲存',
     toast_activated: '已啟用', toast_verify_failed: '驗證失敗', toast_status_updated: '狀態已更新',
     toast_bg_updated: '背景已更新', toast_bg_reset: '背景已重設',
-    loading_emotion: '該怎麼回呢', loading_tool: '正在思考...', error_network: '網路斷了 連不上了',
+    loading_emotion: '該怎麼回呢', loading_tool: '思考', error_network: '網路斷了 連不上了',
+    enter_to_send: 'Enter鍵發送訊息',
+    shortcut_guide: '電腦端快捷鍵指南',
+    shortcut_content: 'Esc — 關閉當前彈窗 / 返回上一頁面\nEnter — 發送訊息（需開啟Enter發送）\nShift + Enter — 換行\nCtrl + 加號 — 放大字型\nCtrl + 減號 — 縮小字型',
+    thinking: '思考中',
   },
   'en': {
     agents: 'Agents', delete: 'Delete', cancel: 'Cancel', settings: 'Settings', selected: 'Selected',
@@ -1954,15 +2006,15 @@ const i18nData = {
     adult: 'I am an adult', minor: 'I am a minor', rest_title: '⏰ Rest Reminder',
     rest_desc: 'You have been using for two hours, please take a break.', close: 'Close',
     api_key_label: 'Your API Key', api_key_placeholder: 'Enter your API key', language: 'Language / 语言',
-    font_size: 'Font Size', light_mode: 'Light Mode', need_confirm: 'Require identity confirmation next time',
+    font_size: 'Font Size', light_mode: 'Light Mode',
     creator_mode: 'Creator Mode', view_agreement: 'View User Agreement', verify_age_again: 'Verify Age Again',
-    reward: 'Tip the Author', version: 'Current Version 2.1.0', save: 'Save', please_input: 'Please Input',
+    reward: 'Tip the Author', version: 'Current Version ' + APP_VERSION, save: 'Save', please_input: 'Please Input',
     confirm: 'Confirm', new_agent: 'New Agent', avatar: 'Avatar', select_image: 'Select Image', name: 'Name',
     agent_name_placeholder: 'e.g.: Emotional Companion', description: 'Description',
     agent_desc_placeholder: 'Brief description of the agent', ai_type: 'AI Type', emotion: 'Emotional Companion',
     ai_gender: 'AI Gender', neutral: 'Neutral', reply_style: 'Reply Style',
-    style_placeholder: 'Describe the AI reply style...', conservative: 'Conservative', creative: 'Creative',
-    create: 'Create', edit_agent: 'Edit Agent', pin: 'Pin', agent_name_placeholder2: 'Agent name',
+    style_placeholder: 'Describe the AI reply style...', create: 'Create',
+    edit_agent: 'Edit Agent', pin: 'Pin', agent_name_placeholder2: 'Agent name',
     agent_desc_placeholder2: 'Brief description of the agent', style_placeholder2: 'Describe the AI reply style...',
     rename_chat: 'Rename Chat', chat_title_label: 'Chat Title', custom_title_placeholder: 'Enter custom title',
     chat_config: 'Chat Config', custom_style: 'Custom Style', copy: 'Copy', copied: 'Copied to clipboard!',
@@ -1984,49 +2036,210 @@ const i18nData = {
     toast_activated: 'Activated', toast_verify_failed: 'Verification failed', toast_status_updated: 'Status updated',
     toast_bg_updated: 'Background updated', toast_bg_reset: 'Background reset',
     loading_emotion: 'Thinking what to say...', loading_tool: 'Thinking...', error_network: 'Network disconnected',
+    enter_to_send: 'Enter to Send',
+    shortcut_guide: 'Desktop Shortcut Guide',
+    shortcut_content: 'Esc — Close current popup / Return to previous page\nEnter — Send message (when Enter to Send is on)\nShift + Enter — New line\nCtrl + Plus — Increase font size\nCtrl + Minus — Decrease font size',
+    thinking: 'Thinking deeply...',
   }
 };
 
+const helpTexts = {
+  'api_key_label': {
+    'zh-CN': '在此填写你自己的 API 密钥，用于调用 AI 大模型服务。密钥仅保存在你设备的浏览器中，不会上传到任何服务器。不填写也可使用默认密钥。',
+    'zh-HK': '在此填寫你自己嘅 API 密鑰，用於調用 AI 大模型服務。密鑰僅保存在你設備嘅瀏覽器中，唔會上傳到任何伺服器。唔填寫亦可使用預設密鑰。',
+    'zh-TW': '在此填寫你自己的 API 金鑰，用於調用 AI 大模型服務。金鑰僅保存在你裝置的瀏覽器中，不會上傳到任何伺服器。不填寫也可使用預設金鑰。',
+    'en': 'Enter your own API key here to call the AI large model service. The key is only saved in your device browser and will not be uploaded to any server. You can also use the default key without filling in.'
+  },
+  'language': {
+    'zh-CN': '切换界面显示语言。更改后即时生效，支持简体中文、繁体中文（香港/台湾）和英文。',
+    'zh-HK': '切換界面顯示語言。更改後即時生效，支援簡體中文、繁體中文（香港/台灣）和英文。',
+    'zh-TW': '切換介面顯示語言。更改後即時生效，支援簡體中文、繁體中文（香港/台灣）和英文。',
+    'en': 'Switch the interface display language. Changes take effect immediately. Supports Simplified Chinese, Traditional Chinese (HK/TW) and English.'
+  },
+  'font_size': {
+    'zh-CN': '调整应用中所有文字的显示大小。点击 + 增大，点击 − 缩小，范围 8~32px。快捷键：Ctrl+加号 放大，Ctrl+减号 缩小。',
+    'zh-HK': '調整應用中所有文字嘅顯示大小。點擊 + 增大，點擊 − 縮小，範圍 8~32px。快捷鍵：Ctrl+加號 放大，Ctrl+減號 縮小。',
+    'zh-TW': '調整應用中所有文字的顯示大小。點選 + 增大，點選 − 縮小，範圍 8~32px。快速鍵：Ctrl+加號 放大，Ctrl+減號 縮小。',
+    'en': 'Adjust the display size of all text in the app. Click + to increase, click − to decrease, range 8~32px. Shortcut: Ctrl+Plus to zoom in, Ctrl+Minus to zoom out.'
+  },
+  'light_mode': {
+    'zh-CN': '切换浅色/深色主题。浅色模式适合白天使用，深色模式适合夜间使用，保护眼睛。',
+    'zh-HK': '切換淺色/深色主題。淺色模式適合日間使用，深色模式適合夜間使用，保護眼睛。',
+    'zh-TW': '切換淺色/深色主題。淺色模式適合白天使用，深色模式適合夜間使用，保護眼睛。',
+    'en': 'Switch between light/dark theme. Light mode is suitable for daytime use, dark mode is suitable for nighttime use to protect your eyes.'
+  },
+  'creator_mode': {
+    'zh-CN': '解锁高级功能：编辑智能体时可修改 AI 类型、性别、回复风格等参数，查看和复制系统提示词。需要验证码激活。',
+    'zh-HK': '解鎖高級功能：編輯智能體時可修改 AI 類型、性別、回覆風格等參數，查看和複製系統提示詞。需要驗證碼啟動。',
+    'zh-TW': '解鎖進階功能：編輯智能體時可修改 AI 類型、性別、回覆風格等參數，檢視和複製系統提示詞。需要驗證碼啟用。',
+    'en': 'Unlock advanced features: when editing agents, you can modify AI type, gender, reply style and other parameters, view and copy system prompts. Requires a verification code to activate.'
+  },
+  'enter_to_send': {
+    'zh-CN': '开启后：按 Enter 键直接发送消息，Shift+Enter 换行。关闭后：Enter 仅换行，必须点击发送按钮才能发送。手机和电脑统一规则。',
+    'zh-HK': '開啟後：按 Enter 鍵直接發送訊息，Shift+Enter 換行。關閉後：Enter 僅換行，必須點擊發送按鈕才能發送。手機和電腦統一規則。',
+    'zh-TW': '開啟後：按 Enter 鍵直接傳送訊息，Shift+Enter 換行。關閉後：Enter 僅換行，必須點選傳送按鈕才能傳送。手機和電腦統一規則。',
+    'en': 'When enabled: Press Enter to send message directly, Shift+Enter for new line. When disabled: Enter only for new line, must click the send button to send. Unified rule for mobile and desktop.'
+  },
+  'home_bg': {
+    'zh-CN': '自定义智能体列表页面的背景图片。支持 JPG/PNG 等常见格式，点击"更换"选择图片，点击"重置"恢复默认纯色背景。',
+    'zh-HK': '自訂智能體列表頁面嘅背景圖片。支援 JPG/PNG 等常見格式，點擊「更換」選擇圖片，點擊「重設」恢復預設純色背景。',
+    'zh-TW': '自訂智能體列表頁面的背景圖片。支援 JPG/PNG 等常見格式，點選「更換」選擇圖片，點選「重設」恢復預設純色背景。',
+    'en': 'Customize the background image of the agent list page. Supports JPG/PNG and other common formats. Click "Change" to select an image, click "Reset" to restore the default solid background.'
+  },
+};
+
 let currentLang = localStorage.getItem('dchat_lang') || 'zh-CN';
+
 function t(key) { return i18nData[currentLang]?.[key] || i18nData['zh-CN'][key] || key; }
-function applyLanguage(lang) { currentLang = lang; localStorage.setItem('dchat_lang', lang); document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {} else if (el.tagName === 'OPTION') el.textContent = t(key); else el.textContent = t(key); }); document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.getAttribute('data-i18n-placeholder')); }); const langSelect = document.getElementById('langSelect'); if (langSelect) langSelect.value = lang; }
+
+function applyLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('dchat_lang', lang);
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {}
+    else if (el.tagName === 'OPTION') el.textContent = t(key);
+    else el.textContent = t(key);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+  });
+  const langSelect = document.getElementById('langSelect');
+  if (langSelect) langSelect.value = lang;
+  updateVersionDisplay();
+  insertHelpButtons();
+}
+
+function insertHelpButtons() {
+  const modalBody = document.querySelector('#modal .modal-body');
+  if (!modalBody) return;
+  modalBody.querySelectorAll('.help-btn').forEach(b => b.remove());
+
+  const labels = modalBody.querySelectorAll('label[data-i18n]');
+  labels.forEach(label => {
+    const key = label.getAttribute('data-i18n');
+    if (helpTexts[key]) label.appendChild(createHelpBtn(key));
+  });
+
+  const switchSpans = modalBody.querySelectorAll('.switch-box span[data-i18n]');
+  switchSpans.forEach(span => {
+    const key = span.getAttribute('data-i18n');
+    if (helpTexts[key]) {
+      const existing = span.querySelector('.help-btn');
+      if (!existing) span.appendChild(createHelpBtn(key));
+    }
+  });
+}
 
 const toastEl = document.getElementById('toast'); let toastTimer = null;
-function showToast(message, type = 'info', duration = 2000) { if (toastTimer) { clearTimeout(toastTimer); toastEl.classList.remove('show', 'error', 'success'); } toastEl.textContent = message; toastEl.className = 'toast'; if (type === 'error') toastEl.classList.add('error'); if (type === 'success') toastEl.classList.add('success'); requestAnimationFrame(() => { requestAnimationFrame(() => { toastEl.classList.add('show'); }); }); toastTimer = setTimeout(() => { toastEl.classList.remove('show'); toastTimer = null; }, duration); }
 
-const selectOverlay = document.getElementById('selectOverlay'), selectOptions = document.getElementById('selectOptions'), selectOptionsList = document.getElementById('selectOptionsList');
+function showToast(message, type = 'info', duration = 2000) {
+  if (toastTimer) { clearTimeout(toastTimer); toastEl.classList.remove('show', 'error', 'success'); }
+  toastEl.textContent = message;
+  toastEl.className = 'toast';
+  if (type === 'error') toastEl.classList.add('error');
+  if (type === 'success') toastEl.classList.add('success');
+  requestAnimationFrame(() => { requestAnimationFrame(() => { toastEl.classList.add('show'); }); });
+  toastTimer = setTimeout(() => { toastEl.classList.remove('show'); toastTimer = null; }, duration);
+}
+
+const selectOverlay = document.getElementById('selectOverlay'),
+      selectOptions = document.getElementById('selectOptions'),
+      selectOptionsList = document.getElementById('selectOptionsList');
+
 let currentSelectTarget = null, selectResolve = null;
-function showSelect(options, targetBtn) { return new Promise((resolve) => { currentSelectTarget = targetBtn; selectResolve = resolve; selectOptionsList.innerHTML = ''; options.forEach(opt => { const div = document.createElement('div'); div.className = 'select-option'; div.textContent = opt.label; div.dataset.value = opt.value; div.onclick = () => { targetBtn.textContent = opt.label; targetBtn.dataset.value = opt.value; hideSelect(opt.value); }; selectOptionsList.appendChild(div); }); selectOverlay.classList.add('show'); selectOptions.classList.add('show'); }); }
-function hideSelect(value) { selectOverlay.classList.remove('show'); selectOptions.classList.remove('show'); if (selectResolve) { selectResolve(value); selectResolve = null; } }
+
+function showSelect(options, targetBtn) {
+  return new Promise((resolve) => {
+    currentSelectTarget = targetBtn; selectResolve = resolve;
+    selectOptionsList.innerHTML = '';
+    options.forEach(opt => {
+      const div = document.createElement('div');
+      div.className = 'select-option';
+      div.textContent = opt.label;
+      div.dataset.value = opt.value;
+      div.onclick = () => { targetBtn.textContent = opt.label; targetBtn.dataset.value = opt.value; hideSelect(opt.value); };
+      selectOptionsList.appendChild(div);
+    });
+    selectOverlay.classList.add('show'); selectOptions.classList.add('show');
+  });
+}
+
+function hideSelect(value) {
+  selectOverlay.classList.remove('show'); selectOptions.classList.remove('show');
+  if (selectResolve) { selectResolve(value); selectResolve = null; }
+}
 selectOverlay.onclick = () => hideSelect(null);
+
 const aiTypeOptions = [{ label: '情感陪伴', value: 'emotion' }, { label: '工具', value: 'tool' }];
 const aiGenderOptions = [{ label: '男性', value: 'male' }, { label: '女性', value: 'female' }, { label: '中性', value: 'neutral' }];
 
-const promptModal = document.getElementById('promptModal'), promptTitle = document.getElementById('promptTitle'), promptInput = document.getElementById('promptInput');
+const promptModal = document.getElementById('promptModal'),
+      promptTitle = document.getElementById('promptTitle'),
+      promptInput = document.getElementById('promptInput');
+
 let promptResolve = null;
-function showPrompt(title, placeholder = '') { return new Promise((resolve) => { promptTitle.textContent = title; promptInput.placeholder = placeholder || ''; promptInput.value = ''; promptResolve = resolve; promptModal.classList.add('show'); promptInput.focus(); }); }
-function closePrompt(value) { promptModal.classList.remove('show'); if (promptResolve) { promptResolve(value); promptResolve = null; } }
+
+function showPrompt(title, placeholder = '') {
+  return new Promise((resolve) => {
+    promptTitle.textContent = title;
+    promptInput.placeholder = placeholder || '';
+    promptInput.value = '';
+    promptResolve = resolve;
+    promptModal.classList.add('show');
+    promptInput.focus();
+  });
+}
+
+function closePrompt(value) {
+  promptModal.classList.remove('show');
+  if (promptResolve) { promptResolve(value); promptResolve = null; }
+}
 document.getElementById('promptConfirm').onclick = () => closePrompt(promptInput.value.trim());
 document.getElementById('promptCancel').onclick = () => closePrompt(null);
 promptInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); closePrompt(promptInput.value.trim()); } });
 promptModal.onclick = (e) => { if (e.target === promptModal) closePrompt(null); };
+
 function showModal(modal) { modal.classList.add('show'); }
 function hideModal(modal) { modal.classList.remove('show'); }
 
-setTimeout(() => { document.getElementById('splash').classList.add('show'); setTimeout(() => { setTimeout(() => { document.getElementById('splash').classList.add('fade'); }, 200); }, 500); }, 200);
+setTimeout(() => {
+  document.getElementById('splash').classList.add('show');
+  setTimeout(() => { setTimeout(() => { document.getElementById('splash').classList.add('fade'); }, 200); }, 500);
+}, 200);
 
 const DEEPSEEK_CONFIG = { apiUrl: "https://api.siliconflow.cn/v1/chat/completions", model: "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B" };
-const DEFAULT_STYLE = { emotion: '你是熟人聊天搭子，主打随性敢说、接地气怼梗，允许日常粗口、直白吐槽，纯口语化唠嗑，别端着、别官方，怎么自然怎么说，禁止用表情符号', tool: '严谨专业，逻辑清晰，高效解答各类问题，回复简洁明了，直击重点，不啰嗦，禁止发任何表情符号' };
-const DEFAULT_TEMPERATURE = { emotion: 1.0, tool: 0.5 };
+const DEFAULT_STYLE = {
+  emotion: '你是熟人聊天搭子，主打随性敢说、接地气怼梗，允许日常粗口、直白吐槽，纯口语化唠嗑，别端着、别官方，怎么自然怎么说，禁止用表情符号',
+  tool: '严谨专业，逻辑清晰，高效解答各类问题，回复简洁明了，直击重点，不啰嗦，禁止发任何表情符号'
+};
+const DEFAULT_TEMPERATURE = { emotion: 1.1, tool: 0.4 };
 const AUTH_CODE = "258456";
 
-let config = JSON.parse(localStorage.getItem("config")) || { userApi: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd", fontSize: 16, needPwdCheck: true, specialMode: false, lightMode: false, homeBackground: null };
+let config = JSON.parse(localStorage.getItem("config")) || {
+  userApi: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd",
+  fontSize: 16,
+  specialMode: false,
+  lightMode: false,
+  homeBackground: null,
+  enterToSend: true
+};
 
 let sessionStartTime = 0, usageTimerInterval = null;
 const TWO_HOURS_MS = 7200000;
-function startUsageTimer() { stopUsageTimer(); sessionStartTime = Date.now(); usageTimerInterval = setInterval(() => { if (Date.now() - sessionStartTime >= TWO_HOURS_MS) { showRestReminder(); sessionStartTime = Date.now(); } }, 10000); }
+
+function startUsageTimer() {
+  stopUsageTimer();
+  sessionStartTime = Date.now();
+  usageTimerInterval = setInterval(() => {
+    if (Date.now() - sessionStartTime >= TWO_HOURS_MS) { showRestReminder(); sessionStartTime = Date.now(); }
+  }, 10000);
+}
+
 function stopUsageTimer() { if (usageTimerInterval) { clearInterval(usageTimerInterval); usageTimerInterval = null; } sessionStartTime = 0; }
+
 function showRestReminder() { showModal(document.getElementById('restReminderModal')); }
+
 document.getElementById('restReminderCloseBtn').onclick = () => hideModal(document.getElementById('restReminderModal'));
 document.getElementById('restReminderModal').onclick = (e) => { if (e.target === document.getElementById('restReminderModal')) hideModal(document.getElementById('restReminderModal')); };
 
@@ -2036,16 +2249,57 @@ let latestCloudVersion = '0', currentAgreementVersion = '0';
 
 function getStoredAgreementVersion() { return localStorage.getItem(AGREEMENT_STORAGE_KEY) || '0'; }
 function setStoredAgreementVersion(version) { localStorage.setItem(AGREEMENT_STORAGE_KEY, version); }
-function openAgreement(force) { const overlay = document.getElementById('agreementOverlay'), iframe = document.getElementById('agreementIframe'); overlay.classList.remove('hidden'); iframe.src = AGREEMENT_URL + '?t=' + Date.now(); iframe.onload = function() { iframe.contentWindow.postMessage({ type: 'setAgreementMode', force: force }, '*'); }; }
+
+function openAgreement(force) {
+  const overlay = document.getElementById('agreementOverlay'), iframe = document.getElementById('agreementIframe');
+  overlay.classList.remove('hidden'); iframe.src = AGREEMENT_URL + '?t=' + Date.now();
+  iframe.onload = function() { iframe.contentWindow.postMessage({ type: 'setAgreementMode', force: force }, '*'); };
+}
+
 function closeAgreement() { document.getElementById('agreementOverlay').classList.add('hidden'); document.getElementById('agreementIframe').src = ''; }
-window.addEventListener('message', function(e) { if (!e.data || !e.data.type) return; if (e.data.type === 'agreementAccepted') { if (e.data.version) { setStoredAgreementVersion(e.data.version); currentAgreementVersion = e.data.version; } closeAgreement(); showToast(t('toast_welcome'), 'success'); } else if (e.data.type === 'agreementRejected') { setStoredAgreementVersion('0'); closeAgreement(); document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:18px;color:#e0e0e0;margin-bottom:8px;">您不同意协议</div><div style="font-size:14px;color:#888;">请退出软件</div></div>'; } else if (e.data.type === 'agreementClosed') closeAgreement(); });
+
+window.addEventListener('message', function(e) {
+  if (!e.data || !e.data.type) return;
+  if (e.data.type === 'agreementAccepted') {
+    if (e.data.version) { setStoredAgreementVersion(e.data.version); currentAgreementVersion = e.data.version; }
+    closeAgreement(); showToast(t('toast_welcome'), 'success');
+  } else if (e.data.type === 'agreementRejected') {
+    setStoredAgreementVersion('0'); closeAgreement();
+    document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:18px;color:#e0e0e0;margin-bottom:8px;">您不同意协议</div><div style="font-size:14px;color:#888;">请退出软件</div></div>';
+  } else if (e.data.type === 'agreementClosed') closeAgreement();
+});
+
 function startAgreementCheck() { checkAgreementVersion(); setInterval(() => checkAgreementVersion(), 600000); }
-function checkAgreementVersion() { fetch(AGREEMENT_URL + '?t=' + Date.now()).then(r => r.text()).then(html => { const m = html.match(/const AGREEMENT_VERSION = '(\d+)'/); if (m && m[1]) { latestCloudVersion = m[1]; if (getStoredAgreementVersion() !== latestCloudVersion) openAgreement(true); } }).catch(() => {}); }
+
+function checkAgreementVersion() {
+  fetch(AGREEMENT_URL + '?t=' + Date.now()).then(r => r.text()).then(html => {
+    const m = html.match(/const AGREEMENT_VERSION = '(\d+)'/);
+    if (m && m[1]) { latestCloudVersion = m[1]; if (getStoredAgreementVersion() !== latestCloudVersion) openAgreement(true); }
+  }).catch(() => {});
+}
 
 function applyTheme() { document.body.classList.toggle('light-mode', config.lightMode); }
 
-function applyHomeBackground() { const homePage = document.getElementById('homePage'); if (config.homeBackground) { homePage.style.backgroundImage = `url(${config.homeBackground})`; homePage.style.backgroundSize = 'cover'; homePage.style.backgroundPosition = 'center'; document.body.classList.add('has-home-bg'); } else { homePage.style.backgroundImage = ''; homePage.style.backgroundSize = ''; homePage.style.backgroundPosition = ''; document.body.classList.remove('has-home-bg'); } updateHomeBgPreview(); }
-function updateHomeBgPreview() { const preview = document.getElementById('homeBgPreview'); if (preview) { if (config.homeBackground) { preview.style.backgroundImage = `url(${config.homeBackground})`; preview.textContent = ''; } else { preview.style.backgroundImage = 'none'; preview.textContent = '未设置背景'; } } }
+function applyHomeBackground() {
+  const homePage = document.getElementById('homePage');
+  if (config.homeBackground) {
+    homePage.style.backgroundImage = `url(${config.homeBackground})`;
+    homePage.style.backgroundSize = 'cover'; homePage.style.backgroundPosition = 'center';
+    document.body.classList.add('has-home-bg');
+  } else {
+    homePage.style.backgroundImage = ''; homePage.style.backgroundSize = ''; homePage.style.backgroundPosition = '';
+    document.body.classList.remove('has-home-bg');
+  }
+  updateHomeBgPreview();
+}
+
+function updateHomeBgPreview() {
+  const preview = document.getElementById('homeBgPreview');
+  if (preview) {
+    if (config.homeBackground) { preview.style.backgroundImage = `url(${config.homeBackground})`; preview.textContent = ''; }
+    else { preview.style.backgroundImage = 'none'; preview.textContent = '未设置背景'; }
+  }
+}
 
 function applyChatBackground() {
   const chatPage = document.getElementById('chatPage');
@@ -2060,138 +2314,756 @@ function applyChatBackground() {
 }
 
 let agents = [], currentAgentId = null, currentChatId = null, defaultAvatarData = null;
-function loadDefaultAvatar() { return new Promise(resolve => { const img = new Image(); img.crossOrigin = 'anonymous'; img.onload = () => { const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; c.getContext('2d').drawImage(img, 0, 0); defaultAvatarData = c.toDataURL('image/png'); resolve(defaultAvatarData); }; img.onerror = () => { defaultAvatarData = 'tx.png'; resolve(defaultAvatarData); }; img.src = 'tx.png'; }); }
-async function migrateOldData() { await loadDefaultAvatar(); const oldChats = JSON.parse(localStorage.getItem("chats")); if (oldChats && !localStorage.getItem("agents")) { agents = oldChats.map((chat, index) => ({ id: 'agent_' + Date.now() + index, name: chat.title + '（旧版）', avatar: defaultAvatarData, description: '从旧版对话迁移', aiConfig: chat.aiConfig || { type: 'emotion', gender: 'neutral', style: DEFAULT_STYLE.emotion }, chats: [{ id: 'chat_' + Date.now() + index, title: chat.title, messages: chat.messages || [], pinned: chat.pinned || false }], pinned: false, createdAt: Date.now(), chatBackground: null })); saveAgents(); localStorage.removeItem("chats"); } else { agents = JSON.parse(localStorage.getItem("agents")) || []; agents.forEach(agent => { if (!agent.avatar || agent.avatar === 'dx.png' || agent.avatar === 'tx.png') agent.avatar = defaultAvatarData; if (agent.chatBackground === undefined) agent.chatBackground = null; }); } if (agents.length === 0) { agents.push({ id: 'agent_default', name: '情感陪伴助手', avatar: defaultAvatarData, description: '一个善解人意的聊天伙伴', aiConfig: { type: 'emotion', gender: 'neutral', style: DEFAULT_STYLE.emotion, temperature: 1.0 }, chats: [{ id: 'chat_default', title: '新对话', messages: [], pinned: false }], pinned: false, createdAt: Date.now(), chatBackground: null }); saveAgents(); } if (config.homeBackground === undefined) config.homeBackground = null; }
+
+function loadDefaultAvatar() {
+  return new Promise(resolve => {
+    const img = new Image(); img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+      c.getContext('2d').drawImage(img, 0, 0);
+      defaultAvatarData = c.toDataURL('image/png'); resolve(defaultAvatarData);
+    };
+    img.onerror = () => { defaultAvatarData = 'tx.png'; resolve(defaultAvatarData); };
+    img.src = 'tx.png';
+  });
+}
+
+async function migrateOldData() {
+  await loadDefaultAvatar();
+  const oldChats = JSON.parse(localStorage.getItem("chats"));
+  if (oldChats && !localStorage.getItem("agents")) {
+    agents = oldChats.map((chat, index) => ({
+      id: 'agent_' + Date.now() + index, name: chat.title + '（旧版）', avatar: defaultAvatarData,
+      description: '从旧版对话迁移',
+      aiConfig: chat.aiConfig || { type: 'emotion', gender: 'neutral', style: DEFAULT_STYLE.emotion, temperature: DEFAULT_TEMPERATURE.emotion },
+      chats: [{ id: 'chat_' + Date.now() + index, title: chat.title, messages: chat.messages || [], pinned: chat.pinned || false }],
+      pinned: false, createdAt: Date.now(), chatBackground: null
+    }));
+    saveAgents(); localStorage.removeItem("chats");
+  } else {
+    agents = JSON.parse(localStorage.getItem("agents")) || [];
+    agents.forEach(agent => {
+      if (!agent.avatar || agent.avatar === 'dx.png' || agent.avatar === 'tx.png') agent.avatar = defaultAvatarData;
+      if (agent.chatBackground === undefined) agent.chatBackground = null;
+    });
+  }
+  if (agents.length === 0) {
+    agents.push({
+      id: 'agent_default', name: '情感陪伴助手', avatar: defaultAvatarData,
+      description: '一个善解人意的聊天伙伴',
+      aiConfig: { type: 'emotion', gender: 'neutral', style: DEFAULT_STYLE.emotion, temperature: DEFAULT_TEMPERATURE.emotion },
+      chats: [{ id: 'chat_default', title: '新对话', messages: [], pinned: false }],
+      pinned: false, createdAt: Date.now(), chatBackground: null
+    });
+    saveAgents();
+  }
+  if (config.homeBackground === undefined) config.homeBackground = null;
+}
+
 function saveAgents() { localStorage.setItem("agents", JSON.stringify(agents)); }
+
 function getCurrentAgent() { return agents.find(a => a.id === currentAgentId) || agents[0]; }
+
 function getCurrentChat() { const agent = getCurrentAgent(); return agent && agent.chats.find(c => c.id === currentChatId) || (agent ? agent.chats[0] : null); }
 
 let noticeCooldownActive = false, noticeCooldownTimer = null, noticeCooldownRemaining = 0;
 const closeNoticeBtn = document.getElementById('closeNotice'), noticeModalEl = document.getElementById('noticeModal');
+
 function isNoticeClosable() { return !noticeCooldownActive; }
 function enableNoticeClose() { closeNoticeBtn.classList.remove('cooldown'); closeNoticeBtn.textContent = '×'; }
 function disableNoticeClose(text) { closeNoticeBtn.classList.add('cooldown'); closeNoticeBtn.textContent = text; }
-function startNoticeCooldown() { noticeCooldownActive = true; noticeCooldownRemaining = 3; disableNoticeClose(String(noticeCooldownRemaining)); noticeCooldownTimer = setInterval(() => { noticeCooldownRemaining--; if (noticeCooldownRemaining <= 0) { clearInterval(noticeCooldownTimer); noticeCooldownTimer = null; noticeCooldownActive = false; enableNoticeClose(); } else { disableNoticeClose(String(noticeCooldownRemaining)); } }, 1000); }
+
+function startNoticeCooldown() {
+  noticeCooldownActive = true; noticeCooldownRemaining = 3;
+  disableNoticeClose(String(noticeCooldownRemaining));
+  noticeCooldownTimer = setInterval(() => {
+    noticeCooldownRemaining--;
+    if (noticeCooldownRemaining <= 0) { clearInterval(noticeCooldownTimer); noticeCooldownTimer = null; noticeCooldownActive = false; enableNoticeClose(); }
+    else { disableNoticeClose(String(noticeCooldownRemaining)); }
+  }, 1000);
+}
+
 function clearNoticeCooldown() { if (noticeCooldownTimer) { clearInterval(noticeCooldownTimer); noticeCooldownTimer = null; } noticeCooldownActive = false; }
-function showNotice(autoPopup = false) { const noticeIframe = document.getElementById('noticeIframe'); noticeIframe.src = 'https://cnyszb.github.io/gongao/Gongao.html?t=' + Date.now(); showModal(noticeModalEl); if (autoPopup) { clearNoticeCooldown(); startNoticeCooldown(); } else { clearNoticeCooldown(); enableNoticeClose(); } }
+
+function showNotice(autoPopup = false) {
+  const noticeIframe = document.getElementById('noticeIframe');
+  noticeIframe.src = 'https://cnyszb.github.io/gongao/Gongao.html?t=' + Date.now();
+  showModal(noticeModalEl);
+  if (autoPopup) { clearNoticeCooldown(); startNoticeCooldown(); }
+  else { clearNoticeCooldown(); enableNoticeClose(); }
+}
+
 function hideNotice() { if (!isNoticeClosable()) return; clearNoticeCooldown(); hideModal(noticeModalEl); }
+
 closeNoticeBtn.onclick = (e) => { e.stopPropagation(); if (isNoticeClosable()) hideNotice(); };
 noticeModalEl.onclick = (e) => { if (e.target === noticeModalEl && isNoticeClosable()) hideNotice(); };
 
-let multiSelectMode = false, selectedAgentIds = new Set(), loadingChatId = null, loadingDotsTimer = null;
-function startLoadingDots() { if (loadingDotsTimer) return; loadingDotsTimer = setInterval(() => { const el = document.querySelector("#messages .loading"); if (!el) { clearInterval(loadingDotsTimer); loadingDotsTimer = null; return; } let c = parseInt(el.dataset.dotCount) || 0; c = (c + 1) % 4; el.dataset.dotCount = c; el.textContent = (el.dataset.baseText || el.textContent.replace(/\.+$/, '')) + '.'.repeat(c); }, 500); }
+let multiSelectMode = false, selectedAgentIds = new Set(), loadingDotsTimer = null;
+
+function startLoadingDots() {
+  if (loadingDotsTimer) return;
+  loadingDotsTimer = setInterval(() => {
+    const el = document.querySelector("#messages .loading");
+    if (!el) { clearInterval(loadingDotsTimer); loadingDotsTimer = null; return; }
+    let c = parseInt(el.dataset.dotCount) || 0; c = (c + 1) % 4; el.dataset.dotCount = c;
+    el.textContent = (el.dataset.baseText || el.textContent.replace(/\.+$/, '')) + '.'.repeat(c);
+  }, 500);
+}
+
 function stopLoadingDots() { if (loadingDotsTimer) { clearInterval(loadingDotsTimer); loadingDotsTimer = null; } }
 
-function renderAgentList() { const list = document.getElementById('agentList'); const sorted = [...agents].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)); list.innerHTML = ''; sorted.forEach(agent => { const card = document.createElement('div'); card.className = `agent-card ${agent.pinned ? 'pinned' : ''} ${selectedAgentIds.has(agent.id) ? 'selected' : ''}`; card.dataset.id = agent.id; const checkbox = document.createElement('div'); checkbox.className = `agent-checkbox ${selectedAgentIds.has(agent.id) ? 'checked' : ''}`; checkbox.onclick = (e) => { e.stopPropagation(); selectedAgentIds.has(agent.id) ? selectedAgentIds.delete(agent.id) : selectedAgentIds.add(agent.id); renderAgentList(); updateDeleteBar(); }; card.appendChild(checkbox); const avatar = document.createElement('img'); avatar.className = 'agent-avatar'; avatar.src = agent.avatar || defaultAvatarData; avatar.onerror = () => avatar.src = defaultAvatarData; card.appendChild(avatar); const info = document.createElement('div'); info.className = 'agent-info'; info.innerHTML = `<div class="agent-name">${agent.name}</div><div class="agent-desc">${agent.description || ''}</div>`; card.appendChild(info); const actions = document.createElement('div'); actions.className = 'agent-actions'; actions.innerHTML = `<span class="pin-agent">📌</span><span class="edit-agent">✏️</span><span class="delete-agent">✕</span>`; card.appendChild(actions); card.addEventListener('click', (e) => { if (e.target.closest('.agent-actions') || e.target.closest('.agent-checkbox')) return; if (multiSelectMode) { selectedAgentIds.has(agent.id) ? selectedAgentIds.delete(agent.id) : selectedAgentIds.add(agent.id); renderAgentList(); updateDeleteBar(); } else enterChat(agent.id); }); actions.querySelector('.pin-agent').addEventListener('click', (e) => { e.stopPropagation(); const pc = agents.filter(a => a.pinned).length; if (!agent.pinned && pc >= 3) { showToast(t('toast_max_pinned'), 'error'); return; } agent.pinned = !agent.pinned; saveAgents(); renderAgentList(); }); actions.querySelector('.edit-agent').addEventListener('click', (e) => { e.stopPropagation(); openEditAgentModal(agent); }); actions.querySelector('.delete-agent').addEventListener('click', (e) => { e.stopPropagation(); if (agents.length <= 1) { showToast(t('toast_min_agents'), 'error'); return; } if (!confirm('确定删除智能体"' + agent.name + '"吗？此操作不可恢复。')) return; agents = agents.filter(a => a.id !== agent.id); saveAgents(); renderAgentList(); }); list.appendChild(card); }); document.body.classList.toggle('multi-select-mode', multiSelectMode); }
-function updateDeleteBar() { const bar = document.getElementById('bottomDeleteBar'); document.getElementById('selectedCount').textContent = selectedAgentIds.size; bar.classList.toggle('show', multiSelectMode && selectedAgentIds.size > 0); }
-function enterChat(agentId) { const agent = agents.find(a => a.id === agentId); if (!agent) return; if (isMinor() && agent.aiConfig.type === 'emotion') { showToast(t('toast_minor_emotion'), 'error'); return; } currentAgentId = agentId; currentChatId = agent.chats[0]?.id; if (!currentChatId) { const nc = { id: 'chat_' + Date.now(), title: t('new_chat'), messages: [], pinned: false }; agent.chats.push(nc); currentChatId = nc.id; saveAgents(); } document.getElementById('chatTitle').innerText = getCurrentChat().title; renderChatList(); renderMessages(); applyChatBackground(); document.getElementById('chatPage').classList.add('show'); }
+function renderAgentList() {
+  const list = document.getElementById('agentList');
+  const sorted = [...agents].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+  list.innerHTML = '';
+  sorted.forEach(agent => {
+    const card = document.createElement('div');
+    card.className = `agent-card ${agent.pinned ? 'pinned' : ''} ${selectedAgentIds.has(agent.id) ? 'selected' : ''}`;
+    card.dataset.id = agent.id;
 
-function readImageFile(file) { return new Promise((resolve, reject) => { if (!file) { reject(new Error('No file')); return; } const reader = new FileReader(); reader.onload = (ev) => resolve(ev.target.result); reader.onerror = reject; reader.readAsDataURL(file); }); }
+    const checkbox = document.createElement('div');
+    checkbox.className = `agent-checkbox ${selectedAgentIds.has(agent.id) ? 'checked' : ''}`;
+    checkbox.onclick = (e) => { e.stopPropagation(); selectedAgentIds.has(agent.id) ? selectedAgentIds.delete(agent.id) : selectedAgentIds.add(agent.id); renderAgentList(); updateDeleteBar(); };
+    card.appendChild(checkbox);
+
+    const avatar = document.createElement('img');
+    avatar.className = 'agent-avatar'; avatar.src = agent.avatar || defaultAvatarData;
+    avatar.onerror = () => avatar.src = defaultAvatarData;
+    card.appendChild(avatar);
+
+    const info = document.createElement('div');
+    info.className = 'agent-info';
+    info.innerHTML = `<div class="agent-name">${agent.name}</div><div class="agent-desc">${agent.description || ''}</div>`;
+    card.appendChild(info);
+
+    const actions = document.createElement('div');
+    actions.className = 'agent-actions';
+    actions.innerHTML = `<span class="pin-agent">📌</span><span class="edit-agent">✏️</span><span class="delete-agent">✕</span>`;
+    card.appendChild(actions);
+
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.agent-actions') || e.target.closest('.agent-checkbox')) return;
+      if (multiSelectMode) { selectedAgentIds.has(agent.id) ? selectedAgentIds.delete(agent.id) : selectedAgentIds.add(agent.id); renderAgentList(); updateDeleteBar(); }
+      else enterChat(agent.id);
+    });
+
+    actions.querySelector('.pin-agent').addEventListener('click', (e) => {
+      e.stopPropagation(); const pc = agents.filter(a => a.pinned).length;
+      if (!agent.pinned && pc >= 3) { showToast(t('toast_max_pinned'), 'error'); return; }
+      agent.pinned = !agent.pinned; saveAgents(); renderAgentList();
+    });
+
+    actions.querySelector('.edit-agent').addEventListener('click', (e) => { e.stopPropagation(); openEditAgentModal(agent); });
+
+    actions.querySelector('.delete-agent').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (agents.length <= 1) { showToast(t('toast_min_agents'), 'error'); return; }
+      if (!confirm('确定删除智能体"' + agent.name + '"吗？此操作不可恢复。')) return;
+      agents = agents.filter(a => a.id !== agent.id); saveAgents(); renderAgentList();
+    });
+
+    list.appendChild(card);
+  });
+  document.body.classList.toggle('multi-select-mode', multiSelectMode);
+}
+
+function updateDeleteBar() {
+  const bar = document.getElementById('bottomDeleteBar');
+  document.getElementById('selectedCount').textContent = selectedAgentIds.size;
+  bar.classList.toggle('show', multiSelectMode && selectedAgentIds.size > 0);
+}
+
+function enterChat(agentId) {
+  const agent = agents.find(a => a.id === agentId);
+  if (!agent) return;
+  if (isMinor() && agent.aiConfig.type === 'emotion') { showToast(t('toast_minor_emotion'), 'error'); return; }
+  currentAgentId = agentId; currentChatId = agent.chats[0]?.id;
+  if (!currentChatId) {
+    const nc = { id: 'chat_' + Date.now(), title: t('new_chat'), messages: [], pinned: false };
+    agent.chats.push(nc); currentChatId = nc.id; saveAgents();
+  }
+  document.getElementById('chatTitle').innerText = getCurrentChat().title;
+  renderChatList(); renderMessages(); applyChatBackground();
+  document.getElementById('chatPage').classList.add('show');
+}
+
+function readImageFile(file) {
+  return new Promise((resolve, reject) => {
+    if (!file) { reject(new Error('No file')); return; }
+    const reader = new FileReader();
+    reader.onload = (ev) => resolve(ev.target.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 
 document.getElementById('changeHomeBgBtn').onclick = () => document.getElementById('homeBgFile').click();
-document.getElementById('homeBgFile').onchange = async (e) => { const file = e.target.files[0]; if (file) { try { config.homeBackground = await readImageFile(file); saveData(); applyHomeBackground(); showToast(t('toast_bg_updated'), 'success'); } catch (err) { showToast('图片读取失败', 'error'); } e.target.value = ''; } };
+document.getElementById('homeBgFile').onchange = async (e) => {
+  const file = e.target.files[0];
+  if (file) { try { config.homeBackground = await readImageFile(file); saveData(); applyHomeBackground(); showToast(t('toast_bg_updated'), 'success'); } catch (err) { showToast('图片读取失败', 'error'); } e.target.value = ''; }
+};
 document.getElementById('resetHomeBgBtn').onclick = () => { config.homeBackground = null; saveData(); applyHomeBackground(); showToast(t('toast_bg_reset'), 'success'); };
 
 let agentChatBgData = null, editAgentChatBgData = null;
 
 function triggerImagePick(callback) {
   const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.onchange = async (e) => {
-    const file = e.target.files[0];
-    if (file) { try { const data = await readImageFile(file); callback(data); } catch (err) { showToast('图片读取失败', 'error'); } }
-  };
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = async (e) => { const file = e.target.files[0]; if (file) { try { const data = await readImageFile(file); callback(data); } catch (err) { showToast('图片读取失败', 'error'); } } };
   input.click();
 }
 
-document.getElementById('changeAgentChatBgBtn').onclick = () => {
-  triggerImagePick((data) => {
-    agentChatBgData = data;
-    const p = document.getElementById('agentChatBgPreview'); p.style.backgroundImage = `url(${agentChatBgData})`; p.textContent = '';
-  });
-};
+document.getElementById('changeAgentChatBgBtn').onclick = () => { triggerImagePick((data) => { agentChatBgData = data; const p = document.getElementById('agentChatBgPreview'); p.style.backgroundImage = `url(${agentChatBgData})`; p.textContent = ''; }); };
 document.getElementById('resetAgentChatBgBtn').onclick = () => { agentChatBgData = null; const p = document.getElementById('agentChatBgPreview'); p.style.backgroundImage = 'none'; p.textContent = '未设置'; };
 
-document.getElementById('changeEditAgentChatBgBtn').onclick = () => {
-  triggerImagePick((data) => {
-    editAgentChatBgData = data;
-    const p = document.getElementById('editAgentChatBgPreview'); p.style.backgroundImage = `url(${editAgentChatBgData})`; p.textContent = '';
-  });
-};
+document.getElementById('changeEditAgentChatBgBtn').onclick = () => { triggerImagePick((data) => { editAgentChatBgData = data; const p = document.getElementById('editAgentChatBgPreview'); p.style.backgroundImage = `url(${editAgentChatBgData})`; p.textContent = ''; }); };
 document.getElementById('resetEditAgentChatBgBtn').onclick = () => { editAgentChatBgData = null; const p = document.getElementById('editAgentChatBgPreview'); p.style.backgroundImage = 'none'; p.textContent = '未设置'; };
 
 const agentModal = document.getElementById('agentModal'); let avatarData = null;
+
 document.getElementById('avatarSelectBtn').onclick = () => document.getElementById('avatarFile').click();
 document.getElementById('avatarFile').onchange = (e) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (ev) => { avatarData = ev.target.result; document.getElementById('avatarPreview').src = avatarData; }; reader.readAsDataURL(file); } };
-document.getElementById('newAgentFab').onclick = async () => { if (!defaultAvatarData) await loadDefaultAvatar(); avatarData = defaultAvatarData; agentChatBgData = null; if (isMinor()) { document.getElementById('aiTypeSelectBtn').textContent = t('tool'); document.getElementById('aiTypeSelectBtn').dataset.value = 'tool'; document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE.tool; document.getElementById('agentGenderBox').classList.add('hide'); } else { document.getElementById('aiTypeSelectBtn').textContent = t('emotion'); document.getElementById('aiTypeSelectBtn').dataset.value = 'emotion'; document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE.emotion; document.getElementById('agentGenderBox').classList.remove('hide'); } document.getElementById('agentNameInput').value = ''; document.getElementById('agentDescInput').value = ''; document.getElementById('aiGenderSelectBtn').textContent = t('neutral'); document.getElementById('aiGenderSelectBtn').dataset.value = 'neutral'; document.getElementById('avatarPreview').src = defaultAvatarData; document.getElementById('avatarFile').value = ''; const p = document.getElementById('agentChatBgPreview'); p.style.backgroundImage = 'none'; p.textContent = '未设置'; showModal(agentModal); };
-document.getElementById('agentConfirm').onclick = async () => { const name = document.getElementById('agentNameInput').value.trim(); if (!name) { showToast(t('toast_name_required'), 'error'); return; } if (isMinor() && document.getElementById('aiTypeSelectBtn').dataset.value === 'emotion') { showToast(t('toast_minor_create_emotion'), 'error'); return; } if (!avatarData) await loadDefaultAvatar(); agents.push({ id: 'agent_' + Date.now(), name, avatar: avatarData || defaultAvatarData, description: document.getElementById('agentDescInput').value.trim(), aiConfig: { type: document.getElementById('aiTypeSelectBtn').dataset.value, gender: document.getElementById('aiGenderSelectBtn').dataset.value, style: document.getElementById('agentAiStyleInput').value.trim() || DEFAULT_STYLE[document.getElementById('aiTypeSelectBtn').dataset.value], temperature: parseFloat(document.getElementById('agentTempSlider').value) }, chats: [{ id: 'chat_' + Date.now(), title: t('new_chat'), messages: [], pinned: false }], pinned: false, createdAt: Date.now(), chatBackground: agentChatBgData || null }); saveAgents(); renderAgentList(); hideModal(agentModal); showToast(t('toast_create_success'), 'success'); };
+
+document.getElementById('newAgentFab').onclick = async () => {
+  if (!defaultAvatarData) await loadDefaultAvatar();
+  avatarData = defaultAvatarData; agentChatBgData = null;
+  if (isMinor()) {
+    document.getElementById('aiTypeSelectBtn').textContent = t('tool'); document.getElementById('aiTypeSelectBtn').dataset.value = 'tool';
+    document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE.tool; document.getElementById('agentGenderBox').classList.add('hide');
+  } else {
+    document.getElementById('aiTypeSelectBtn').textContent = t('emotion'); document.getElementById('aiTypeSelectBtn').dataset.value = 'emotion';
+    document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE.emotion; document.getElementById('agentGenderBox').classList.remove('hide');
+  }
+  document.getElementById('agentNameInput').value = ''; document.getElementById('agentDescInput').value = '';
+  document.getElementById('aiGenderSelectBtn').textContent = t('neutral'); document.getElementById('aiGenderSelectBtn').dataset.value = 'neutral';
+  document.getElementById('avatarPreview').src = defaultAvatarData; document.getElementById('avatarFile').value = '';
+  const p = document.getElementById('agentChatBgPreview'); p.style.backgroundImage = 'none'; p.textContent = '未设置';
+  showModal(agentModal);
+};
+
+document.getElementById('agentConfirm').onclick = async () => {
+  const name = document.getElementById('agentNameInput').value.trim();
+  if (!name) { showToast(t('toast_name_required'), 'error'); return; }
+  if (isMinor() && document.getElementById('aiTypeSelectBtn').dataset.value === 'emotion') { showToast(t('toast_minor_create_emotion'), 'error'); return; }
+  if (!avatarData) await loadDefaultAvatar();
+  const aiType = document.getElementById('aiTypeSelectBtn').dataset.value;
+  agents.push({
+    id: 'agent_' + Date.now(), name, avatar: avatarData || defaultAvatarData,
+    description: document.getElementById('agentDescInput').value.trim(),
+    aiConfig: {
+      type: aiType,
+      gender: document.getElementById('aiGenderSelectBtn').dataset.value,
+      style: document.getElementById('agentAiStyleInput').value.trim() || DEFAULT_STYLE[aiType],
+      temperature: aiType === 'tool' ? DEFAULT_TEMPERATURE.tool : DEFAULT_TEMPERATURE.emotion
+    },
+    chats: [{ id: 'chat_' + Date.now(), title: t('new_chat'), messages: [], pinned: false }],
+    pinned: false, createdAt: Date.now(), chatBackground: agentChatBgData || null
+  });
+  saveAgents(); renderAgentList(); hideModal(agentModal); showToast(t('toast_create_success'), 'success');
+};
+
 document.getElementById('agentCancel').onclick = () => hideModal(agentModal);
 
 const editAgentModal = document.getElementById('editAgentModal'); let editingAgentId = null, editAvatarData = '';
+
 document.getElementById('editAvatarSelectBtn').onclick = () => document.getElementById('editAvatarFile').click();
 document.getElementById('editAvatarFile').onchange = (e) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (ev) => { editAvatarData = ev.target.result; document.getElementById('editAvatarPreview').src = editAvatarData; }; reader.readAsDataURL(file); } };
-function openEditAgentModal(agent) { editingAgentId = agent.id; document.getElementById('editAgentNameInput').value = agent.name; editAvatarData = agent.avatar; document.getElementById('editAvatarPreview').src = agent.avatar || defaultAvatarData; document.getElementById('editAvatarFile').value = ''; const sw = document.getElementById('editPinnedSwitch'); sw.classList.toggle('checked', agent.pinned); sw.onclick = () => { const np = !sw.classList.contains('checked'); if (np && agents.filter(a => a.pinned).length >= 3 && !agent.pinned) { showToast(t('toast_max_pinned'), 'error'); return; } sw.classList.toggle('checked'); }; editAgentChatBgData = agent.chatBackground || null; const p = document.getElementById('editAgentChatBgPreview'); if (editAgentChatBgData) { p.style.backgroundImage = `url(${editAgentChatBgData})`; p.textContent = ''; } else { p.style.backgroundImage = 'none'; p.textContent = '未设置'; } if (config.specialMode) { document.getElementById('editAgentDescInput').value = agent.description || ''; document.getElementById('editAiTypeSelectBtn').textContent = agent.aiConfig.type === 'tool' ? t('tool') : t('emotion'); document.getElementById('editAiTypeSelectBtn').dataset.value = agent.aiConfig.type || 'emotion'; document.getElementById('editAiGenderSelectBtn').textContent = agent.aiConfig.gender === 'male' ? t('male') : agent.aiConfig.gender === 'female' ? t('female') : t('neutral'); document.getElementById('editAiGenderSelectBtn').dataset.value = agent.aiConfig.gender || 'neutral'; document.getElementById('editAgentAiStyleInput').value = agent.aiConfig.style || ''; document.getElementById('editAgentGenderBox').classList.toggle('hide', agent.aiConfig.type === 'tool'); } document.body.classList.toggle('creator-mode', config.specialMode); showModal(editAgentModal); }
-document.getElementById('editAgentConfirm').onclick = () => { const name = document.getElementById('editAgentNameInput').value.trim(); if (!name) { showToast(t('toast_name_required'), 'error'); return; } const agent = agents.find(a => a.id === editingAgentId); if (agent) { agent.name = name; agent.avatar = editAvatarData || defaultAvatarData; agent.pinned = document.getElementById('editPinnedSwitch').classList.contains('checked'); agent.chatBackground = editAgentChatBgData; if (config.specialMode) { const aiType = document.getElementById('editAiTypeSelectBtn').dataset.value; if (isMinor() && aiType === 'emotion') { showToast(t('toast_minor_set_emotion'), 'error'); return; } agent.description = document.getElementById('editAgentDescInput').value.trim(); agent.aiConfig = { type: aiType, gender: document.getElementById('editAiGenderSelectBtn').dataset.value, style: document.getElementById('editAgentAiStyleInput').value.trim() || DEFAULT_STYLE[aiType], temperature: parseFloat(document.getElementById('editAgentTempSlider').value) }; } saveAgents(); renderAgentList(); if (currentAgentId === agent.id) applyChatBackground(); } hideModal(editAgentModal); };
+
+function openEditAgentModal(agent) {
+  editingAgentId = agent.id;
+  document.getElementById('editAgentNameInput').value = agent.name;
+  editAvatarData = agent.avatar; document.getElementById('editAvatarPreview').src = agent.avatar || defaultAvatarData;
+  document.getElementById('editAvatarFile').value = '';
+  const sw = document.getElementById('editPinnedSwitch');
+  sw.classList.toggle('checked', agent.pinned);
+  sw.onclick = () => { const np = !sw.classList.contains('checked'); if (np && agents.filter(a => a.pinned).length >= 3 && !agent.pinned) { showToast(t('toast_max_pinned'), 'error'); return; } sw.classList.toggle('checked'); };
+  editAgentChatBgData = agent.chatBackground || null;
+  const p = document.getElementById('editAgentChatBgPreview');
+  if (editAgentChatBgData) { p.style.backgroundImage = `url(${editAgentChatBgData})`; p.textContent = ''; } else { p.style.backgroundImage = 'none'; p.textContent = '未设置'; }
+  if (config.specialMode) {
+    document.getElementById('editAgentDescInput').value = agent.description || '';
+    document.getElementById('editAiTypeSelectBtn').textContent = agent.aiConfig.type === 'tool' ? t('tool') : t('emotion');
+    document.getElementById('editAiTypeSelectBtn').dataset.value = agent.aiConfig.type || 'emotion';
+    document.getElementById('editAiGenderSelectBtn').textContent = agent.aiConfig.gender === 'male' ? t('male') : agent.aiConfig.gender === 'female' ? t('female') : t('neutral');
+    document.getElementById('editAiGenderSelectBtn').dataset.value = agent.aiConfig.gender || 'neutral';
+    document.getElementById('editAgentAiStyleInput').value = agent.aiConfig.style || '';
+    document.getElementById('editAgentGenderBox').classList.toggle('hide', agent.aiConfig.type === 'tool');
+  }
+  document.body.classList.toggle('creator-mode', config.specialMode);
+  showModal(editAgentModal);
+}
+
+document.getElementById('editAgentConfirm').onclick = () => {
+  const name = document.getElementById('editAgentNameInput').value.trim();
+  if (!name) { showToast(t('toast_name_required'), 'error'); return; }
+  const agent = agents.find(a => a.id === editingAgentId);
+  if (agent) {
+    agent.name = name; agent.avatar = editAvatarData || defaultAvatarData;
+    agent.pinned = document.getElementById('editPinnedSwitch').classList.contains('checked');
+    agent.chatBackground = editAgentChatBgData;
+    if (config.specialMode) {
+      const aiType = document.getElementById('editAiTypeSelectBtn').dataset.value;
+      if (isMinor() && aiType === 'emotion') { showToast(t('toast_minor_set_emotion'), 'error'); return; }
+      agent.description = document.getElementById('editAgentDescInput').value.trim();
+      agent.aiConfig = {
+        type: aiType,
+        gender: document.getElementById('editAiGenderSelectBtn').dataset.value,
+        style: document.getElementById('editAgentAiStyleInput').value.trim() || DEFAULT_STYLE[aiType],
+        temperature: aiType === 'tool' ? DEFAULT_TEMPERATURE.tool : DEFAULT_TEMPERATURE.emotion
+      };
+    }
+    saveAgents(); renderAgentList();
+    if (currentAgentId === agent.id) applyChatBackground();
+  }
+  hideModal(editAgentModal);
+};
+
 document.getElementById('editAgentCancel').onclick = () => hideModal(editAgentModal);
 
 document.getElementById('multiSelectBtn').onclick = () => { multiSelectMode = true; selectedAgentIds.clear(); document.getElementById('multiSelectBtn').style.display = 'none'; document.getElementById('cancelMultiBtn').classList.add('show'); renderAgentList(); updateDeleteBar(); };
 document.getElementById('cancelMultiBtn').onclick = () => { multiSelectMode = false; selectedAgentIds.clear(); document.getElementById('multiSelectBtn').style.display = 'block'; document.getElementById('cancelMultiBtn').classList.remove('show'); renderAgentList(); updateDeleteBar(); };
-document.getElementById('confirmDeleteBtn').onclick = () => { if (selectedAgentIds.size === 0) return; const remaining = agents.filter(a => !selectedAgentIds.has(a.id)); if (remaining.length === 0) { showToast(t('toast_min_agents'), 'error'); return; } agents = remaining; saveAgents(); multiSelectMode = false; selectedAgentIds.clear(); document.getElementById('multiSelectBtn').style.display = 'block'; document.getElementById('cancelMultiBtn').classList.remove('show'); renderAgentList(); updateDeleteBar(); showToast(t('toast_delete_success'), 'success'); };
 
-document.getElementById('homeSettingsBtn').onclick = () => { document.getElementById('userApiInput').value = config.userApi; document.getElementById('langSelect').value = currentLang; updateFontSizeDisplay(); updateThemeSwitch(); updateHomeBgPreview(); document.body.classList.toggle('creator-mode', config.specialMode); document.getElementById('devControlBox').style.display = config.specialMode ? 'flex' : 'none'; document.getElementById('devSwitch').classList.toggle('checked', config.specialMode); showModal(document.getElementById('modal')); };
+document.getElementById('confirmDeleteBtn').onclick = () => {
+  if (selectedAgentIds.size === 0) return;
+  const remaining = agents.filter(a => !selectedAgentIds.has(a.id));
+  if (remaining.length === 0) { showToast(t('toast_min_agents'), 'error'); return; }
+  agents = remaining; saveAgents(); multiSelectMode = false; selectedAgentIds.clear();
+  document.getElementById('multiSelectBtn').style.display = 'block'; document.getElementById('cancelMultiBtn').classList.remove('show');
+  renderAgentList(); updateDeleteBar(); showToast(t('toast_delete_success'), 'success');
+};
+
+function openSettingsPanel() {
+  document.getElementById('userApiInput').value = config.userApi;
+  document.getElementById('langSelect').value = currentLang;
+  updateFontSizeDisplay(); updateThemeSwitch(); updateHomeBgPreview();
+  document.getElementById('enterSendSwitch').classList.toggle('checked', config.enterToSend);
+  document.body.classList.toggle('creator-mode', config.specialMode);
+  document.getElementById('devControlBox').style.display = config.specialMode ? 'flex' : 'none';
+  document.getElementById('devSwitch').classList.toggle('checked', config.specialMode);
+  insertHelpButtons();
+  showModal(document.getElementById('modal'));
+}
+
+document.getElementById('homeSettingsBtn').onclick = openSettingsPanel;
 document.getElementById('goToImageFab').onclick = () => document.getElementById('imagePage').classList.add('show');
 document.getElementById('backBtnFromImg').onclick = () => document.getElementById('imagePage').classList.remove('show');
 document.getElementById('homeBtn').onclick = () => { document.getElementById('chatPage').classList.remove('show'); closeSidebar(); renderAgentList(); };
 
-async function checkText(text) { if (config.specialMode) return true; const key = config.userApi; if (!key) return true; try { const res = await fetch(DEEPSEEK_CONFIG.apiUrl, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key }, body: JSON.stringify({ model: "Qwen/Qwen2.5-7B-Instruct", messages: [{ role: "user", content: "你是极度宽松的内容审核员。判断原则：1.只有直接、露骨、详细的色情动作描写才算异常 2.只有明确的暴力威胁才算异常 3.只有具体的违法犯罪操作指导才算异常。回复只回复'正常'或'异常'两个字。\n" + text }], temperature: 0.1, max_tokens: 8 }) }); return ((await res.json()).choices?.[0]?.message?.content || "").trim() === "正常"; } catch (e) { return true; } }
-function buildSystemPrompt(aiConfig) { let gp = ""; if (aiConfig.type === "emotion") gp = aiConfig.gender === "male" ? "你的性别为男性，语气贴合男性说话方式并且认为自己是男性；" : aiConfig.gender === "female" ? "你的性别为女性，语气贴合女性说话方式并且认为自己是女性；" : "你的性别为中性，语气无明显性别特征；"; return `${gp}你是${aiConfig.type === "emotion" ? "情感陪伴AI" : "工具型AI"}，${aiConfig.style}；禁止使用任何表情符号，单个句号可保留，连续句号请删除，回复贴合设定风格。`; }
+async function checkText(text) {
+  if (config.specialMode) return true;
+  const key = config.userApi; if (!key) return true;
+  try {
+    const res = await fetch(DEEPSEEK_CONFIG.apiUrl, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key }, body: JSON.stringify({ model: "Qwen/Qwen2.5-7B-Instruct", messages: [{ role: "user", content: "你是极度宽松的内容审核员。判断原则：1.只有直接、露骨、详细的色情动作描写才算异常 2.只有明确的暴力威胁才算异常 3.只有具体的违法犯罪操作指导才算异常。回复只回复'正常'或'异常'两个字。\n" + text }], temperature: 0.1, max_tokens: 8 }) });
+    return ((await res.json()).choices?.[0]?.message?.content || "").trim() === "正常";
+  } catch (e) { return true; }
+}
 
-function renderChatList() { const agent = getCurrentAgent(); const list = document.getElementById("chatList"); list.innerHTML = ""; [...agent.chats].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)).forEach(chat => { const item = document.createElement("div"); item.className = `chat-item ${chat.pinned ? 'pinned' : ''} ${chat.id === currentChatId ? 'active' : ''}`; let ah = `<span class="rename" data-id="${chat.id}">✏️</span>`; if (config.specialMode) ah += `<span class="chat-config-btn" data-id="${chat.id}">⚙</span>`; ah += `<span class="del" data-id="${chat.id}">✕</span>`; item.innerHTML = `<div class="chat-item-left"><span class="pin-icon ${chat.pinned ? 'pinned' : ''}" data-id="${chat.id}">📌</span><span class="chat-title-text">${chat.title}</span></div><div class="chat-item-actions">${ah}</div>`; item.querySelector('.pin-icon').onclick = (e) => { e.stopPropagation(); chat.pinned = !chat.pinned; saveAgents(); renderChatList(); }; item.addEventListener("click", (e) => { if (e.target.closest('.del') || e.target.closest('.rename') || e.target.closest('.pin-icon') || e.target.closest('.chat-config-btn')) return; currentChatId = chat.id; renderChatList(); renderMessages(); applyChatBackground(); document.getElementById("chatTitle").innerText = chat.title; closeSidebar(); }); item.querySelector(".rename").onclick = async (e) => { e.stopPropagation(); document.getElementById('renameInput').value = chat.title; showModal(document.getElementById('renameModal')); const cf = () => { const nt = document.getElementById('renameInput').value.trim(); if (nt) { chat.title = nt; saveAgents(); renderChatList(); document.getElementById("chatTitle").innerText = chat.title; } hideModal(document.getElementById('renameModal')); }; document.getElementById('renameConfirm').onclick = cf; document.getElementById('renameCancel').onclick = () => hideModal(document.getElementById('renameModal')); }; const cbtn = item.querySelector(".chat-config-btn"); if (cbtn) cbtn.onclick = (e) => { e.stopPropagation(); }; item.querySelector(".del").onclick = (e) => { e.stopPropagation(); if (agent.chats.length <= 1) { showToast(t("toast_min_chats"), "error"); return; } agent.chats = agent.chats.filter(c => c.id !== chat.id); currentChatId = agent.chats[0].id; saveAgents(); renderChatList(); renderMessages(); applyChatBackground(); document.getElementById("chatTitle").innerText = agent.chats[0].title; }; list.appendChild(item); }); }
-function renderMessages() { const chat = getCurrentChat(); const box = document.getElementById("messages"); box.innerHTML = ""; if (!chat) return; chat.messages.forEach(msg => { const div = document.createElement("div"); div.className = `msg ${msg.role === "assistant" ? "ai" : "user"}`; div.textContent = msg.content; box.appendChild(div); }); box.scrollTop = box.scrollHeight; }
+function buildSystemPrompt(aiConfig) {
+  let gp = "";
+  if (aiConfig.type === "emotion") gp = aiConfig.gender === "male" ? "你的性别为男性，语气贴合男性说话方式并且认为自己是男性；" : aiConfig.gender === "female" ? "你的性别为女性，语气贴合女性说话方式并且认为自己是女性；" : "你的性别为中性，语气无明显性别特征；";
+  return `${gp}你是${aiConfig.type === "emotion" ? "情感陪伴AI" : "工具型AI"}，${aiConfig.style}；禁止使用任何表情符号，单个句号可保留，连续句号请删除，回复贴合设定风格。`;
+}
+
+function renderChatList() {
+  const agent = getCurrentAgent();
+  const list = document.getElementById("chatList"); list.innerHTML = "";
+  [...agent.chats].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)).forEach(chat => {
+    const item = document.createElement("div");
+    item.className = `chat-item ${chat.pinned ? 'pinned' : ''} ${chat.id === currentChatId ? 'active' : ''}`;
+    let ah = `<span class="rename" data-id="${chat.id}">✏️</span>`;
+    if (config.specialMode) ah += `<span class="chat-config-btn" data-id="${chat.id}">⚙</span>`;
+    ah += `<span class="del" data-id="${chat.id}">✕</span>`;
+    item.innerHTML = `<div class="chat-item-left"><span class="pin-icon ${chat.pinned ? 'pinned' : ''}" data-id="${chat.id}">📌</span><span class="chat-title-text">${chat.title}</span></div><div class="chat-item-actions">${ah}</div>`;
+
+    item.querySelector('.pin-icon').onclick = (e) => { e.stopPropagation(); chat.pinned = !chat.pinned; saveAgents(); renderChatList(); };
+
+    item.addEventListener("click", (e) => {
+      if (e.target.closest('.del') || e.target.closest('.rename') || e.target.closest('.pin-icon') || e.target.closest('.chat-config-btn')) return;
+      currentChatId = chat.id; renderChatList(); renderMessages(); applyChatBackground();
+      document.getElementById("chatTitle").innerText = chat.title; closeSidebar();
+    });
+
+    item.querySelector(".rename").onclick = async (e) => {
+      e.stopPropagation();
+      document.getElementById('renameInput').value = chat.title; showModal(document.getElementById('renameModal'));
+      const cf = () => { const nt = document.getElementById('renameInput').value.trim(); if (nt) { chat.title = nt; saveAgents(); renderChatList(); document.getElementById("chatTitle").innerText = chat.title; } hideModal(document.getElementById('renameModal')); };
+      document.getElementById('renameConfirm').onclick = cf;
+      document.getElementById('renameCancel').onclick = () => hideModal(document.getElementById('renameModal'));
+    };
+
+    const cbtn = item.querySelector(".chat-config-btn");
+    if (cbtn) cbtn.onclick = (e) => { e.stopPropagation(); };
+
+    item.querySelector(".del").onclick = (e) => {
+      e.stopPropagation();
+      if (agent.chats.length <= 1) { showToast(t("toast_min_chats"), "error"); return; }
+      agent.chats = agent.chats.filter(c => c.id !== chat.id); currentChatId = agent.chats[0].id;
+      saveAgents(); renderChatList(); renderMessages(); applyChatBackground();
+      document.getElementById("chatTitle").innerText = agent.chats[0].title;
+    };
+
+    list.appendChild(item);
+  });
+}
+
+function renderMessages() {
+  const chat = getCurrentChat(); const box = document.getElementById("messages"); box.innerHTML = "";
+  if (!chat) return;
+  chat.messages.forEach(msg => { const div = document.createElement("div"); div.className = `msg ${msg.role === "assistant" ? "ai" : "user"}`; div.textContent = msg.content; box.appendChild(div); });
+  box.scrollTop = box.scrollHeight;
+}
+
 function saveData() { localStorage.setItem("config", JSON.stringify(config)); }
+
 function closeSidebar() { document.getElementById("sidebar").classList.remove("open"); document.getElementById("overlay").classList.remove("show"); }
+
 function updateThemeSwitch() { document.getElementById("themeSwitch").classList.toggle("checked", config.lightMode); }
+
 function updateFontSizeDisplay() { document.getElementById('fontSizeValue').textContent = config.fontSize; }
+
+function updateVersionDisplay() { const el = document.getElementById('versionDisplay'); if (el) el.textContent = t('version'); }
+
 function isMinor() { return config.isAdult === false; }
 
 let lastGeneratedImageUrl = null;
+let activeStreamAbort = null;
+let thinkingTimer = null;
+let hasReceivedContent = false;
 
-async function sendMsg() { const text = document.getElementById("input").value.trim(); if (!text) return; const agentId = currentAgentId, chatId = currentChatId, agent = agents.find(a => a.id === agentId), chat = agent.chats.find(c => c.id === chatId); chat.messages.push({ role: "user", content: text }); document.getElementById("input").value = ""; saveAgents(); loadingChatId = chatId; if (currentAgentId === agentId && currentChatId === chatId) { renderMessages(); const loading = document.createElement("div"); loading.className = "loading"; loading.textContent = agent.aiConfig.type === "emotion" ? t("loading_emotion") : t("loading_tool"); loading.dataset.baseText = loading.textContent; loading.dataset.dotCount = "0"; document.getElementById("messages").appendChild(loading); startLoadingDots(); document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight; } checkText(text).then(async (ok) => { if (!ok) { chat.messages.pop(); saveAgents(); if (currentAgentId === agentId && currentChatId === chatId) { const le = document.querySelector("#messages .loading"); if (le) le.remove(); const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = t("toast_change_content"); document.getElementById("messages").appendChild(tip); } return; } try { const key = config.userApi; if (!key) throw new Error(t("toast_no_api")); const aiConfig = chat.chatConfig && chat.chatConfig.type ? chat.chatConfig : agent.aiConfig; const res = await fetch(DEEPSEEK_CONFIG.apiUrl, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` }, body: JSON.stringify({ model: DEEPSEEK_CONFIG.model, messages: [{ role: "system", content: buildSystemPrompt(aiConfig) }, ...chat.messages.map(m => ({ role: m.role, content: m.content }))], temperature: aiConfig.temperature || 1.0, top_p: 0.9, max_tokens: 1000, stream: true }) }); stopLoadingDots(); loadingChatId = null; const le = document.querySelector("#messages .loading"); if (le) le.remove(); const aiMsg = document.createElement("div"); aiMsg.className = "msg ai"; aiMsg.style.animation = 'none'; aiMsg.style.opacity = '1'; aiMsg.style.transform = 'none'; document.getElementById("messages").appendChild(aiMsg); const reader = res.body.getReader(); const decoder = new TextDecoder(); let reply = ''; while (true) { const { done, value } = await reader.read(); if (done) break; const lines = decoder.decode(value, { stream: true }).split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const js = line.slice(6).trim(); if (js === '[DONE]') continue; try { const content = JSON.parse(js).choices?.[0]?.delta?.content || ''; if (content) { reply += content; aiMsg.textContent = reply.replace(/^\n+/, ''); document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight; } } catch(e) {} } } } reply = reply.replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, '').replace(/[。.]{2,}/g, '').trim() || (agent.aiConfig.type === "emotion" ? "咋了啊" : "暂无解答"); aiMsg.textContent = reply; if (await checkText(reply)) { chat.messages.push({ role: "assistant", content: reply }); saveAgents(); } } catch (e) { stopLoadingDots(); loadingChatId = null; if (currentAgentId === agentId && currentChatId === chatId) { const le2 = document.querySelector("#messages .loading"); if (le2) le2.remove(); const err = document.createElement("div"); err.className = "msg ai"; err.textContent = agent.aiConfig.type === "emotion" ? t("error_network") : t("toast_req_failed") + e.message; document.getElementById("messages").appendChild(err); } } }); }
+function addEllipsisToContent(content) {
+  if (!content) return '…';
+  const trimmed = content.trimEnd();
+  if (!trimmed) return '…';
+  const lastChar = trimmed.slice(-1);
+  if (/[。.！!？?，,；;：:、…～~—\-]/.test(lastChar)) {
+    return trimmed.slice(0, -1) + '…';
+  }
+  return trimmed + '…';
+}
+
+function startThinkingTimer(loadingEl, baseText) {
+  thinkingTimer = setInterval(() => {
+    if (hasReceivedContent) {
+      clearInterval(thinkingTimer);
+      thinkingTimer = null;
+      return;
+    }
+    if (loadingEl && loadingEl.parentNode) {
+      let c = parseInt(loadingEl.dataset.thinkDotCount) || 0;
+      c = (c + 1) % 4;
+      loadingEl.dataset.thinkDotCount = c;
+      loadingEl.textContent = baseText + '.'.repeat(c);
+    }
+  }, 500);
+}
+
+function stopThinkingTimer() {
+  if (thinkingTimer) { clearInterval(thinkingTimer); thinkingTimer = null; }
+}
+
+async function sendMsg() {
+  if (activeStreamAbort) {
+    activeStreamAbort.abort();
+    activeStreamAbort = null;
+    stopLoadingDots();
+    stopThinkingTimer();
+    const loadingEl = document.querySelector("#messages .loading");
+    if (loadingEl) loadingEl.remove();
+    const chat = getCurrentChat();
+    if (chat && chat.messages.length > 0) {
+      const lastMsg = chat.messages[chat.messages.length - 1];
+      if (lastMsg.role === 'assistant' && lastMsg._streaming) {
+        lastMsg.content = addEllipsisToContent(lastMsg.content);
+        delete lastMsg._streaming;
+        saveAgents();
+        renderMessages();
+      }
+    }
+  }
+
+  const text = document.getElementById("input").value.trim();
+  if (!text) return;
+  const agentId = currentAgentId, chatId = currentChatId,
+        agent = agents.find(a => a.id === agentId),
+        chat = agent.chats.find(c => c.id === chatId);
+  chat.messages.push({ role: "user", content: text });
+  document.getElementById("input").value = ""; saveAgents();
+  hasReceivedContent = false;
+
+  if (currentAgentId === agentId && currentChatId === chatId) {
+    renderMessages();
+    const loading = document.createElement("div"); loading.className = "loading";
+    const baseText = t('thinking');
+    loading.textContent = baseText;
+    loading.dataset.thinkDotCount = "0";
+    document.getElementById("messages").appendChild(loading);
+    startThinkingTimer(loading, baseText);
+    document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+  }
+
+  checkText(text).then(async (ok) => {
+    if (!ok) {
+      chat.messages.pop(); saveAgents();
+      if (currentAgentId === agentId && currentChatId === chatId) {
+        const le = document.querySelector("#messages .loading"); if (le) le.remove();
+        stopThinkingTimer();
+        const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = t("toast_change_content");
+        document.getElementById("messages").appendChild(tip);
+      }
+      return;
+    }
+    try {
+      const key = config.userApi; if (!key) throw new Error(t("toast_no_api"));
+      const aiConfig = chat.chatConfig && chat.chatConfig.type ? chat.chatConfig : agent.aiConfig;
+
+      const placeholderMsg = { role: "assistant", content: "", _streaming: true };
+      chat.messages.push(placeholderMsg);
+      saveAgents();
+
+      const abortController = new AbortController();
+      activeStreamAbort = abortController;
+
+      const res = await fetch(DEEPSEEK_CONFIG.apiUrl, {
+        method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
+        body: JSON.stringify({ model: DEEPSEEK_CONFIG.model, messages: [{ role: "system", content: buildSystemPrompt(aiConfig) }, ...chat.messages.filter(m => !m._streaming).map(m => ({ role: m.role, content: m.content }))], temperature: aiConfig.temperature || DEFAULT_TEMPERATURE.emotion, top_p: 0.9, max_tokens: 1000, stream: true }),
+        signal: abortController.signal
+      });
+
+      const reader = res.body.getReader(); const decoder = new TextDecoder(); let reply = '';
+      let loadingRemoved = false;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const lines = decoder.decode(value, { stream: true }).split('\n');
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const js = line.slice(6).trim(); if (js === '[DONE]') continue;
+            try {
+              const delta = JSON.parse(js).choices?.[0]?.delta || {};
+              const content = delta.content || '';
+              if (content) {
+                if (!loadingRemoved) {
+                  stopThinkingTimer();
+                  hasReceivedContent = true;
+                  const le = document.querySelector("#messages .loading"); if (le) le.remove();
+                  loadingRemoved = true;
+                }
+                reply += content;
+                placeholderMsg.content = reply.replace(/^\n+/, '');
+                if (currentAgentId === agentId && currentChatId === chatId) {
+                  const aiMsgEl = document.getElementById("messages").querySelector(".msg.ai:last-of-type");
+                  if (!aiMsgEl) {
+                    const newAiMsg = document.createElement("div"); newAiMsg.className = "msg ai";
+                    newAiMsg.textContent = placeholderMsg.content;
+                    newAiMsg.style.animation = 'none'; newAiMsg.style.opacity = '1'; newAiMsg.style.transform = 'none';
+                    document.getElementById("messages").appendChild(newAiMsg);
+                  } else {
+                    aiMsgEl.textContent = placeholderMsg.content;
+                  }
+                  document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+                }
+              }
+            } catch(e) {}
+          }
+        }
+      }
+
+      stopThinkingTimer();
+      const le = document.querySelector("#messages .loading"); if (le) le.remove();
+      activeStreamAbort = null;
+      delete placeholderMsg._streaming;
+
+      if (!reply) {
+        chat.messages.pop();
+        reply = agent.aiConfig.type === "emotion" ? "咋了啊" : "暂无解答";
+        placeholderMsg.content = reply;
+        chat.messages.push({ role: "assistant", content: reply });
+      } else {
+        reply = reply.replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, '').replace(/[。.]{2,}/g, '').trim();
+        placeholderMsg.content = reply;
+      }
+
+      if (await checkText(reply)) {
+        saveAgents();
+        if (currentAgentId === agentId && currentChatId === chatId) renderMessages();
+      } else {
+        chat.messages = chat.messages.filter(m => m !== placeholderMsg);
+        saveAgents();
+        if (currentAgentId === agentId && currentChatId === chatId) {
+          renderMessages();
+          const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = t("toast_change_content");
+          document.getElementById("messages").appendChild(tip);
+        }
+      }
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+      stopThinkingTimer();
+      activeStreamAbort = null;
+      const le = document.querySelector("#messages .loading"); if (le) le.remove();
+      if (currentAgentId === agentId && currentChatId === chatId) {
+        const err = document.createElement("div"); err.className = "msg ai";
+        err.textContent = agent.aiConfig.type === "emotion" ? t("error_network") : t("toast_req_failed") + e.message;
+        document.getElementById("messages").appendChild(err);
+      }
+    }
+  });
+}
+
+function createHelpBtn(key) {
+  const btn = document.createElement('span');
+  btn.className = 'help-btn'; btn.textContent = '?';
+  btn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); showHelpTooltip(key); };
+  return btn;
+}
+
+function showHelpTooltip(key) {
+  const modal = document.getElementById('helpTooltipModal');
+  document.getElementById('helpTooltipTitle').textContent = t(key);
+  document.getElementById('helpTooltipDesc').textContent = (helpTexts[key] && helpTexts[key][currentLang]) || helpTexts[key]?.['zh-CN'] || '暂无说明';
+  modal.classList.add('show');
+}
+
+document.getElementById('helpTooltipClose').onclick = () => { document.getElementById('helpTooltipModal').classList.remove('show'); };
+document.getElementById('helpTooltipModal').onclick = (e) => { if (e.target === document.getElementById('helpTooltipModal')) { document.getElementById('helpTooltipModal').classList.remove('show'); } };
+
+document.getElementById('openShortcutBtn').onclick = () => {
+  document.getElementById('shortcutDesc').textContent = t('shortcut_content');
+  document.getElementById('shortcutModal').classList.add('show');
+  hideModal(document.getElementById('modal'));
+};
+document.getElementById('shortcutClose').onclick = () => { document.getElementById('shortcutModal').classList.remove('show'); };
+document.getElementById('shortcutModal').onclick = (e) => { if (e.target === document.getElementById('shortcutModal')) { document.getElementById('shortcutModal').classList.remove('show'); } };
 
 async function initAll() {
-  await migrateOldData(); applyTheme(); applyHomeBackground(); renderAgentList();
+  await migrateOldData();
+
+  config = JSON.parse(localStorage.getItem("config")) || config;
+  if (config.specialMode === undefined) config.specialMode = false;
+  if (config.enterToSend === undefined) config.enterToSend = true;
+  if (config.lightMode === undefined) config.lightMode = false;
+  if (config.homeBackground === undefined) config.homeBackground = null;
+
+  applyTheme(); applyHomeBackground(); renderAgentList();
   document.getElementById('langSelect').value = currentLang; applyLanguage(currentLang); startUsageTimer();
-  const storedVersion = getStoredAgreementVersion(); if (storedVersion === '0') { openAgreement(true); } startAgreementCheck();
+
+  const storedVersion = getStoredAgreementVersion();
+  if (storedVersion === '0') { openAgreement(true); }
+  startAgreementCheck();
+
   document.getElementById('openAgreementBtn').onclick = () => { hideModal(document.getElementById('modal')); openAgreement(false); };
-  document.getElementById("apiTag").onclick = async () => { const input = await showPrompt(t("please_input"), "验证码"); if (input === AUTH_CODE) { config.specialMode = true; saveData(); showToast(t("toast_activated"), "success"); } else if (input !== null) showToast(t("toast_verify_failed"), "error"); };
+
+  document.getElementById("apiTag").onclick = async () => {
+    const input = await showPrompt(t("please_input"), "验证码");
+    if (input === AUTH_CODE) { config.specialMode = true; saveData(); showToast(t("toast_activated"), "success"); }
+    else if (input !== null) showToast(t("toast_verify_failed"), "error");
+  };
+
   document.getElementById("toggleSidebar").onclick = () => { document.getElementById("sidebar").classList.add("open"); document.getElementById("overlay").classList.add("show"); };
-  document.getElementById("collapseBtn").onclick = closeSidebar; document.getElementById("overlay").onclick = closeSidebar;
+  document.getElementById("collapseBtn").onclick = closeSidebar;
+  document.getElementById("overlay").onclick = closeSidebar;
+
   document.getElementById("fontMinus").onclick = () => { if (config.fontSize > 8) setFontSize(config.fontSize - 1); };
   document.getElementById("fontPlus").onclick = () => setFontSize(config.fontSize + 1);
+
   function setFontSize(size) { config.fontSize = size; document.documentElement.style.setProperty('--font-size', `${size}px`); document.getElementById('fontSizeValue').textContent = size; saveData(); }
-  document.getElementById("newChat").onclick = () => { const agent = getCurrentAgent(); const nc = { id: 'chat_' + Date.now(), title: t('new_chat'), messages: [], pinned: false }; agent.chats.unshift(nc); currentChatId = nc.id; saveAgents(); renderChatList(); renderMessages(); applyChatBackground(); document.getElementById("chatTitle").innerText = nc.title; closeSidebar(); };
-  document.getElementById("openSettings").onclick = () => { document.getElementById("userApiInput").value = config.userApi; document.getElementById('langSelect').value = currentLang; updateFontSizeDisplay(); updateThemeSwitch(); updateHomeBgPreview(); document.getElementById('devControlBox').style.display = config.specialMode ? 'flex' : 'none'; document.getElementById('devSwitch').classList.toggle('checked', config.specialMode); document.getElementById('devSwitch').onclick = () => { config.specialMode = !config.specialMode; document.getElementById('devSwitch').classList.toggle('checked', config.specialMode); document.getElementById('devControlBox').style.display = config.specialMode ? 'flex' : 'none'; saveData(); }; showModal(document.getElementById("modal")); };
+
+  document.getElementById("newChat").onclick = () => {
+    const agent = getCurrentAgent();
+    const nc = { id: 'chat_' + Date.now(), title: t('new_chat'), messages: [], pinned: false };
+    agent.chats.unshift(nc); currentChatId = nc.id; saveAgents();
+    renderChatList(); renderMessages(); applyChatBackground();
+    document.getElementById("chatTitle").innerText = nc.title; closeSidebar();
+  };
+
+  document.getElementById("openSettings").onclick = () => {
+    document.getElementById('devSwitch').onclick = () => { config.specialMode = !config.specialMode; document.getElementById('devSwitch').classList.toggle('checked', config.specialMode); document.getElementById('devControlBox').style.display = config.specialMode ? 'flex' : 'none'; saveData(); };
+    openSettingsPanel();
+  };
+
   document.getElementById("modalSave").onclick = () => { config.userApi = document.getElementById("userApiInput").value.trim(); saveData(); hideModal(document.getElementById("modal")); };
   document.getElementById("modalCancel").onclick = () => hideModal(document.getElementById("modal"));
+
   document.getElementById("send").onclick = sendMsg;
-  document.getElementById('genImgBtn').onclick = async () => { const prompt = document.getElementById('imgPrompt').value.trim(); if (!prompt) { showToast(t('please_input'), 'error'); return; } const loading = document.getElementById('imgLoading'); const img = document.getElementById('resultImg'); const downloadBtn = document.getElementById('downloadImgBtn'); loading.style.display = 'block'; img.classList.remove('show'); downloadBtn.style.display = 'none'; try { const res = await fetch('https://api.siliconflow.cn/v1/images/generations', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + config.userApi }, body: JSON.stringify({ model: 'Kwai-Kolors/Kolors', prompt, image_size: '1024x1024', num_inference_steps: 28 }) }); const data = await res.json(); const url = data.images?.[0]?.url; if (url) { lastGeneratedImageUrl = url; img.src = url; requestAnimationFrame(() => requestAnimationFrame(() => { img.classList.add('show'); downloadBtn.style.display = 'block'; })); } else { showToast(t('toast_gen_failed'), 'error'); } } catch (e) { showToast(t('toast_req_failed') + e.message, 'error'); } finally { loading.style.display = 'none'; } };
+
+  document.getElementById("input").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      if (config.enterToSend && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+      else if (!config.enterToSend && e.shiftKey) { e.preventDefault(); sendMsg(); }
+    }
+  });
+
+  document.getElementById('enterSendSwitch').onclick = () => { config.enterToSend = !config.enterToSend; document.getElementById('enterSendSwitch').classList.toggle('checked', config.enterToSend); saveData(); };
+
+  document.getElementById('genImgBtn').onclick = async () => {
+    const prompt = document.getElementById('imgPrompt').value.trim();
+    if (!prompt) { showToast(t('please_input'), 'error'); return; }
+    const loading = document.getElementById('imgLoading'), img = document.getElementById('resultImg'), downloadBtn = document.getElementById('downloadImgBtn');
+    loading.style.display = 'block'; img.classList.remove('show'); downloadBtn.style.display = 'none';
+    try {
+      const res = await fetch('https://api.siliconflow.cn/v1/images/generations', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + config.userApi }, body: JSON.stringify({ model: 'Kwai-Kolors/Kolors', prompt, image_size: '1024x1024', num_inference_steps: 28 }) });
+      const data = await res.json(); const url = data.images?.[0]?.url;
+      if (url) { lastGeneratedImageUrl = url; img.src = url; requestAnimationFrame(() => requestAnimationFrame(() => { img.classList.add('show'); downloadBtn.style.display = 'block'; })); }
+      else { showToast(t('toast_gen_failed'), 'error'); }
+    } catch (e) { showToast(t('toast_req_failed') + e.message, 'error'); }
+    finally { loading.style.display = 'none'; }
+  };
+
   document.getElementById('downloadImgBtn').onclick = () => { if (!lastGeneratedImageUrl) { showToast(t('toast_no_download'), 'error'); return; } window.open(lastGeneratedImageUrl, '_blank'); showToast(t('toast_download_tip'), 'success'); };
-  document.getElementById("input").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMsg(); } });
+
   document.getElementById("openRewardBtn").onclick = () => { showModal(document.getElementById("rewardModal")); hideModal(document.getElementById("modal")); };
   document.getElementById("closeReward").onclick = () => hideModal(document.getElementById("rewardModal"));
   document.getElementById("rewardModal").onclick = (e) => { if (e.target === document.getElementById("rewardModal")) hideModal(document.getElementById("rewardModal")); };
+
   document.getElementById("openNoticeBtn").onclick = () => { showNotice(false); closeSidebar(); };
   document.getElementById('closeConfigDetailBtn').onclick = () => hideModal(document.getElementById('chatConfigMask'));
+
   document.getElementById("themeSwitch").onclick = () => { config.lightMode = !config.lightMode; document.getElementById("themeSwitch").classList.toggle("checked", config.lightMode); applyTheme(); saveData(); };
-  document.getElementById("pwdCheckSwitch").onclick = () => { config.needPwdCheck = !config.needPwdCheck; document.getElementById("pwdCheckSwitch").classList.toggle("checked", config.needPwdCheck); };
+
   document.getElementById('langSelect').addEventListener('change', function(e) { applyLanguage(e.target.value); });
   document.getElementById('changeAgeBtn').onclick = () => { hideModal(document.getElementById('modal')); showAgeConfirmModal(() => showToast(t('toast_status_updated'), 'success')); };
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const visibleModals = [
+        document.getElementById('modal'),
+        document.getElementById('agentModal'),
+        document.getElementById('editAgentModal'),
+        document.getElementById('promptModal'),
+        document.getElementById('chatConfigMask'),
+        document.getElementById('chatConfigModal'),
+        document.getElementById('rewardModal'),
+        document.getElementById('noticeModal'),
+        document.getElementById('renameModal'),
+        document.getElementById('restReminderModal'),
+        document.getElementById('helpTooltipModal'),
+        document.getElementById('shortcutModal'),
+      ];
+      for (let i = visibleModals.length - 1; i >= 0; i--) {
+        if (visibleModals[i].classList.contains('show')) { hideModal(visibleModals[i]); return; }
+      }
+      if (document.getElementById('imagePage').classList.contains('show')) {
+        document.getElementById('imagePage').classList.remove('show'); return;
+      }
+      if (document.getElementById('chatPage').classList.contains('show')) {
+        document.getElementById('chatPage').classList.remove('show'); closeSidebar(); renderAgentList(); return;
+      }
+    }
+    if (e.ctrlKey && (e.key === '=' || e.key === '+')) { e.preventDefault(); if (config.fontSize < 32) { config.fontSize++; document.documentElement.style.setProperty('--font-size', `${config.fontSize}px`); document.getElementById('fontSizeValue').textContent = config.fontSize; saveData(); } }
+    if (e.ctrlKey && e.key === '-') { e.preventDefault(); if (config.fontSize > 8) { config.fontSize--; document.documentElement.style.setProperty('--font-size', `${config.fontSize}px`); document.getElementById('fontSizeValue').textContent = config.fontSize; saveData(); } }
+  });
 }
 
 let ageConfirmCallback = null;
+
 function showAgeConfirmModal(callback) { ageConfirmCallback = callback; showModal(document.getElementById('confirmAgeModal')); }
-function handleAgeChoice(isAdult) { config.isAdult = isAdult; saveData(); hideModal(document.getElementById('confirmAgeModal')); if (!isAdult && getCurrentAgent()?.aiConfig?.type === 'emotion') document.getElementById('chatPage').classList.remove('show'); if (ageConfirmCallback) { ageConfirmCallback(); ageConfirmCallback = null; } }
+
+function handleAgeChoice(isAdult) {
+  config.isAdult = isAdult; saveData(); hideModal(document.getElementById('confirmAgeModal'));
+  if (!isAdult && getCurrentAgent()?.aiConfig?.type === 'emotion') document.getElementById('chatPage').classList.remove('show');
+  if (ageConfirmCallback) { ageConfirmCallback(); ageConfirmCallback = null; }
+}
+
 document.getElementById('confirmAgeBtnAdult').onclick = () => handleAgeChoice(true);
 document.getElementById('confirmAgeBtnMinor').onclick = () => handleAgeChoice(false);
 
@@ -2206,6 +3078,7 @@ window.onload = async () => {
   if (needAgeConfirm) { showAgeConfirmModal(() => { initAll(); setTimeout(() => showNotice(true), 500); }); }
   else { initAll(); setTimeout(() => showNotice(true), 500); }
 };
+
 document.addEventListener('DOMContentLoaded', () => { history.pushState(null, null, location.href); window.addEventListener('popstate', () => { window.close(); }); });
 </script>
 </body>
