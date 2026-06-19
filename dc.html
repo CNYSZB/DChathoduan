@@ -26,7 +26,7 @@
     color: var(--subtext);
     font-weight: 500;
   }
-  .lang-select {
+  .lang-select-btn {
     width: 100%;
     padding: 12px 14px;
     background: var(--surface-light);
@@ -36,6 +36,61 @@
     font-size: var(--font-size);
     outline: none;
     cursor: pointer;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .lang-select-btn::after {
+    content: '▼';
+    font-size: 12px;
+    color: var(--subtext);
+  }
+
+  .api-select-wrap {
+    margin-top: 16px;
+  }
+  .api-select-wrap label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    font-weight: 500;
+  }
+  .api-select-btn {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    font-size: var(--font-size);
+    outline: none;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .api-select-btn::after {
+    content: '▼';
+    font-size: 12px;
+    color: var(--subtext);
+  }
+  .custom-api-input {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: #fff;
+    outline: none;
+    font-size: var(--font-size);
+    margin-top: 8px;
+    display: none;
+  }
+  .custom-api-input.show {
+    display: block;
   }
 
   .page, .modal-box, .msg, .toast, .chat-item, button, .agent-card {
@@ -121,6 +176,10 @@
   body.light-mode #genImgBtn { color: #fff; }
   body.light-mode .api-tag { color: var(--primary); }
   body.light-mode #closeReward { color: #fff; }
+  body.light-mode .lang-select-btn { color: var(--text); }
+  body.light-mode .api-select-btn { color: var(--text); }
+  body.light-mode .custom-api-input { color: var(--text); }
+  body.light-mode .custom-api-input::placeholder { color: #8e8e93; }
 
   body {
     font-family: 'aacuhei', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
@@ -848,7 +907,7 @@
   }
   #send:active { transform: scale(0.92); }
 
-  .base-modal, #chatConfigModal, #promptModal, #agentModal, #editAgentModal, #selectModal, #chatConfigEditModal, #confirmAgeModal, #restReminderModal {
+  .base-modal, #chatConfigModal, #promptModal, #agentModal, #editAgentModal, #selectModal, #chatConfigEditModal, #confirmAgeModal, #restReminderModal, #langSelectModal {
     position: fixed;
     left: 0; top: 0;
     width: 100%; height: 100%;
@@ -861,9 +920,9 @@
     justify-content: center;
     z-index: 9999;
   }
-  .base-modal.show, #chatConfigModal.show, #promptModal.show, #agentModal.show, #editAgentModal.show, #selectModal.show, #chatConfigEditModal.show, #confirmAgeModal.show, #restReminderModal.show { opacity: 1; visibility: visible; }
+  .base-modal.show, #chatConfigModal.show, #promptModal.show, #agentModal.show, #editAgentModal.show, #selectModal.show, #chatConfigEditModal.show, #confirmAgeModal.show, #restReminderModal.show, #langSelectModal.show { opacity: 1; visibility: visible; }
 
-  .modal-box, .config-modal-box, #chatConfigDetail {
+  .modal-box, .config-modal-box, #chatConfigDetail, #langSelectBox {
     background: var(--surface);
     width: 90%;
     max-width: 360px;
@@ -880,7 +939,8 @@
   }
   body.light-mode .modal-box,
   body.light-mode .config-modal-box,
-  body.light-mode #chatConfigDetail { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
+  body.light-mode #chatConfigDetail,
+  body.light-mode #langSelectBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
   .base-modal.show .modal-box,
   .base-modal.show .config-modal-box,
   #chatConfigModal.show .config-modal-box,
@@ -890,7 +950,44 @@
   #selectModal.show .modal-box,
   #chatConfigEditModal.show .modal-box,
   #confirmAgeModal.show .modal-box,
-  #restReminderModal.show .modal-box { transform: scale(1); }
+  #restReminderModal.show .modal-box,
+  #langSelectModal.show #langSelectBox { transform: scale(1); }
+
+  #langSelectBox {
+    max-width: 300px;
+    padding: 20px;
+  }
+  .lang-select-title {
+    font-size: calc(var(--font-size) + 4px);
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .lang-option {
+    padding: 14px 16px;
+    margin: 4px 0;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: var(--font-size);
+    transition: background 0.15s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid transparent;
+  }
+  .lang-option:hover { background: var(--surface-light); }
+  .lang-option.active {
+    background: var(--primary-bg);
+    border: 1px solid var(--primary);
+  }
+  .lang-option .check-mark {
+    color: var(--primary);
+    font-size: 18px;
+    font-weight: 700;
+    display: none;
+  }
+  .lang-option.active .check-mark { display: block; }
+  .lang-option:active { transform: scale(0.98); }
 
   .modal-head, .config-detail-title {
     display: flex;
@@ -1479,6 +1576,7 @@
     .chat-item .del:hover, .chat-item .rename:hover { transform: scale(1.15); }
     .agent-actions span:hover { background: #242830; }
     #closeNotice.cooldown:hover { filter: none; }
+    .lang-option:hover { background: var(--surface-light); }
   }
 </style>
 </head>
@@ -1576,6 +1674,13 @@
   <div id="selectOptionsList"></div>
 </div>
 
+<div id="langSelectModal" class="base-modal" style="z-index:100002;">
+  <div id="langSelectBox">
+    <div class="lang-select-title" data-i18n="language">语言 / Language</div>
+    <div id="langOptionsList"></div>
+  </div>
+</div>
+
 <div id="confirmAgeModal" class="base-modal" style="z-index:100000;">
   <div id="confirmAgeBox">
     <div id="confirmAgeTitle" data-i18n="age_title">请问您是否已成年？</div>
@@ -1599,16 +1704,14 @@
       <span data-i18n="settings">设置</span>
     </div>
     <div class="modal-body">
-      <label data-i18n="api_key_label">自己的API密钥</label>
-      <input type="password" id="userApiInput" data-i18n-placeholder="api_key_placeholder" placeholder="填写你自己的API">
+      <div class="api-select-wrap">
+        <label data-i18n="api_source">API 线路</label>
+        <button class="api-select-btn" id="apiSelectBtn" data-i18n="api_default">默认线路</button>
+        <input type="password" class="custom-api-input" id="customApiInput" data-i18n-placeholder="api_key_placeholder" placeholder="输入你的自定义 API Key">
+      </div>
       <div class="lang-select-wrap">
         <label data-i18n="language">语言 / Language</label>
-        <select class="lang-select" id="langSelect">
-          <option value="zh-CN">简体中文</option>
-          <option value="zh-HK">繁體中文（香港）</option>
-          <option value="zh-TW">繁體中文（台灣）</option>
-          <option value="en">English</option>
-        </select>
+        <button class="lang-select-btn" id="langSelectBtn"></button>
       </div>
       <div class="font-size-setting">
         <span data-i18n="font_size">字体大小</span>
@@ -1866,7 +1969,20 @@
 <div id="toast" class="toast"></div>
 
 <script>
-const APP_VERSION = '2.3.1';
+const APP_VERSION = '2.3.8';
+
+const PRESET_API_KEYS = {
+  default: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd",
+  line1: "sk-invecoktfzbtqalblrnytslakmfpzqemaclwszknrhpsuoxf",
+  line2: "sk-illhbbvslpisfkwfljgwukqapfebzbaecbjawqcznhcmkyct"
+};
+
+const API_LINE_LABELS = {
+  'zh-CN': ['默认线路', '分流线路一', '分流线路二', '自定义 API'],
+  'zh-HK': ['預設線路', '分流線路一', '分流線路二', '自訂 API'],
+  'zh-TW': ['預設線路', '分流線路一', '分流線路二', '自訂 API'],
+  'en': ['Default Line', 'Line 1', 'Line 2', 'Custom API']
+};
 
 const i18nData = {
   'zh-CN': {
@@ -1879,6 +1995,7 @@ const i18nData = {
     age_desc: '未成年用户将无法使用情感陪伴功能，并受到使用时长限制。', adult: '我已成年', minor: '我未成年',
     rest_title: '⏰ 休息提醒', rest_desc: '您已使用两个小时，建议休息一会。', close: '关闭',
     api_key_label: '自己的API密钥', api_key_placeholder: '填写你自己的API', language: '语言 / Language',
+    api_source: 'API 线路', api_default: '默认线路',
     font_size: '字体大小', light_mode: '浅色模式',
     creator_mode: '创造者模式', view_agreement: '查看用户协议', verify_age_again: '再次验证年龄',
     reward: '打赏作者', version: '当前版本 ' + APP_VERSION, save: '保存', please_input: '请输入', confirm: '确认',
@@ -1910,6 +2027,7 @@ const i18nData = {
     shortcut_guide: '电脑端快捷键指南',
     shortcut_content: 'Esc — 关闭当前弹窗 / 返回上一页面\nEnter — 发送消息（需开启回车发送）\nShift + Enter — 换行\nCtrl + 加号 — 放大字体\nCtrl + 减号 — 缩小字体',
     thinking: '思考中',
+    custom_api_label: '自定义 API Key',
   },
   'zh-HK': {
     agents: '智能體', delete: '刪除', cancel: '取消', settings: '設定', selected: '已選擇',
@@ -1921,6 +2039,7 @@ const i18nData = {
     age_desc: '未成年用戶將無法使用情感陪伴功能，並受到使用時長限制。', adult: '我已成年', minor: '我未成年',
     rest_title: '⏰ 休息提醒', rest_desc: '您已使用兩個小時，建議休息一陣。', close: '關閉',
     api_key_label: '自己嘅API密鑰', api_key_placeholder: '填寫你自己嘅API', language: '語言 / Language',
+    api_source: 'API 線路', api_default: '預設線路',
     font_size: '字體大小', light_mode: '淺色模式',
     creator_mode: '創造者模式', view_agreement: '查看用戶協議', verify_age_again: '再次驗證年齡',
     reward: '打賞作者', version: '當前版本 ' + APP_VERSION, save: '儲存', please_input: '請輸入', confirm: '確認',
@@ -1952,6 +2071,7 @@ const i18nData = {
     shortcut_guide: '電腦端快捷鍵指南',
     shortcut_content: 'Esc — 關閉當前彈窗 / 返回上一頁面\nEnter — 發送訊息（需開啟Enter發送）\nShift + Enter — 換行\nCtrl + 加號 — 放大字體\nCtrl + 減號 — 縮小字體',
     thinking: '思考中',
+    custom_api_label: '自訂 API Key',
   },
   'zh-TW': {
     agents: '智能體', delete: '刪除', cancel: '取消', settings: '設定', selected: '已選擇',
@@ -1963,6 +2083,7 @@ const i18nData = {
     age_desc: '未成年使用者將無法使用情感陪伴功能，並受到使用時間限制。', adult: '我已成年', minor: '我未成年',
     rest_title: '⏰ 休息提醒', rest_desc: '您已使用兩個小時，建議休息一會。', close: '關閉',
     api_key_label: '自己的API金鑰', api_key_placeholder: '填寫你自己的API', language: '語言 / Language',
+    api_source: 'API 線路', api_default: '預設線路',
     font_size: '字型大小', light_mode: '淺色模式',
     creator_mode: '創造者模式', view_agreement: '檢視使用者協議', verify_age_again: '再次驗證年齡',
     reward: '打賞作者', version: '當前版本 ' + APP_VERSION, save: '儲存', please_input: '請輸入', confirm: '確認',
@@ -1994,6 +2115,7 @@ const i18nData = {
     shortcut_guide: '電腦端快捷鍵指南',
     shortcut_content: 'Esc — 關閉當前彈窗 / 返回上一頁面\nEnter — 發送訊息（需開啟Enter發送）\nShift + Enter — 換行\nCtrl + 加號 — 放大字型\nCtrl + 減號 — 縮小字型',
     thinking: '思考中',
+    custom_api_label: '自訂 API Key',
   },
   'en': {
     agents: 'Agents', delete: 'Delete', cancel: 'Cancel', settings: 'Settings', selected: 'Selected',
@@ -2006,6 +2128,7 @@ const i18nData = {
     adult: 'I am an adult', minor: 'I am a minor', rest_title: '⏰ Rest Reminder',
     rest_desc: 'You have been using for two hours, please take a break.', close: 'Close',
     api_key_label: 'Your API Key', api_key_placeholder: 'Enter your API key', language: 'Language / 语言',
+    api_source: 'API Line', api_default: 'Default Line',
     font_size: 'Font Size', light_mode: 'Light Mode',
     creator_mode: 'Creator Mode', view_agreement: 'View User Agreement', verify_age_again: 'Verify Age Again',
     reward: 'Tip the Author', version: 'Current Version ' + APP_VERSION, save: 'Save', please_input: 'Please Input',
@@ -2040,6 +2163,7 @@ const i18nData = {
     shortcut_guide: 'Desktop Shortcut Guide',
     shortcut_content: 'Esc — Close current popup / Return to previous page\nEnter — Send message (when Enter to Send is on)\nShift + Enter — New line\nCtrl + Plus — Increase font size\nCtrl + Minus — Decrease font size',
     thinking: 'Thinking deeply...',
+    custom_api_label: 'Custom API Key',
   }
 };
 
@@ -2049,6 +2173,12 @@ const helpTexts = {
     'zh-HK': '在此填寫你自己嘅 API 密鑰，用於調用 AI 大模型服務。密鑰僅保存在你設備嘅瀏覽器中，唔會上傳到任何伺服器。唔填寫亦可使用預設密鑰。',
     'zh-TW': '在此填寫你自己的 API 金鑰，用於調用 AI 大模型服務。金鑰僅保存在你裝置的瀏覽器中，不會上傳到任何伺服器。不填寫也可使用預設金鑰。',
     'en': 'Enter your own API key here to call the AI large model service. The key is only saved in your device browser and will not be uploaded to any server. You can also use the default key without filling in.'
+  },
+  'api_source': {
+    'zh-CN': '选择 API 线路。支持三条预设线路（默认/分流一/分流二）以及自定义 API。选择自定义后可填写你自己的 API Key。',
+    'zh-HK': '選擇 API 線路。支援三條預設線路（預設/分流一/分流二）以及自訂 API。選擇自訂後可填寫你自己嘅 API Key。',
+    'zh-TW': '選擇 API 線路。支援三條預設線路（預設/分流一/分流二）以及自訂 API。選擇自訂後可填寫你自己的 API Key。',
+    'en': 'Select API line. Supports three preset lines (Default/Line 1/Line 2) and custom API. After selecting custom, you can enter your own API Key.'
   },
   'language': {
     'zh-CN': '切换界面显示语言。更改后即时生效，支持简体中文、繁体中文（香港/台湾）和英文。',
@@ -2104,8 +2234,8 @@ function applyLanguage(lang) {
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
   });
-  const langSelect = document.getElementById('langSelect');
-  if (langSelect) langSelect.value = lang;
+  updateApiSelectDisplay();
+  updateLangSelectDisplay();
   updateVersionDisplay();
   insertHelpButtons();
 }
@@ -2217,13 +2347,50 @@ const DEFAULT_TEMPERATURE = { emotion: 1.1, tool: 0.4 };
 const AUTH_CODE = "258456";
 
 let config = JSON.parse(localStorage.getItem("config")) || {
-  userApi: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd",
+  apiLine: 'default',
+  customApi: '',
   fontSize: 16,
   specialMode: false,
   lightMode: false,
   homeBackground: null,
   enterToSend: true
 };
+
+function getEffectiveApiKey() {
+  if (config.apiLine === 'custom' && config.customApi) {
+    return config.customApi;
+  }
+  return PRESET_API_KEYS[config.apiLine] || PRESET_API_KEYS.default;
+}
+
+function updateApiSelectDisplay() {
+  const btn = document.getElementById('apiSelectBtn');
+  const input = document.getElementById('customApiInput');
+  if (!btn || !input) return;
+  const labels = API_LINE_LABELS[currentLang] || API_LINE_LABELS['zh-CN'];
+  if (config.apiLine === 'default') btn.textContent = labels[0];
+  else if (config.apiLine === 'line1') btn.textContent = labels[1];
+  else if (config.apiLine === 'line2') btn.textContent = labels[2];
+  else if (config.apiLine === 'custom') btn.textContent = labels[3];
+  if (config.apiLine === 'custom') {
+    input.classList.add('show');
+    input.value = config.customApi || '';
+  } else {
+    input.classList.remove('show');
+  }
+}
+
+function updateLangSelectDisplay() {
+  const btn = document.getElementById('langSelectBtn');
+  if (!btn) return;
+  const langNames = {
+    'zh-CN': '简体中文',
+    'zh-HK': '繁體中文（香港）',
+    'zh-TW': '繁體中文（台灣）',
+    'en': 'English'
+  };
+  btn.textContent = langNames[currentLang] || currentLang;
+}
 
 let sessionStartTime = 0, usageTimerInterval = null;
 const TWO_HOURS_MS = 7200000;
@@ -2358,6 +2525,8 @@ async function migrateOldData() {
     saveAgents();
   }
   if (config.homeBackground === undefined) config.homeBackground = null;
+  if (config.apiLine === undefined) config.apiLine = 'default';
+  if (config.customApi === undefined) config.customApi = '';
 }
 
 function saveAgents() { localStorage.setItem("agents", JSON.stringify(agents)); }
@@ -2633,8 +2802,8 @@ document.getElementById('confirmDeleteBtn').onclick = () => {
 };
 
 function openSettingsPanel() {
-  document.getElementById('userApiInput').value = config.userApi;
-  document.getElementById('langSelect').value = currentLang;
+  updateApiSelectDisplay();
+  updateLangSelectDisplay();
   updateFontSizeDisplay(); updateThemeSwitch(); updateHomeBgPreview();
   document.getElementById('enterSendSwitch').classList.toggle('checked', config.enterToSend);
   document.body.classList.toggle('creator-mode', config.specialMode);
@@ -2651,7 +2820,7 @@ document.getElementById('homeBtn').onclick = () => { document.getElementById('ch
 
 async function checkText(text) {
   if (config.specialMode) return true;
-  const key = config.userApi; if (!key) return true;
+  const key = getEffectiveApiKey(); if (!key) return true;
   try {
     const res = await fetch(DEEPSEEK_CONFIG.apiUrl, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key }, body: JSON.stringify({ model: "Qwen/Qwen2.5-7B-Instruct", messages: [{ role: "user", content: "你是极度宽松的内容审核员。判断原则：1.只有直接、露骨、详细的色情动作描写才算异常 2.只有明确的暴力威胁才算异常 3.只有具体的违法犯罪操作指导才算异常。回复只回复'正常'或'异常'两个字。\n" + text }], temperature: 0.1, max_tokens: 8 }) });
     return ((await res.json()).choices?.[0]?.message?.content || "").trim() === "正常";
@@ -2724,6 +2893,62 @@ function updateFontSizeDisplay() { document.getElementById('fontSizeValue').text
 function updateVersionDisplay() { const el = document.getElementById('versionDisplay'); if (el) el.textContent = t('version'); }
 
 function isMinor() { return config.isAdult === false; }
+
+function showLangSelectModal() {
+  const modal = document.getElementById('langSelectModal');
+  const list = document.getElementById('langOptionsList');
+  const langs = [
+    { code: 'zh-CN', name: '简体中文' },
+    { code: 'zh-HK', name: '繁體中文（香港）' },
+    { code: 'zh-TW', name: '繁體中文（台灣）' },
+    { code: 'en', name: 'English' }
+  ];
+  list.innerHTML = '';
+  langs.forEach(lang => {
+    const div = document.createElement('div');
+    div.className = 'lang-option';
+    if (lang.code === currentLang) div.classList.add('active');
+    div.innerHTML = `<span>${lang.name}</span><span class="check-mark">✓</span>`;
+    div.onclick = () => {
+      if (lang.code !== currentLang) {
+        applyLanguage(lang.code);
+        updateLangSelectDisplay();
+        updateApiSelectDisplay();
+      }
+      hideModal(modal);
+    };
+    list.appendChild(div);
+  });
+  showModal(modal);
+}
+
+document.getElementById('langSelectBtn').onclick = () => showLangSelectModal();
+document.getElementById('langSelectModal').onclick = (e) => { if (e.target === document.getElementById('langSelectModal')) hideModal(document.getElementById('langSelectModal')); };
+
+document.getElementById('apiSelectBtn').onclick = async () => {
+  const labels = API_LINE_LABELS[currentLang] || API_LINE_LABELS['zh-CN'];
+  const options = [
+    { label: labels[0], value: 'default' },
+    { label: labels[1], value: 'line1' },
+    { label: labels[2], value: 'line2' },
+    { label: labels[3], value: 'custom' }
+  ];
+  const value = await showSelect(options, document.getElementById('apiSelectBtn'));
+  if (value) {
+    config.apiLine = value;
+    if (value === 'custom') {
+      document.getElementById('customApiInput').classList.add('show');
+    } else {
+      document.getElementById('customApiInput').classList.remove('show');
+    }
+    saveData();
+  }
+};
+
+document.getElementById('customApiInput').addEventListener('input', function() {
+  config.customApi = this.value.trim();
+  saveData();
+});
 
 let lastGeneratedImageUrl = null;
 let activeStreamAbort = null;
@@ -2813,7 +3038,7 @@ async function sendMsg() {
       return;
     }
     try {
-      const key = config.userApi; if (!key) throw new Error(t("toast_no_api"));
+      const key = getEffectiveApiKey(); if (!key) throw new Error(t("toast_no_api"));
       const aiConfig = chat.chatConfig && chat.chatConfig.type ? chat.chatConfig : agent.aiConfig;
 
       const placeholderMsg = { role: "assistant", content: "", _streaming: true };
@@ -2943,9 +3168,11 @@ async function initAll() {
   if (config.enterToSend === undefined) config.enterToSend = true;
   if (config.lightMode === undefined) config.lightMode = false;
   if (config.homeBackground === undefined) config.homeBackground = null;
+  if (config.apiLine === undefined) config.apiLine = 'default';
+  if (config.customApi === undefined) config.customApi = '';
 
   applyTheme(); applyHomeBackground(); renderAgentList();
-  document.getElementById('langSelect').value = currentLang; applyLanguage(currentLang); startUsageTimer();
+  applyLanguage(currentLang); startUsageTimer();
 
   const storedVersion = getStoredAgreementVersion();
   if (storedVersion === '0') { openAgreement(true); }
@@ -2981,7 +3208,10 @@ async function initAll() {
     openSettingsPanel();
   };
 
-  document.getElementById("modalSave").onclick = () => { config.userApi = document.getElementById("userApiInput").value.trim(); saveData(); hideModal(document.getElementById("modal")); };
+  document.getElementById("modalSave").onclick = () => {
+    config.customApi = document.getElementById("customApiInput").value.trim();
+    saveData(); hideModal(document.getElementById("modal"));
+  };
   document.getElementById("modalCancel").onclick = () => hideModal(document.getElementById("modal"));
 
   document.getElementById("send").onclick = sendMsg;
@@ -3001,7 +3231,7 @@ async function initAll() {
     const loading = document.getElementById('imgLoading'), img = document.getElementById('resultImg'), downloadBtn = document.getElementById('downloadImgBtn');
     loading.style.display = 'block'; img.classList.remove('show'); downloadBtn.style.display = 'none';
     try {
-      const res = await fetch('https://api.siliconflow.cn/v1/images/generations', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + config.userApi }, body: JSON.stringify({ model: 'Kwai-Kolors/Kolors', prompt, image_size: '1024x1024', num_inference_steps: 28 }) });
+      const res = await fetch('https://api.siliconflow.cn/v1/images/generations', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getEffectiveApiKey() }, body: JSON.stringify({ model: 'Kwai-Kolors/Kolors', prompt, image_size: '1024x1024', num_inference_steps: 28 }) });
       const data = await res.json(); const url = data.images?.[0]?.url;
       if (url) { lastGeneratedImageUrl = url; img.src = url; requestAnimationFrame(() => requestAnimationFrame(() => { img.classList.add('show'); downloadBtn.style.display = 'block'; })); }
       else { showToast(t('toast_gen_failed'), 'error'); }
@@ -3020,7 +3250,6 @@ async function initAll() {
 
   document.getElementById("themeSwitch").onclick = () => { config.lightMode = !config.lightMode; document.getElementById("themeSwitch").classList.toggle("checked", config.lightMode); applyTheme(); saveData(); };
 
-  document.getElementById('langSelect').addEventListener('change', function(e) { applyLanguage(e.target.value); });
   document.getElementById('changeAgeBtn').onclick = () => { hideModal(document.getElementById('modal')); showAgeConfirmModal(() => showToast(t('toast_status_updated'), 'success')); };
 
   document.addEventListener('keydown', (e) => {
@@ -3038,6 +3267,7 @@ async function initAll() {
         document.getElementById('restReminderModal'),
         document.getElementById('helpTooltipModal'),
         document.getElementById('shortcutModal'),
+        document.getElementById('langSelectModal'),
       ];
       for (let i = visibleModals.length - 1; i >= 0; i--) {
         if (visibleModals[i].classList.contains('show')) { hideModal(visibleModals[i]); return; }
