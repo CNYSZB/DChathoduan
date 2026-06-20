@@ -93,6 +93,35 @@
     display: block;
   }
 
+  .email-row {
+    margin-top: 12px;
+    cursor: pointer;
+    color: var(--subtext);
+    transition: opacity 0.15s ease;
+    line-height: 1.5;
+  }
+  .email-row:active {
+    opacity: 0.7;
+  }
+  .email-row-line1 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-size);
+  }
+  .email-row-line1 svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+  .email-row-line2 {
+    font-size: calc(var(--font-size) - 2px);
+    margin-top: 2px;
+    opacity: 0.8;
+    word-break: break-all;
+  }
+
   .page, .modal-box, .msg, .toast, .chat-item, button, .agent-card {
     will-change: transform;
     transform: translateZ(0);
@@ -180,6 +209,7 @@
   body.light-mode .api-select-btn { color: var(--text); }
   body.light-mode .custom-api-input { color: var(--text); }
   body.light-mode .custom-api-input::placeholder { color: #8e8e93; }
+  body.light-mode .email-row { color: var(--subtext); }
 
   body {
     font-family: 'aacuhei', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
@@ -1742,6 +1772,16 @@
       <button class="side-btn" style="margin-top:8px;width:100%;" id="changeAgeBtn" data-i18n="verify_age_again">再次验证年龄</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="openShortcutBtn" data-i18n="shortcut_guide">电脑端快捷键指南</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn" data-i18n="reward">打赏作者</button>
+      <div class="email-row" id="emailRow">
+        <div class="email-row-line1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+            <path d="M22 4L12 13L2 4"></path>
+          </svg>
+          <span data-i18n="official_email">官方邮箱</span>
+        </div>
+        <div class="email-row-line2">dchatstudio@outlook.com</div>
+      </div>
       <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;" id="versionDisplay"></div>
     </div>
     <div class="modal-foot">
@@ -1969,7 +2009,7 @@
 <div id="toast" class="toast"></div>
 
 <script>
-const APP_VERSION = '2.3.8';
+const APP_VERSION = '2.3.9';
 
 const PRESET_API_KEYS = {
   default: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd",
@@ -2028,6 +2068,8 @@ const i18nData = {
     shortcut_content: 'Esc — 关闭当前弹窗 / 返回上一页面\nEnter — 发送消息（需开启回车发送）\nShift + Enter — 换行\nCtrl + 加号 — 放大字体\nCtrl + 减号 — 缩小字体',
     thinking: '思考中',
     custom_api_label: '自定义 API Key',
+    official_email: '官方邮箱',
+    email_copied: '邮箱已复制',
   },
   'zh-HK': {
     agents: '智能體', delete: '刪除', cancel: '取消', settings: '設定', selected: '已選擇',
@@ -2072,6 +2114,8 @@ const i18nData = {
     shortcut_content: 'Esc — 關閉當前彈窗 / 返回上一頁面\nEnter — 發送訊息（需開啟Enter發送）\nShift + Enter — 換行\nCtrl + 加號 — 放大字體\nCtrl + 減號 — 縮小字體',
     thinking: '思考中',
     custom_api_label: '自訂 API Key',
+    official_email: '官方郵箱',
+    email_copied: '郵箱已複製',
   },
   'zh-TW': {
     agents: '智能體', delete: '刪除', cancel: '取消', settings: '設定', selected: '已選擇',
@@ -2116,6 +2160,8 @@ const i18nData = {
     shortcut_content: 'Esc — 關閉當前彈窗 / 返回上一頁面\nEnter — 發送訊息（需開啟Enter發送）\nShift + Enter — 換行\nCtrl + 加號 — 放大字型\nCtrl + 減號 — 縮小字型',
     thinking: '思考中',
     custom_api_label: '自訂 API Key',
+    official_email: '官方郵箱',
+    email_copied: '郵箱已複製',
   },
   'en': {
     agents: 'Agents', delete: 'Delete', cancel: 'Cancel', settings: 'Settings', selected: 'Selected',
@@ -2164,6 +2210,8 @@ const i18nData = {
     shortcut_content: 'Esc — Close current popup / Return to previous page\nEnter — Send message (when Enter to Send is on)\nShift + Enter — New line\nCtrl + Plus — Increase font size\nCtrl + Minus — Decrease font size',
     thinking: 'Thinking deeply...',
     custom_api_label: 'Custom API Key',
+    official_email: 'Official Email',
+    email_copied: 'Email copied',
   }
 };
 
@@ -3159,6 +3207,14 @@ document.getElementById('openShortcutBtn').onclick = () => {
 };
 document.getElementById('shortcutClose').onclick = () => { document.getElementById('shortcutModal').classList.remove('show'); };
 document.getElementById('shortcutModal').onclick = (e) => { if (e.target === document.getElementById('shortcutModal')) { document.getElementById('shortcutModal').classList.remove('show'); } };
+
+document.getElementById('emailRow').addEventListener('click', () => {
+  navigator.clipboard.writeText('dchatstudio@outlook.com').then(() => {
+    showToast(t('email_copied'), 'success');
+  }).catch(() => {
+    showToast(t('email_copied'), 'success');
+  });
+});
 
 async function initAll() {
   await migrateOldData();
