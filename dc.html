@@ -1,3606 +1,961 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>dct</title>
-<style>
-  @font-face {
-    font-family: 'aacuhei';
-    src: url('aacuhei.ttf') format('truetype');
-  }
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .bracket-content {
-    font-style: italic;
-    color: #888;
-  }
-  body.light-mode .bracket-content {
-    color: #999;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=2.0">
+  <title>Dchat · 沉浸式AI对话</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  .api-select-wrap {
-    margin-top: 16px;
-  }
-  .api-select-wrap label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: calc(var(--font-size) - 2px);
-    color: var(--subtext);
-    font-weight: 500;
-  }
-  .api-select-btn {
-    width: 100%;
-    padding: 12px 14px;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    color: var(--text);
-    font-size: var(--font-size);
-    outline: none;
-    cursor: pointer;
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .api-select-btn::after {
-    content: '▼';
-    font-size: 12px;
-    color: var(--subtext);
-  }
-  .custom-api-input {
-    width: 100%;
-    padding: 12px 14px;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    color: #fff;
-    outline: none;
-    font-size: var(--font-size);
-    margin-top: 8px;
-    display: none;
-  }
-  .custom-api-input.show {
-    display: block;
-  }
+    :root {
+      --bg: #0a0a0c;
+      --text: #f0f0f5;
+      --subtext: #9898a0;
+      --primary: #3E9AE2;
+      --bubble-user: #1a4a6e;
+      --bubble-ai: #1e2026;
+      --border-light: rgba(255, 255, 255, 0.08);
+      --surface-light: #1a1c22;
+      --border: #2a2c33;
+      --font-stack: "SF Pro SC", "SF Pro Text", "PingFang SC", "Helvetica Neue", system-ui, -apple-system, sans-serif;
+    }
 
-  .custom-model-wrap {
-    margin-top: 8px;
-    display: none;
-  }
-  .custom-model-wrap.show {
-    display: block;
-  }
-  .custom-model-wrap label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: calc(var(--font-size) - 2px);
-    color: var(--subtext);
-    font-weight: 500;
-  }
-  .custom-model-display {
-    width: 100%;
-    padding: 12px 14px;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    color: var(--text);
-    font-size: var(--font-size);
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-height: 48px;
-  }
-  .custom-model-display::after {
-    content: '✎';
-    font-size: 14px;
-    color: var(--subtext);
-  }
-  .custom-model-display.placeholder {
-    color: #5a5c64;
-  }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
 
-  #modelSelectModal .modal-box {
-    max-width: 380px;
-  }
-  .model-select-title {
-    font-size: calc(var(--font-size) + 4px);
-    font-weight: 700;
-    margin-bottom: 8px;
-    text-align: center;
-  }
-  .model-select-subtitle {
-    font-size: calc(var(--font-size) - 2px);
-    color: var(--subtext);
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  .model-option-btn {
-    width: 100%;
-    padding: 14px 16px;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    color: var(--text);
-    font-size: var(--font-size);
-    cursor: pointer;
-    text-align: left;
-    margin-bottom: 10px;
-    transition: background 0.15s ease;
-    line-height: 1.4;
-  }
-  .model-option-btn:active {
-    background: var(--primary-bg);
-    border-color: var(--primary);
-  }
-  .model-option-btn .model-name {
-    font-weight: 600;
-    display: block;
-  }
-  .model-option-btn .model-desc {
-    font-size: calc(var(--font-size) - 3px);
-    color: var(--subtext);
-    display: block;
-    margin-top: 2px;
-  }
-  .model-option-btn.custom-model-btn {
-    text-align: center;
-    font-weight: 500;
-  }
+    body {
+      font-family: var(--font-stack);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(62, 154, 226, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.04) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
 
-  /* 代码块样式 */
-  .code-block-wrap {
-    background: #0d1117;
-    border: 1px solid #30363d;
-    border-radius: 12px;
-    margin: 10px 0;
-    overflow: hidden;
-  }
-  body.light-mode .code-block-wrap {
-    background: #f6f8fa;
-    border-color: #d0d7de;
-  }
-  .code-block-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 14px;
-    background: #161b22;
-    border-bottom: 1px solid #30363d;
-  }
-  body.light-mode .code-block-header {
-    background: #eaeef2;
-    border-color: #d0d7de;
-  }
-  .code-lang-tag {
-    font-size: 11px;
-    color: #8b949e;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-  .code-copy-btn {
-    font-size: 11px;
-    padding: 4px 10px;
-    background: #21262d;
-    color: #c9d1d9;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-  }
-  body.light-mode .code-copy-btn {
-    background: #ffffff;
-    color: #24292f;
-    border-color: #d0d7de;
-  }
-  .code-copy-btn:active {
-    background: #30363d;
-  }
-  .code-block-body {
-    padding: 14px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .code-block-body pre {
-    margin: 0;
-    white-space: pre-wrap;
-    word-break: break-all;
-  }
-  .code-block-body code {
-    font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
-    font-size: 13px;
-    color: #c9d1d9;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-  body.light-mode .code-block-body code {
-    color: #24292f;
-  }
+    /* ========== 导航栏 ========== */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 10, 12, 0.8);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
 
-  .email-row {
-    margin-top: 12px;
-    cursor: pointer;
-    color: var(--subtext);
-    transition: opacity 0.15s ease;
-    line-height: 1.5;
-  }
-  .email-row:active {
-    opacity: 0.7;
-  }
-  .email-row-line1 {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: var(--font-size);
-  }
-  .email-row-line1 svg {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-    opacity: 0.8;
-  }
-  .email-row-line2 {
-    font-size: calc(var(--font-size) - 2px);
-    margin-top: 2px;
-    opacity: 0.8;
-    word-break: break-all;
-  }
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      color: transparent;
+      background: linear-gradient(135deg, #ffffff 0%, #c0c0c8 85%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
 
-  .page, .modal-box, .msg, .toast, .chat-item, button, .agent-card {
-    will-change: transform;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
 
-  :root {
-    --bg: #0a0a0c;
-    --surface: #14161a;
-    --surface-light: #1a1c22;
-    --border: #2a2c33;
-    --text: #f0f0f5;
-    --subtext: #9898a0;
-    --primary: #3E9AE2;
-    --primary-bg: #1a3a5c;
-    --danger: #ff4444;
-    --bubble-user: #1a4a6e;
-    --bubble-ai: #1e2026;
-    --font-size: 16px;
-  }
+    .nav-links a {
+      color: var(--subtext);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 450;
+      transition: all 0.25s ease;
+      padding: 6px 0;
+      border-bottom: 2px solid transparent;
+    }
 
-  body.light-mode {
-    --bg: #f5f5f7;
-    --surface: #ffffff;
-    --surface-light: #f0f0f2;
-    --border: #d1d1d6;
-    --text: #1c1c1e;
-    --subtext: #6e6e73;
-    --primary: #0071e3;
-    --primary-bg: #e8f2fd;
-    --danger: #ff3b30;
-    --bubble-user: #0071e3;
-    --bubble-ai: #e9e9eb;
-  }
+    .nav-links a:hover {
+      color: #ffffff;
+      border-bottom-color: #ff6b4a;
+    }
 
-  body.light-mode .homeActionBtn { color: var(--text); }
-  body.light-mode .fab { color: var(--text); }
-  body.light-mode #imgPrompt { color: var(--text); }
-  body.light-mode #imgPrompt::placeholder { color: #8e8e93; }
-  body.light-mode #input { color: var(--text); }
-  body.light-mode #input::placeholder { color: #8e8e93; }
-  body.light-mode .modal-body input,
-  body.light-mode .modal-body textarea,
-  body.light-mode #promptInput,
-  body.light-mode #agentNameInput,
-  body.light-mode #agentDescInput,
-  body.light-mode #agentAiStyleInput,
-  body.light-mode #editAgentNameInput,
-  body.light-mode #editAgentDescInput,
-  body.light-mode #editAgentAiStyleInput,
-  body.light-mode #renameInput,
-  body.light-mode #chatConfigAiStyleInput { color: var(--text); }
-  body.light-mode .modal-body input::placeholder,
-  body.light-mode .modal-body textarea::placeholder,
-  body.light-mode #promptInput::placeholder,
-  body.light-mode #agentNameInput::placeholder,
-  body.light-mode #agentDescInput::placeholder,
-  body.light-mode #agentAiStyleInput::placeholder,
-  body.light-mode #editAgentNameInput::placeholder,
-  body.light-mode #editAgentDescInput::placeholder,
-  body.light-mode #editAgentAiStyleInput::placeholder,
-  body.light-mode #renameInput::placeholder,
-  body.light-mode #chatConfigAiStyleInput::placeholder { color: #8e8e93; }
-  body.light-mode .select-btn { color: var(--text); }
-  body.light-mode .inline-select-option { color: var(--text); border-color: var(--border); }
-  body.light-mode .switch-box span { color: var(--text); }
-  body.light-mode .prompt-value { color: var(--text); }
-  body.light-mode .config-item-value { color: var(--text); }
-  body.light-mode .chat-item .del,
-  body.light-mode .chat-item .rename { color: var(--primary); }
-  body.light-mode .chat-item .del { color: var(--danger); }
-  body.light-mode .agent-actions span { color: var(--text); }
-  body.light-mode .toast { color: #fff; }
-  body.light-mode .side-btn,
-  body.light-mode .new-chat,
-  body.light-mode .notice-btn { color: var(--text); }
-  body.light-mode #toggleSidebar,
-  body.light-mode #homeBtn,
-  body.light-mode #collapseBtn { color: var(--text); }
-  body.light-mode #genImgBtn { color: #fff; }
-  body.light-mode .api-tag { color: var(--primary); }
-  body.light-mode #closeReward { color: #fff; }
-  body.light-mode .api-select-btn { color: var(--text); }
-  body.light-mode .custom-api-input { color: var(--text); }
-  body.light-mode .custom-api-input::placeholder { color: #8e8e93; }
-  body.light-mode .custom-model-display { color: var(--text); }
-  body.light-mode .custom-model-display.placeholder { color: #8e8e93; }
-  body.light-mode .model-option-btn { color: var(--text); }
-  body.light-mode .email-row { color: var(--subtext); }
+    /* ========== 首屏 ========== */
+    .hero-area {
+      padding: 200px 0 80px;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-  body {
-    font-family: 'aacuhei', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-    background: var(--bg);
-    color: var(--text);
-    height: 100vh;
-    overflow: hidden;
-    font-size: var(--font-size);
-  }
+    .hero-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
 
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background:
-      radial-gradient(circle at 20% 30%, rgba(62, 154, 226, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: -1;
-  }
+    .hero-area h1 {
+      font-size: clamp(48px, 9vw, 76px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      margin-bottom: 24px;
+      background: linear-gradient(to right, #ffffff, #d0d0e0, #ffffff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
 
-  body.light-mode::before {
-    background:
-      radial-gradient(circle at 20% 30%, rgba(0, 113, 227, 0.06) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(0, 113, 227, 0.04) 0%, transparent 50%);
-  }
+    .hero-area p {
+      font-size: 20px;
+      color: #a0a0b0;
+      margin-bottom: 56px;
+    }
 
-  #splash {
-    position: fixed;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: #000;
-    z-index: 9999999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 1;
-    transition: opacity 0.5s ease;
-  }
-  #splashIcon {
-    width: 120px;
-    height: 120px;
-    object-fit: contain;
-    opacity: 0;
-    transform: scale(0.8);
-    transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-  }
-  #splash.show #splashIcon {
-    opacity: 1;
-    transform: scale(1);
-  }
-  #splash.fade {
-    opacity: 0;
-    pointer-events: none;
-  }
+    .download-section {
+      padding: 40px 0 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
 
-  #pageContainer {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-  }
-  .page {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-    background: transparent;
-  }
-  #homePage {
-    transform: translateX(0);
-    z-index: 1;
-    background-color: #0a0a0c;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-  body.light-mode #homePage { background-color: var(--bg); }
-  #chatPage {
-    transform: translateX(100%);
-    z-index: 2;
-    background-color: #0a0a0c;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-  body.light-mode #chatPage { background-color: var(--bg); }
-  #imagePage {
-    transform: translateX(100%);
-    z-index: 3;
-    background: #0a0a0c;
-  }
-  body.light-mode #imagePage { background: var(--bg); }
-  #chatPage.show, #imagePage.show { transform: translateX(0); }
+    .action-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: center;
+    }
 
-  body.has-home-bg .homeActionBtn,
-  body.has-home-bg .fab,
-  body.has-home-bg .agent-actions span,
-  body.has-home-bg .bottom-delete-bar,
-  body.has-home-bg #bottomDeleteBar {
-    background: rgba(255, 255, 255, 0.12) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  }
-  body.has-home-bg.light-mode .homeActionBtn,
-  body.has-home-bg.light-mode .fab,
-  body.has-home-bg.light-mode .agent-actions span,
-  body.has-home-bg.light-mode .bottom-delete-bar,
-  body.has-home-bg.light-mode #bottomDeleteBar {
-    background: rgba(0, 0, 0, 0.08) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
-  }
+    .download-btn {
+      padding: 18px 48px;
+      background: #ff6b4a;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.3px;
+      border: none;
+      cursor: pointer;
+      border-radius: 30px;
+    }
 
-  body.has-chat-bg .chat-header,
-  body.has-chat-bg .input-bar,
-  body.has-chat-bg #toggleSidebar,
-  body.has-chat-bg .api-tag,
-  body.has-chat-bg #send {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    border-color: rgba(255, 255, 255, 0.15) !important;
-  }
-  body.has-chat-bg .msg {
-    background: rgba(255, 255, 255, 0.08) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  }
-  body.has-chat-bg .msg.user {
-    background: rgba(26, 74, 110, 0.5) !important;
-  }
-  body.has-chat-bg .msg.ai {
-    background: rgba(20, 22, 26, 0.5) !important;
-  }
-  body.has-chat-bg .loading {
-    background: rgba(255, 255, 255, 0.08) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  }
-  body.has-chat-bg.light-mode .chat-header,
-  body.has-chat-bg.light-mode .input-bar,
-  body.has-chat-bg.light-mode #toggleSidebar,
-  body.has-chat-bg.light-mode .api-tag,
-  body.has-chat-bg.light-mode #send {
-    background: rgba(0, 0, 0, 0.06) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    border-color: rgba(0, 0, 0, 0.08) !important;
-  }
-  body.has-chat-bg.light-mode .msg {
-    background: rgba(0, 0, 0, 0.04) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(0, 0, 0, 0.06) !important;
-  }
-  body.has-chat-bg.light-mode .msg.user {
-    background: rgba(0, 113, 227, 0.4) !important;
-  }
-  body.has-chat-bg.light-mode .msg.ai {
-    background: rgba(233, 233, 235, 0.5) !important;
-  }
-  body.has-chat-bg.light-mode .loading {
-    background: rgba(0, 0, 0, 0.04) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(0, 0, 0, 0.06) !important;
-  }
+    .download-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.7s ease;
+    }
 
-  .homeWrap {
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-  }
-  .homeHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  .homeTitle { font-size: 22px; font-weight: 700; }
-  .homeActions { display: flex; gap: 12px; }
-  .homeActionBtn {
-    background: var(--primary-bg);
-    color: #fff;
-    border: 1px solid var(--border);
-    padding: 10px 16px;
-    border-radius: 30px;
-    cursor: pointer;
-    font-size: calc(var(--font-size) - 2px);
-    font-weight: 500;
-    transition: transform 0.15s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  }
-  body.light-mode .homeActionBtn { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
-  .homeActionBtn:active { transform: scale(0.96); }
-  #multiSelectBtn.active { background: #3a2a1a; }
-  #cancelMultiBtn { display: none; }
-  #cancelMultiBtn.show { display: block; }
+    .download-btn:hover::after {
+      left: 100%;
+    }
 
-  #agentList {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding-bottom: 100px;
-    -webkit-overflow-scrolling: touch;
-  }
-  .agent-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    position: relative;
-  }
-  body.light-mode .agent-card { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); }
-  .agent-card.pinned { border-left: 4px solid #FFD700; }
-  .agent-card.selected {
-    background: #1a2a3a;
-    border: 1px solid var(--primary);
-  }
-  body.light-mode .agent-card.selected { background: #e8f2fd; }
-  .agent-checkbox {
-    width: 24px;
-    height: 24px;
-    border-radius: 8px;
-    border: 2px solid #3a3c44;
-    background: #1a1c22;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-  .multi-select-mode .agent-checkbox { display: flex; }
-  .agent-checkbox.checked { background: var(--primary); border-color: var(--primary); }
-  .agent-checkbox.checked::after { content: '✓'; }
-  .agent-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--border);
-    flex-shrink: 0;
-  }
-  .agent-info { flex: 1; overflow: hidden; }
-  .agent-name { font-size: calc(var(--font-size) + 0px); font-weight: 600; margin-bottom: 4px; }
-  .agent-desc {
-    font-size: calc(var(--font-size) - 4px);
-    color: var(--subtext);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .agent-actions { display: flex; gap: 8px; flex-shrink: 0; }
-  .multi-select-mode .agent-actions { display: none; }
-  .agent-actions span {
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--surface-light);
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 18px;
-    border: 1px solid var(--border);
-  }
-  .agent-actions span:active { transform: scale(0.9); }
+    .download-btn:hover {
+      background: #ff7b5c;
+      transform: translateY(-3px);
+    }
 
-  .fab-container {
-    position: fixed;
-    bottom: 30px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    z-index: 100;
-  }
-  .fab {
-    width: 60px;
-    height: 60px;
-    border-radius: 30px;
-    background: var(--primary-bg);
-    border: 1px solid var(--border);
-    color: #fff;
-    font-size: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    transition: transform 0.15s ease;
-  }
-  body.light-mode .fab { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
-  .fab:active { transform: scale(0.92); }
-  .fab.gen-img { background: #2a1a4a; color: #fff; }
-  body.light-mode .fab.gen-img { background: #e8e0f7; color: var(--text); }
+    .web-btn {
+      padding: 16px 38px;
+      color: #e8e8ed;
+      font-size: 17px;
+      text-decoration: none;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.35s ease;
+      backdrop-filter: blur(12px);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+      border-radius: 30px;
+    }
 
-  .bottom-delete-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 16px 20px;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    z-index: 101;
-  }
-  .bottom-delete-bar.show { display: flex; }
-  #selectedCount { color: var(--primary); }
-  #confirmDeleteBtn {
-    background: var(--danger);
-    padding: 12px 24px;
-    border-radius: 30px;
-    border: none;
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
-  }
+    .web-btn:hover {
+      border-color: #3E9AE2;
+      background: rgba(62, 154, 226, 0.1);
+      transform: translateY(-2px);
+    }
 
-  #agreementOverlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.85);
-    z-index: 99999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-  }
-  #agreementOverlay.hidden { display: none; }
-  #agreementBox {
-    background: #14161a;
-    border: 1px solid #2a2c33;
-    border-radius: 24px;
-    width: 100%;
-    max-width: 420px;
-    height: 80vh;
-    max-height: 600px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-  }
-  body.light-mode #agreementBox { box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-  #agreementIframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: transparent;
-  }
+    .qq-btn {
+      padding: 16px 38px;
+      color: #e8e8ed;
+      font-size: 17px;
+      text-decoration: none;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.35s ease;
+      backdrop-filter: blur(12px);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+      border-radius: 30px;
+    }
 
-  .creator-only { display: none; }
-  .creator-mode .creator-only { display: block; }
-  .creator-mode .creator-only-flex { display: flex; }
+    .qq-btn:hover {
+      border-color: #ff6b4a;
+      background: rgba(255, 107, 74, 0.1);
+      transform: translateY(-2px);
+    }
 
-  #downloadImgBtn {
-    background: var(--primary-bg);
-    color: #fff;
-    border: 1px solid var(--border);
-    padding: 14px;
-    border-radius: 30px;
-    cursor: pointer;
-    margin-bottom: 16px;
-    font-size: var(--font-size);
-    font-weight: 600;
-    display: none;
-    text-align: center;
-  }
-  #downloadImgBtn:active { transform: scale(0.97); }
+    .group-hint {
+      color: #6b6b72;
+      font-size: 14px;
+    }
 
-  .imgPageWrap {
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-  }
-  .imgHeader {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  #backBtnFromImg {
-    background: var(--primary-bg);
-    color: #fff;
-    border: 1px solid var(--border);
-    padding: 12px 18px;
-    border-radius: 30px;
-    cursor: pointer;
-    font-size: var(--font-size);
-    font-weight: 500;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  }
-  body.light-mode #backBtnFromImg { color: var(--text); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
-  #backBtnFromImg:active { transform: scale(0.96); }
-  .imgTitle { font-size: 22px; font-weight: 700; }
-  #imgPrompt {
-    padding: 16px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    color: #fff;
-    outline: none;
-    resize: none;
-    height: 120px;
-    margin-bottom: 16px;
-    font-size: var(--font-size);
-    box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-  #imgPrompt::placeholder { color: #5a5c64; }
-  #genImgBtn {
-    background: #2a1a4a;
-    color: #fff;
-    border: 1px solid var(--border);
-    padding: 14px;
-    border-radius: 30px;
-    cursor: pointer;
-    margin-bottom: 16px;
-    font-size: var(--font-size);
-    font-weight: 600;
-    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
-  }
-  #genImgBtn:active { transform: scale(0.97); }
-  #imgLoading {
-    color: var(--subtext);
-    text-align: center;
-    padding: 10px;
-    display: none;
-  }
-  #imgResult {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--surface);
-    border-radius: 24px;
-    padding: 20px;
-    border: 1px solid var(--border);
-    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.3);
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-  body.light-mode #imgResult { box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.06); }
-  #resultImg {
-    width: 100%;
-    max-width: 360px;
-    height: auto;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    border-radius: 16px;
-    opacity: 0;
-    transform: scale(0.95);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-  }
-  body.light-mode #resultImg { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
-  #resultImg.show { opacity: 1; transform: scale(1); }
+    .platform-support {
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: #6b6b72;
+      font-size: 13px;
+    }
 
-  #app {
-    display: none;
-    width: 100%;
-    height: 100vh;
-    position: relative;
-  }
+    .platform-label {
+      opacity: 0.65;
+      font-weight: 500;
+    }
 
-  #sidebar {
-    width: 280px;
-    height: 100vh;
-    background: var(--surface);
-    position: fixed;
-    left: 0; top: 0;
-    z-index: 1000;
-    transform: translateX(-100%);
-    transition: transform 0.35s ease;
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid var(--border);
-    box-shadow: 20px 0 40px rgba(0, 0, 0, 0.5);
-    will-change: auto;
-  }
-  body.light-mode #sidebar { box-shadow: 10px 0 20px rgba(0, 0, 0, 0.08); }
-  #sidebar.open { transform: translateX(0); }
-  .side-header {
-    padding: 20px 16px;
-    font-size: calc(var(--font-size) + 4px);
-    font-weight: 700;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  #collapseBtn, #homeBtn {
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-size: var(--font-size);
-    cursor: pointer;
-    width: 36px;
-    height: 36px;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backface-visibility: visible;
-    will-change: auto;
-    transform: none;
-  }
-  .side-header-actions { display: flex; gap: 8px; }
-  #collapseBtn:active, #homeBtn:active { transform: scale(0.92); }
-  .notice-btn {
-    margin: 12px;
-    padding: 12px;
-    background: #3a2a1a;
-    color: #fff;
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    font-size: var(--font-size);
-    font-weight: 500;
-    cursor: pointer;
-  }
-  body.light-mode .notice-btn { background: #fef3e4; color: var(--text); }
-  .notice-btn:active { transform: scale(0.97); }
-  .new-chat {
-    margin: 12px;
-    padding: 12px;
-    background: var(--primary-bg);
-    color: #fff;
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    font-size: var(--font-size);
-    font-weight: 500;
-    cursor: pointer;
-  }
-  body.light-mode .new-chat { color: var(--text); }
-  .new-chat:active { transform: scale(0.97); }
-  .chat-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 4px 0;
-    -webkit-overflow-scrolling: touch;
-  }
-  .chat-item {
-    padding: 14px 16px;
-    margin: 4px 8px;
-    border-radius: 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    font-size: var(--font-size);
-    border: 1px solid transparent;
-  }
-  .chat-item.pinned { background: #2a2a1a; border-left: 3px solid #FFD700; }
-  body.light-mode .chat-item.pinned { background: #fefce8; }
-  .chat-item.active { background: #1a2a3a; border: 1px solid var(--primary); }
-  body.light-mode .chat-item.active { background: #e8f2fd; }
-  .chat-item-left { display: flex; align-items: center; gap: 8px; flex: 1; overflow: hidden; }
-  .pin-icon { color: #FFD700; font-size: 14px; cursor: pointer; opacity: 0.4; flex-shrink: 0; }
-  .pin-icon.pinned { opacity: 1; }
-  .chat-title-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .chat-item-actions { display: flex; gap: 8px; flex-shrink: 0; }
-  .chat-item .del { color: var(--danger); font-size: var(--font-size); cursor: pointer; }
-  .chat-item .rename { color: var(--primary); font-size: var(--font-size); cursor: pointer; }
-  .chat-item .chat-config-btn { color: #FFD700; font-size: var(--font-size); cursor: pointer; }
-  .side-bottom { padding: 16px 12px; border-top: 1px solid var(--border); }
-  .side-btn {
-    padding: 12px;
-    background: var(--surface-light);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    width: 100%;
-    margin-bottom: 8px;
-    font-size: var(--font-size);
-    font-weight: 500;
-    cursor: pointer;
-  }
-  .side-btn:active { transform: scale(0.97); }
+    .platform-icons {
+      display: flex;
+      gap: 12px;
+    }
 
-  #overlay {
-    position: fixed;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.25s ease, visibility 0.25s;
-    z-index: 999;
-  }
-  #overlay.show { opacity: 1; visibility: visible; }
+    .platform-icon {
+      font-size: 18px;
+      opacity: 0.45;
+      transition: opacity 0.3s ease;
+      cursor: default;
+    }
 
-  #chat-container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    background: transparent;
-  }
+    .platform-icon:hover {
+      opacity: 0.8;
+    }
 
-  .chat-header {
-    background: var(--surface);
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-  }
-  #toggleSidebar {
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-size: 22px;
-    margin-right: 16px;
-    cursor: pointer;
-    width: 44px;
-    height: 44px;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  #toggleSidebar:active { transform: scale(0.94); }
-  .chat-title { flex: 1; text-align: center; font-size: calc(var(--font-size) + 4px); font-weight: 700; }
-  .api-tag {
-    font-size: calc(var(--font-size) - 4px);
-    color: var(--primary);
-    margin-left: 8px;
-    padding: 6px 12px;
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    cursor: pointer;
-    background: var(--primary-bg);
-  }
+    /* ========== 区块标题 ========== */
+    .section-spacer {
+      height: 100px;
+    }
 
-  #messages {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    -webkit-overflow-scrolling: touch;
-  }
+    .block-title {
+      font-size: 42px;
+      font-weight: 620;
+      text-align: center;
+      letter-spacing: -0.5px;
+      color: #f0f0f5;
+      padding: 0 20px;
+      margin-bottom: 50px;
+    }
 
-  .msg {
-    max-width: 85%;
-    padding: 14px 18px;
-    border-radius: 24px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    word-break: break-word;
-    font-size: var(--font-size);
-    line-height: 1.5;
-    border: 1px solid var(--border);
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeInUp 0.25s ease forwards;
-  }
-  .msg.user { background: var(--bubble-user); color: #fff; align-self: flex-end; border-bottom-right-radius: 8px; }
-  .msg.ai { background: var(--bubble-ai); color: var(--text); align-self: flex-start; border-bottom-left-radius: 8px; }
-  .loading {
-    max-width: 85%;
-    background: var(--bubble-ai);
-    padding: 14px 18px;
-    border-radius: 24px;
-    border-bottom-left-radius: 8px;
-    color: var(--subtext);
-    align-self: flex-start;
-    font-size: var(--font-size);
-    border: 1px solid var(--border);
-  }
+    .block-subtitle {
+      text-align: center;
+      color: #6b6b72;
+      font-size: 14px;
+      padding: 0 20px;
+      margin-top: 24px;
+      margin-bottom: 20px;
+    }
 
-  .input-bar { padding: 16px 20px; background: var(--surface); border-top: 1px solid var(--border); }
-  .input-wrapper { display: flex; gap: 12px; align-items: flex-end; }
-  #bracketBtn {
-    width: 48px;
-    height: 48px;
-    border-radius: 30px;
-    background: var(--surface-light);
-    color: var(--text);
-    border: 1px solid var(--border);
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    letter-spacing: 2px;
-  }
-  #bracketBtn:active { transform: scale(0.92); background: var(--primary-bg); }
-  #input {
-    flex: 1;
-    min-height: 48px;
-    max-height: 120px;
-    padding: 14px 18px;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    color: #fff;
-    outline: none;
-    resize: none;
-    font-size: var(--font-size);
-    line-height: 1.5;
-  }
-  #input::placeholder { color: #5a5c64; }
-  #send {
-    width: 52px;
-    height: 52px;
-    border-radius: 30px;
-    background: var(--primary-bg);
-    color: #fff;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    font-size: 22px;
-    font-weight: 300;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  #send:active { transform: scale(0.92); }
+    /* ========== 分隔线 ========== */
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.04);
+      margin: 60px 0;
+    }
 
-  .base-modal, #chatConfigModal, #promptModal, #agentModal, #editAgentModal, #selectModal, #chatConfigEditModal, #confirmAgeModal, #restReminderModal, #confirmModal, #modelSelectModal {
-    position: fixed;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-  }
-  .base-modal.show, #chatConfigModal.show, #promptModal.show, #agentModal.show, #editAgentModal.show, #selectModal.show, #chatConfigEditModal.show, #confirmAgeModal.show, #restReminderModal.show, #confirmModal.show, #modelSelectModal.show { opacity: 1; visibility: visible; }
+    /* ========== 编年史 ========== */
+    .chronicle-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
 
-  .modal-box, .config-modal-box, #chatConfigDetail, #confirmBox {
-    background: var(--surface);
-    width: 90%;
-    max-width: 360px;
-    max-height: 85vh;
-    padding: 24px;
-    border-radius: 32px;
-    border: 1px solid var(--border);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transform: scale(0.9);
-    transition: transform 0.25s ease;
-  }
-  body.light-mode .modal-box,
-  body.light-mode .config-modal-box,
-  body.light-mode #chatConfigDetail,
-  body.light-mode #confirmBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
-  .base-modal.show .modal-box,
-  .base-modal.show .config-modal-box,
-  #chatConfigModal.show .config-modal-box,
-  #promptModal.show .modal-box,
-  #agentModal.show .modal-box,
-  #editAgentModal.show .modal-box,
-  #selectModal.show .modal-box,
-  #chatConfigEditModal.show .modal-box,
-  #confirmAgeModal.show .modal-box,
-  #restReminderModal.show .modal-box,
-  #confirmModal.show #confirmBox,
-  #modelSelectModal.show .modal-box { transform: scale(1); }
+    .chronicle-era {
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.015);
+      border-radius: 16px;
+    }
 
-  #confirmBox {
-    max-width: 340px;
-    text-align: center;
-    padding: 28px;
-  }
-  #confirmTitle {
-    font-size: calc(var(--font-size) + 4px);
-    font-weight: 700;
-    margin-bottom: 12px;
-    color: var(--text);
-  }
-  #confirmMsg {
-    font-size: calc(var(--font-size) - 2px);
-    color: var(--subtext);
-    margin-bottom: 24px;
-    line-height: 1.5;
-  }
-  #confirmBtnGroup {
-    display: flex;
-    gap: 12px;
-  }
-  #confirmBtnGroup button {
-    flex: 1;
-    padding: 12px;
-    border-radius: 30px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    font-size: var(--font-size);
-    font-weight: 500;
-    background: var(--surface-light);
-    color: var(--text);
-  }
-  #confirmBtnGroup button.primary {
-    background: var(--danger);
-    color: #fff;
-    border-color: var(--danger);
-  }
-  #confirmBtnGroup button:active { transform: scale(0.96); }
+    .chronicle-era h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #3E9AE2;
+      margin-bottom: 12px;
+    }
 
-  .modal-head, .config-detail-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-  .modal-head span, .config-detail-title span { font-size: calc(var(--font-size) + 4px); font-weight: 700; }
-  .modal-close, .config-detail-close { display: none; }
+    .chronicle-era ul {
+      list-style: none;
+      padding: 0;
+    }
 
-  .modal-body {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-right: 4px;
-  }
-  .modal-body label, .config-item label {
-    display: block;
-    margin-top: 14px;
-    font-size: calc(var(--font-size) - 2px);
-    margin-bottom: 6px;
-    color: var(--subtext);
-    font-weight: 500;
-  }
-  .modal-body label:first-child { margin-top: 0; }
-  .modal-body input, .modal-body textarea, .config-item select, .config-item textarea, #promptInput {
-    width: 100%;
-    padding: 12px 14px;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    color: #fff;
-    outline: none;
-    font-size: var(--font-size);
-  }
-  .modal-body textarea { min-height: 80px; resize: none; }
+    .chronicle-era ul li {
+      font-size: 14px;
+      color: #a0a0b0;
+      padding: 4px 0;
+      padding-left: 16px;
+      position: relative;
+    }
 
-  .bg-btn {
-    width: 100%;
-    padding: 12px 14px;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    color: var(--text);
-    font-size: var(--font-size);
-    cursor: pointer;
-    text-align: center;
-    margin-top: 8px;
-  }
-  .bg-btn:active { transform: scale(0.97); }
-  .bg-btn.reset { border-color: var(--danger); color: var(--danger); }
-  .bg-preview {
-    width: 100%;
-    height: 80px;
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    background-size: cover;
-    background-position: center;
-    margin-top: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--subtext);
-    font-size: 13px;
-  }
+    .chronicle-era ul li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      color: #3E9AE2;
+      font-weight: 700;
+    }
 
-  .select-btn {
-    width: 100%;
-    padding: 14px 16px;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    color: #fff;
-    font-size: var(--font-size);
-    text-align: left;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    z-index: 1;
-  }
-  .select-btn::after { content: '▼'; font-size: 12px; color: var(--subtext); }
+    .chronicle-highlight {
+      color: #ff6b4a;
+      font-weight: 500;
+    }
 
-  .inline-select-options {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    margin-top: 4px;
-    z-index: 100;
-    overflow: hidden;
-    display: none;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-  }
-  .inline-select-options.show { display: block; }
-  .inline-select-option {
-    padding: 14px 16px;
-    font-size: var(--font-size);
-    cursor: pointer;
-    border-bottom: 1px solid var(--border);
-    color: var(--text);
-    transition: background 0.1s ease;
-  }
-  .inline-select-option:last-child { border-bottom: none; }
-  .inline-select-option:active { background: var(--surface-light); }
+    /* ========== 智能体创建UI（同步应用内样式） ========== */
+    .agent-form-flow {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 0 30px;
+    }
 
-  .switch-box { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; }
-  .switch {
-    position: relative;
-    width: 50px;
-    height: 28px;
-    background: #3a3c44;
-    border-radius: 30px;
-    cursor: pointer;
-    border: 1px solid var(--border);
-  }
-  body.light-mode .switch { background: #d1d1d6; }
-  .switch::after {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 20px;
-    height: 20px;
-    background: #fff;
-    border-radius: 50%;
-    transition: transform 0.2s ease;
-  }
-  .switch.checked { background: var(--primary); }
-  .switch.checked::after { transform: translateX(22px); }
-  .modal-foot, .config-btn-group {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-    flex-shrink: 0;
-  }
-  .modal-foot button, .config-btn {
-    flex: 1;
-    padding: 12px;
-    border-radius: 30px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    font-size: var(--font-size);
-    font-weight: 500;
-    background: var(--surface-light);
-    color: var(--text);
-  }
-  .modal-foot .primary, .config-confirm { background: var(--primary-bg); color: #fff; border: 1px solid var(--border); }
-  body.light-mode .modal-foot .primary,
-  body.light-mode .config-confirm { color: var(--text); }
-  .modal-foot button:active, .config-btn:active { transform: scale(0.96); }
+    .form-label {
+      display: block;
+      font-size: 14px;
+      color: var(--subtext);
+      font-weight: 500;
+      margin-top: 20px;
+      margin-bottom: 6px;
+    }
 
-  .font-size-setting { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding: 8px 0; }
-  .font-size-setting span:first-child { font-size: calc(var(--font-size) - 2px); color: var(--subtext); }
-  .font-size-control { display: flex; align-items: center; gap: 16px; }
-  .font-size-control button {
-    width: 36px; height: 36px;
-    border-radius: 30px;
-    border: 1px solid var(--border);
-    background: var(--surface-light);
-    color: #fff;
-    font-size: 18px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  body.light-mode .font-size-control button { color: var(--text); }
-  .font-size-control span { min-width: 40px; text-align: center; font-size: var(--font-size); }
+    .form-label:first-child {
+      margin-top: 0;
+    }
 
-  /* 可点击的token数字 */
-  .token-clickable {
-    cursor: pointer;
-    border-bottom: 1px dashed var(--subtext);
-    padding: 2px 4px;
-    transition: color 0.15s, border-color 0.15s;
-  }
-  .token-clickable:hover {
-    color: var(--primary);
-    border-bottom-color: var(--primary);
-  }
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      color: #fff;
+      font-size: 15px;
+      font-family: var(--font-stack);
+      outline: none;
+      border-radius: 20px;
+    }
 
-  .avatar-selector { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
-  #avatarPreview, #editAvatarPreview { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
-  .avatar-btn {
-    flex: 1;
-    padding: 12px 16px;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    color: var(--text);
-    font-size: var(--font-size);
-    cursor: pointer;
-    text-align: center;
-  }
-  .avatar-btn:active { background: var(--surface); }
-  #avatarFile, #editAvatarFile, #homeBgFile { display: none; }
+    .form-textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 12px 14px;
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      color: #fff;
+      font-size: 15px;
+      font-family: var(--font-stack);
+      outline: none;
+      resize: none;
+      border-radius: 20px;
+    }
 
-  #chatConfigMask {
-    z-index: 99999;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-  }
-  #chatConfigMask.show { opacity: 1; visibility: visible; }
+    .avatar-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 8px;
+    }
 
-  .config-item-row { margin-bottom: 16px; }
-  .config-item-label { font-size: calc(var(--font-size) - 2px); color: var(--subtext); margin-bottom: 6px; }
-  .config-item-value {
-    font-size: var(--font-size);
-    color: var(--text);
-    padding: 10px 14px;
-    background: var(--surface-light);
-    border-radius: 16px;
-    border: 1px solid var(--border);
-  }
-  .prompt-wrap { position: relative; }
-  .prompt-value {
-    width: 100%;
-    height: 80px;
-    font-size: var(--font-size);
-    color: var(--text);
-    padding: 10px 14px;
-    background: var(--surface-light);
-    border-radius: 16px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    border: 1px solid var(--border);
-  }
-  .copy-btn {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    padding: 6px 12px;
-    background: var(--primary-bg);
-    color: #fff;
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .copy-btn:active { transform: scale(0.92); }
-  .copy-tip { font-size: 12px; color: var(--primary); margin-top: 4px; display: none; text-align: right; }
+    .avatar-circle {
+      width: 60px;
+      height: 60px;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      background: var(--surface-light);
+      border-radius: 50%;
+    }
 
-  #rewardModal {
-    position: fixed;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 99999;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  #rewardModal.show { opacity: 1; visibility: visible; }
-  #rewardBox {
-    background: var(--surface);
-    border-radius: 32px;
-    padding: 28px;
-    width: 100%;
-    max-width: 340px;
-    text-align: center;
-    border: 1px solid var(--border);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-    transform: scale(0.9);
-    transition: transform 0.25s ease;
-  }
-  body.light-mode #rewardBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
-  #rewardModal.show #rewardBox { transform: scale(1); }
-  #rewardTitle { font-size: 18px; color: var(--primary); margin-bottom: 20px; font-weight: 700; }
-  #rewardImg { width: 100%; max-width: 260px; border-radius: 20px; border: 1px solid var(--border); }
-  #closeReward {
-    margin-top: 24px;
-    padding: 12px 28px;
-    background: var(--primary-bg);
-    color: #fff;
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  #closeReward:active { transform: scale(0.96); }
+    .avatar-action {
+      flex: 1;
+      padding: 12px 16px;
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      color: #f0f0f5;
+      font-size: 15px;
+      cursor: pointer;
+      text-align: center;
+      font-family: var(--font-stack);
+      border-radius: 20px;
+    }
 
-  #noticeModal {
-    position: fixed;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 999999;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  #noticeModal.show { opacity: 1; visibility: visible; }
-  #noticeBox {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 36px;
-    width: 100%;
-    max-width: 640px;
-    height: 80vh;
-    max-height: 560px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-    transform: scale(0.9);
-    transition: transform 0.25s ease;
-  }
-  body.light-mode #noticeBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
-  #noticeModal.show #noticeBox { transform: scale(1); }
+    .select-btn {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: #fff;
+      font-size: 15px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+      font-family: var(--font-stack);
+    }
 
-  #closeNotice {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 40px;
-    height: 40px;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    color: #fff;
-    font-size: 22px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    transition: opacity 0.3s ease, background 0.3s ease;
-  }
-  body.light-mode #closeNotice { color: var(--text); }
-  #closeNotice:active { transform: scale(0.9); }
-  #closeNotice.cooldown {
-    background: #2a2a2a;
-    color: #888;
-    cursor: not-allowed;
-    font-size: 16px;
-    font-weight: 600;
-  }
-  body.light-mode #closeNotice.cooldown { background: #e0e0e0; color: #999; }
-  #closeNotice.cooldown:active { transform: none; }
+    .select-btn::after {
+      content: '▼';
+      font-size: 12px;
+      color: var(--subtext);
+    }
 
-  #noticeIframe { width: 100%; height: 100%; border: none; background: transparent; border-radius: 36px; }
+    .inline-select-options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: #14161a;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-top: 4px;
+      z-index: 100;
+      overflow: hidden;
+      display: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
 
-  #titleLoading {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999999;
-    color: #fff;
-    font-size: var(--font-size);
-  }
-  #titleLoading.show { opacity: 1; visibility: visible; }
+    .inline-select-options.show {
+      display: block;
+    }
 
-  #renameModal .modal-box { max-width: 360px; }
+    .inline-select-option {
+      padding: 14px 16px;
+      font-size: 15px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      transition: background 0.1s ease;
+      text-align: center;
+    }
 
-  #confirmAgeBox {
-    background: var(--surface);
-    border-radius: 32px;
-    padding: 28px;
-    width: 90%;
-    max-width: 340px;
-    text-align: center;
-    border: 1px solid var(--border);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-    transform: scale(0.9);
-    transition: transform 0.25s ease;
-  }
-  body.light-mode #confirmAgeBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
-  #confirmAgeModal.show #confirmAgeBox { transform: scale(1); }
-  #confirmAgeTitle {
-    font-size: 18px;
-    color: var(--text);
-    margin-bottom: 8px;
-    font-weight: 700;
-  }
-  #confirmAgeDesc {
-    font-size: 14px;
-    color: var(--subtext);
-    margin-bottom: 24px;
-    line-height: 1.5;
-  }
-  #confirmAgeBtnAdult {
-    width: 100%;
-    padding: 14px;
-    background: var(--primary-bg);
-    color: #fff;
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 12px;
-  }
-  #confirmAgeBtnMinor {
-    width: 100%;
-    padding: 14px;
-    background: var(--surface-light);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-  }
-  #confirmAgeBtnAdult:active, #confirmAgeBtnMinor:active { transform: scale(0.97); }
+    .inline-select-option:last-child {
+      border-bottom: none;
+    }
 
-  #restReminderBox {
-    background: var(--surface);
-    border-radius: 32px;
-    padding: 28px;
-    width: 90%;
-    max-width: 340px;
-    text-align: center;
-    border: 1px solid var(--border);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-    transform: scale(0.9);
-    transition: transform 0.25s ease;
-  }
-  body.light-mode #restReminderBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
-  #restReminderModal.show #restReminderBox { transform: scale(1); }
-  #restReminderTitle {
-    font-size: 18px;
-    color: var(--text);
-    margin-bottom: 8px;
-    font-weight: 700;
-  }
-  #restReminderDesc {
-    font-size: 14px;
-    color: var(--subtext);
-    margin-bottom: 24px;
-    line-height: 1.5;
-  }
-  #restReminderCloseBtn {
-    width: 100%;
-    padding: 14px;
-    background: var(--primary-bg);
-    color: #fff;
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  #restReminderCloseBtn:active { transform: scale(0.97); }
+    .inline-select-option:hover {
+      background: #1a3a5c;
+    }
 
-  .help-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    color: var(--subtext);
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-left: 6px;
-    flex-shrink: 0;
-  }
-  .help-btn:active { transform: scale(0.9); }
+    .inline-select-option.selected {
+      background: #1a3a5c;
+      color: #fff;
+    }
 
-  .help-tooltip-modal {
-    position: fixed;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 99999;
-    padding: 16px;
-  }
-  .help-tooltip-modal.show { opacity: 1; visibility: visible; }
-  .help-tooltip-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 24px;
-    width: 90%;
-    max-width: 340px;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    transform: scale(0.9);
-    transition: transform 0.25s ease;
-  }
-  .help-tooltip-modal.show .help-tooltip-box { transform: scale(1); }
-  .help-tooltip-title {
-    font-size: calc(var(--font-size) + 2px);
-    font-weight: 700;
-    margin-bottom: 12px;
-    color: var(--text);
-  }
-  .help-tooltip-desc {
-    font-size: calc(var(--font-size) - 2px);
-    color: var(--subtext);
-    line-height: 1.6;
-    margin-bottom: 20px;
-  }
-  .help-tooltip-close {
-    padding: 10px 28px;
-    background: var(--primary-bg);
-    color: #fff;
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    font-size: var(--font-size);
-    font-weight: 500;
-    cursor: pointer;
-  }
-  body.light-mode .help-tooltip-close { color: var(--text); }
-  .help-tooltip-close:active { transform: scale(0.96); }
+    .form-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
 
-  .toast {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.9);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 40px;
-    padding: 14px 24px;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 500;
-    text-align: center;
-    min-width: 120px;
-    max-width: 280px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    z-index: 9999999;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s, transform 0.25s ease;
-    pointer-events: none;
-  }
-  body.light-mode .toast { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); }
-  .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
-  .toast.error { background: #441111; border-color: #662222; }
-  .toast.success { background: #114444; border-color: #226666; }
+    .form-btn {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      background: var(--surface-light);
+      color: #f0f0f5;
+      text-align: center;
+      font-family: var(--font-stack);
+      border-radius: 30px;
+    }
 
-  .hide { display: none !important; }
+    .form-btn.primary {
+      background: #1a3a5c;
+      border-color: #3E9AE2;
+      color: #fff;
+    }
 
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #4a4c55; border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: #5a5c66; }
-  body.light-mode ::-webkit-scrollbar-thumb { background: #c1c1c6; }
-  body.light-mode ::-webkit-scrollbar-thumb:hover { background: #a1a1a6; }
+    .disabled-zone {
+      opacity: 0.35;
+      pointer-events: none;
+      filter: grayscale(0.2);
+    }
 
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    .fade-edge {
+      position: relative;
+    }
 
-  @media (hover: hover) and (pointer: fine) {
-    button:hover, .fab:hover, .homeActionBtn:hover, .side-btn:hover, .new-chat:hover,
-    .notice-btn:hover, #send:hover, #toggleSidebar:hover, #backBtnFromImg:hover,
-    #genImgBtn:hover, #closeReward:hover,
-    #confirmDeleteBtn:hover, .chat-item:hover, .agent-card:hover, .select-btn:hover,
-    .inline-select-option:hover, .avatar-btn:hover, .copy-btn:hover, .api-tag:hover,
-    .bg-btn:hover, .custom-model-display:hover, .model-option-btn:hover { filter: brightness(1.15); }
-    .chat-item .del:hover, .chat-item .rename:hover { transform: scale(1.15); }
-    .agent-actions span:hover { background: #242830; }
-    #closeNotice.cooldown:hover { filter: none; }
-  }
-</style>
+    .fade-edge::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: linear-gradient(to bottom, #0a0a0c 0%, transparent 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .fade-edge::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: linear-gradient(to top, #0a0a0c 0%, transparent 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ========== 对话气泡（同步应用内样式） ========== */
+    .chat-flow {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .chat-bubble {
+      max-width: 85%;
+      padding: 14px 18px;
+      font-size: 15px;
+      line-height: 1.5;
+      border: 1px solid var(--border);
+    }
+
+    .chat-bubble.user {
+      background: #1a4a6e;
+      color: #fff;
+      align-self: flex-end;
+      border-radius: 24px 24px 8px 24px;
+    }
+
+    .chat-bubble.ai {
+      background: #1e2026;
+      color: #f0f0f5;
+      align-self: flex-start;
+      border-radius: 24px 24px 24px 8px;
+    }
+
+    .typewriter-text span {
+      opacity: 0;
+      animation: fadeInChar 0.06s ease forwards;
+    }
+
+    @keyframes fadeInChar {
+      from { opacity: 0; transform: translateY(3px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .trigger-btn {
+      padding: 10px 24px;
+      background: #1a3a5c;
+      color: #fff;
+      border: 1px solid #3E9AE2;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: var(--font-stack);
+      transition: all 0.2s ease;
+      border-radius: 30px;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .trigger-btn:hover {
+      background: #1e4a6e;
+    }
+
+    .footer-area {
+      padding: 48px 20px;
+      text-align: center;
+      color: #6b6b72;
+      font-size: 14px;
+      border-top: 1px solid rgba(255,255,255,0.03);
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        padding: 16px 20px;
+      }
+      .nav-links {
+        gap: 14px;
+      }
+      .nav-links a {
+        font-size: 13px;
+      }
+      .hero-area h1 {
+        font-size: 38px;
+      }
+      .block-title {
+        font-size: 30px;
+      }
+      .agent-form-flow {
+        padding: 0 20px;
+      }
+      .platform-support {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div id="splash">
-  <img id="splashIcon" src="appIcon.png" alt="APP图标">
-</div>
-
-<div id="agreementOverlay" class="hidden">
-  <div id="agreementBox">
-    <iframe id="agreementIframe" src=""></iframe>
-  </div>
-</div>
-
-<div id="pageContainer">
-  <div class="page" id="homePage">
-    <div class="homeWrap">
-      <div class="homeHeader">
-        <div class="homeTitle">智能体</div>
-        <div class="homeActions">
-          <button class="homeActionBtn" id="multiSelectBtn">删除</button>
-          <button class="homeActionBtn" id="cancelMultiBtn">取消</button>
-          <button class="homeActionBtn" id="homeSettingsBtn">设置</button>
-        </div>
-      </div>
-      <div id="agentList"></div>
+  <nav>
+    <div class="logo">Dchat</div>
+    <div class="nav-links">
+      <a href="#home">首页</a>
+      <a href="#create-agent">创建智能体</a>
+      <a href="#animate">回复动画</a>
+      <a href="#chat-preview">对话预览</a>
+      <a href="#chronicle">编年史</a>
+      <a href="#download-section">下载</a>
     </div>
-    <div class="fab-container">
-      <button class="fab" id="newAgentFab">+</button>
-      <button class="fab gen-img" id="goToImageFab">🎨</button>
-    </div>
-    <div class="bottom-delete-bar" id="bottomDeleteBar">
-      <span>已选择 <span id="selectedCount">0</span> 个智能体</span>
-      <button id="confirmDeleteBtn">删除</button>
+  </nav>
+
+  <div class="hero-area" id="home">
+    <div class="hero-inner">
+      <h1>对话，本该如此沉浸</h1>
+      <p>基于 DeepSeek 内核 · 全维度自定义 AI 伙伴</p>
     </div>
   </div>
 
-  <div class="page" id="chatPage">
-    <div id="app">
-      <div id="chat-container">
-        <div class="chat-header">
-          <button id="toggleSidebar">☰</button>
-          <div class="chat-title" id="chatTitle">新对话</div>
-          <span class="api-tag" id="apiTag">内容由 ai 生成，仅供参考</span>
-        </div>
-        <div id="messages"></div>
-        <div class="input-bar">
-          <div class="input-wrapper">
-            <button id="bracketBtn">( )</button>
-            <textarea id="input" placeholder="想说点什么就跟我说吧..."></textarea>
-            <button id="send">↑</button>
-          </div>
-        </div>
+  <div class="download-section" id="download-section">
+    <div class="action-group">
+      <a href="Dchat_2.5.0.apk" class="download-btn" download="Dchat_2.5.0.apk">
+        <i class="fa-brands fa-android" style="margin-right: 8px;"></i>下载 Android 版本
+      </a>
+      <a href="https://cnyszb.github.io/dht/dc.html" class="web-btn" target="_blank">
+        <i class="fa-solid fa-desktop" style="margin-right: 8px;"></i>网页端入口
+      </a>
+      <a href="#" class="qq-btn" id="qqGroupBtn">
+        <i class="fa-brands fa-qq" style="margin-right: 8px;"></i>加入官方社群
+      </a>
+    </div>
+    <div class="group-hint">
+      官方Q群：629741287 · 反馈与建议：dchatstudio@outlook.com
+    </div>
+    <div class="platform-support">
+      <span class="platform-label">支持系统</span>
+      <span class="platform-icons">
+        <i class="fa-brands fa-android platform-icon" title="Android"></i>
+        <i class="fa-brands fa-windows platform-icon" title="Windows"></i>
+        <i class="fa-brands fa-apple platform-icon" title="macOS"></i>
+        <i class="fa-brands fa-linux platform-icon" title="Linux"></i>
+      </span>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="section-spacer" id="create-agent"></div>
+  <div class="block-title">创建你的专属智能体</div>
+
+  <div class="agent-form-flow fade-edge">
+    <div class="disabled-zone">
+      <div class="form-label">头像</div>
+      <div class="avatar-row">
+        <div class="avatar-circle">👤</div>
+        <div class="avatar-action">选择图片</div>
+      </div>
+    </div>
+
+    <div class="disabled-zone">
+      <div class="form-label">名称</div>
+      <input class="form-input" type="text" value="情感陪伴助手" readonly>
+    </div>
+
+    <div class="disabled-zone">
+      <div class="form-label">描述</div>
+      <input class="form-input" type="text" value="一个善解人意的聊天伙伴" readonly>
+    </div>
+
+    <div style="position: relative; z-index: 10;">
+      <div class="form-label" style="color: #3E9AE2;">AI类型 ✦ 可交互</div>
+      <div class="select-btn" id="aiTypeSelectBtn" onclick="toggleSelect('aiTypeDropdown')">
+        <span id="aiTypeText">情感陪伴</span>
+      </div>
+      <div class="inline-select-options" id="aiTypeDropdown">
+        <div class="inline-select-option selected" onclick="selectOption('aiType', '情感陪伴', this)">情感陪伴</div>
+        <div class="inline-select-option" onclick="selectOption('aiType', '工具', this)">工具</div>
+      </div>
+    </div>
+
+    <div style="position: relative; z-index: 9;">
+      <div class="form-label" style="color: #3E9AE2;">AI性别 ✦ 可交互</div>
+      <div class="select-btn" id="aiGenderSelectBtn" onclick="toggleSelect('aiGenderDropdown')">
+        <span id="aiGenderText">中性</span>
+      </div>
+      <div class="inline-select-options" id="aiGenderDropdown">
+        <div class="inline-select-option" onclick="selectOption('aiGender', '男性', this)">男性</div>
+        <div class="inline-select-option" onclick="selectOption('aiGender', '女性', this)">女性</div>
+        <div class="inline-select-option selected" onclick="selectOption('aiGender', '中性', this)">中性</div>
+      </div>
+    </div>
+
+    <div class="disabled-zone">
+      <div class="form-label">回复风格</div>
+      <textarea class="form-textarea" readonly>你是熟人聊天搭子，主打随性敢说、接地气怼梗，允许日常粗口、直白吐槽，纯口语化唠嗑，别端着、别官方，怎么自然怎么说，禁止用表情符号</textarea>
+    </div>
+
+    <div class="disabled-zone">
+      <div class="form-buttons">
+        <div class="form-btn">取消</div>
+        <div class="form-btn primary">创建</div>
       </div>
     </div>
   </div>
 
-  <div class="page" id="imagePage">
-    <div class="imgPageWrap">
-      <div class="imgHeader">
-        <button id="backBtnFromImg">← 返回</button>
-        <div class="imgTitle">AI生图</div>
-      </div>
-      <textarea id="imgPrompt" placeholder="输入画面描述，例如：一只可爱的橘猫，夕阳下，治愈风，高清，细节丰富"></textarea>
-      <button id="genImgBtn">开始生成</button>
-      <button id="downloadImgBtn">下载图片</button>
-      <div id="imgLoading">生成中...</div>
-      <div id="imgResult">
-        <img id="resultImg" alt="生成结果">
-      </div>
+  <div class="block-subtitle">
+     应用内"创建智能体"界面，显示与应用内有区别但真不大的
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="section-spacer" id="animate"></div>
+  <div class="block-title">灵动逐字回复</div>
+
+  <div class="chat-flow">
+    <div class="trigger-btn" onclick="playTypewriter()">
+      ▶ 点击播放逐字动画
+    </div>
+    <div class="chat-bubble user">今天心情不太好...</div>
+    <div class="chat-bubble ai">
+      <span class="typewriter-text" id="typewriterContent"></span>
     </div>
   </div>
-</div>
 
-<div id="sidebar">
-  <div class="side-header">
-    <span>对话列表</span>
-    <div class="side-header-actions">
-      <button id="homeBtn">⌂</button>
-      <button id="collapseBtn">←</button>
+  <div class="block-subtitle">
+    AI回复逐字淡入，告别僵硬整屏弹出
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="section-spacer" id="chat-preview"></div>
+  <div class="block-title">沉浸式对话体验</div>
+
+  <div class="chat-flow">
+    <div class="chat-bubble user">你好，我今天有点累</div>
+    <div class="chat-bubble ai">嘿，辛苦了。累了就歇会儿，别硬撑。想聊聊今天发生了什么吗？我听着呢～</div>
+    <div class="chat-bubble user">工作上的事情，感觉怎么都做不完</div>
+    <div class="chat-bubble ai">理解你。有时候工作就是会堆成山，但别给自己太大压力。一件一件来，你已经很努力了。</div>
+    <div class="chat-bubble user">谢谢你，感觉好多了</div>
+    <div class="chat-bubble ai">不客气～你能好受点我就放心了。随时都可以来找我聊聊，我一直都在。</div>
+  </div>
+
+  <div class="block-subtitle">
+    DeepSeek驱动，回复自然流畅
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="section-spacer" id="chronicle"></div>
+  <div class="block-title">编年史</div>
+
+  <div class="chronicle-wrap">
+    <div class="chronicle-era">
+      <h3>A聊 时期</h3>
+      <ul>
+        <li><span class="chronicle-highlight">A聊</span>上线，DChat的前身，智谱GLM-4-Flash，豆包写代码</li>
+        <li>确立了密码登录、视频教程、长按配置详情、身份验证等基础功能</li>
+        <li>节点从1个扩到5个，全是创作者自己的API，为后来的分流系统打下基础</li>
+      </ul>
+    </div>
+
+    <div class="chronicle-era">
+      <h3>DChat 1.x.x 早期</h3>
+      <ul>
+        <li><span class="chronicle-highlight">DChat 1.0.0</span>上线，换硅基流动，调用DeepSeek-R1-Distill-Qwen-7B</li>
+        <li>继承A聊全部功能，豆包继续写代码</li>
+        <li>我是主动换成8B模型，因为当时以为更强大</li>
+      </ul>
+    </div>
+
+    <div class="chronicle-era">
+      <h3>DChat 1.x.x 中期</h3>
+      <ul>
+        <li>DeepSeek接入写代码，逐渐全面交给DeepSeek</li>
+        <li>分流系统从A聊移植、智能体系统上线、白名单机制</li>
+      </ul>
+    </div>
+
+    <div class="chronicle-era">
+      <h3>DChat 1.x.x 晚期</h3>
+      <ul>
+        <li>创造者模式上线（当时暂未公开此功能）</li>
+        <li>软件名从"D聊"改为"Dchat"，更换图标</li>
+        <li>版本号记录丢失的问题时期结束</li>
+      </ul>
+    </div>
+
+    <div class="chronicle-era">
+      <h3>DChat 2.0.0</h3>
+      <ul>
+        <li><span class="chronicle-highlight">删除登录系统</span>，从封闭变开放</li>
+      </ul>
+    </div>
+
+    <div class="chronicle-era">
+      <h3>DChat 2.1.0 ~ 2.3.9</h3>
+      <ul>
+        <li>帮助问号引导、回车发送开关、电脑端快捷键指南</li>
+        <li>打断AI功能、括号按钮、语言切换内置弹窗</li>
+        <li>分流系统正式启用、官方社媒、背景自定义</li>
+      </ul>
+    </div>
+
+    <div class="chronicle-era">
+      <h3>DChat 2.4.0</h3>
+      <ul>
+        <li>修复性别/类型bug</li>
+      </ul>
+    </div>
+
+    <div class="chronicle-era">
+      <h3>DChat 2.5.0</h3>
+      <ul>
+        <li>自定义模型选择、最大使用token可调节</li>
+        <li>代码块检测与一键复制</li>
+        <li>删除多语言，只保留简体中文</li>
+      </ul>
     </div>
   </div>
-  <button class="notice-btn" id="openNoticeBtn">📢 公告</button>
-  <button class="new-chat" id="newChat">+ 新建对话</button>
-  <div id="chatList" class="chat-list"></div>
-  <div class="side-bottom">
-    <button class="side-btn" id="openSettings">设置</button>
+
+  <div class="block-subtitle">
+    从A聊到Dchat，从群友互助(其实没人帮我)到独立生态
   </div>
-</div>
 
-<div id="overlay"></div>
-
-<div id="confirmModal" class="base-modal" style="z-index:100003;">
-  <div id="confirmBox">
-    <div id="confirmTitle"></div>
-    <div id="confirmMsg"></div>
-    <div id="confirmBtnGroup">
-      <button id="confirmCancelBtn">取消</button>
-      <button class="primary" id="confirmOkBtn">删除</button>
-    </div>
+  <div class="footer-area">
+    Dchat · 持续更新请关注官方Q群 629741287<br>
+    <span style="opacity:0.5;">© 这里空着太可惜了，我往这里塞点东西</span>
   </div>
-</div>
 
-<div id="modelSelectModal" class="base-modal" style="z-index:100004;">
-  <div class="modal-box">
-    <div class="model-select-title">选择自定义模型</div>
-    <div class="model-select-subtitle">请选择你要使用的模型，或自行填写</div>
-    <button class="model-option-btn" id="modelOptV4Flash">
-      <span class="model-name">DeepSeek-V4-Flash</span>
-      <span class="model-desc">deepseek-ai/DeepSeek-V4-Flash，V4系列中算便宜的</span>
-    </button>
-    <button class="model-option-btn" id="modelOptR1Qwen">
-      <span class="model-name">DeepSeek-R1-0528-Qwen3-8B</span>
-      <span class="model-desc">deepseek-ai/DeepSeek-R1-0528-Qwen3-8B，免费</span>
-    </button>
-    <button class="model-option-btn custom-model-btn" id="modelOptCustom">
-      不用上面两个，我自己填
-    </button>
-  </div>
-</div>
+  <script>
+    function toggleSelect(dropdownId) {
+      const dropdown = document.getElementById(dropdownId);
+      const isOpen = dropdown.classList.contains('show');
+      // 关闭所有下拉
+      document.querySelectorAll('.inline-select-options.show').forEach(el => el.classList.remove('show'));
+      if (!isOpen) {
+        dropdown.classList.add('show');
+      }
+    }
 
-<div id="confirmAgeModal" class="base-modal" style="z-index:100000;">
-  <div id="confirmAgeBox">
-    <div id="confirmAgeTitle">请问您是否已成年？</div>
-    <div id="confirmAgeDesc">未成年用户将无法使用情感陪伴功能，并受到使用时长限制。</div>
-    <button id="confirmAgeBtnAdult">我已成年</button>
-    <button id="confirmAgeBtnMinor">我未成年</button>
-  </div>
-</div>
+    function selectOption(type, value, el) {
+      if (type === 'aiType') {
+        document.getElementById('aiTypeText').textContent = value;
+        document.querySelectorAll('#aiTypeDropdown .inline-select-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('aiTypeDropdown').classList.remove('show');
+      } else if (type === 'aiGender') {
+        document.getElementById('aiGenderText').textContent = value;
+        document.querySelectorAll('#aiGenderDropdown .inline-select-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('aiGenderDropdown').classList.remove('show');
+      }
+    }
 
-<div id="restReminderModal" class="base-modal" style="z-index:100001;">
-  <div id="restReminderBox">
-    <div id="restReminderTitle">⏰ 休息提醒</div>
-    <div id="restReminderDesc">您已使用两个小时，建议休息一会。</div>
-    <button id="restReminderCloseBtn">关闭</button>
-  </div>
-</div>
-
-<div id="modal" class="base-modal">
-  <div class="modal-box">
-    <div class="modal-head">
-      <span>设置</span>
-    </div>
-    <div class="modal-body">
-      <div class="api-select-wrap">
-        <label>API 线路</label>
-        <button class="api-select-btn" id="apiSelectBtn">默认线路</button>
-        <input type="password" class="custom-api-input" id="customApiInput" placeholder="输入你的自定义 API Key">
-      </div>
-      <div class="custom-model-wrap" id="customModelWrap">
-        <label>自定义模型</label>
-        <div class="custom-model-display placeholder" id="customModelDisplay">点击选择模型</div>
-      </div>
-      <div class="font-size-setting">
-        <span>字体大小</span>
-        <div class="font-size-control">
-          <button id="fontMinus">−</button>
-          <span id="fontSizeValue">16</span>
-          <button id="fontPlus">+</button>
-        </div>
-      </div>
-      <div class="font-size-setting" style="margin-top:8px;">
-        <span>最大使用token</span>
-        <div class="font-size-control">
-          <span id="tokenValue" class="token-clickable">1000</span>
-        </div>
-      </div>
-      <div class="switch-box">
-        <span style="font-size:14px;">浅色模式</span>
-        <div class="switch" id="themeSwitch"></div>
-      </div>
-      <div class="switch-box" id="devControlBox" style="margin-top:12px;display:none;">
-        <span style="font-size:14px">创造者模式</span>
-        <div class="switch" id="devSwitch"></div>
-      </div>
-      <div class="switch-box">
-        <span style="font-size:14px;">回车键发送消息</span>
-        <div class="switch checked" id="enterSendSwitch"></div>
-      </div>
-      <label style="margin-top:16px;">主菜单背景</label>
-      <div class="bg-preview" id="homeBgPreview" style="background-image: none;">未设置背景</div>
-      <button class="bg-btn" id="changeHomeBgBtn">更换主菜单背景</button>
-      <button class="bg-btn reset" id="resetHomeBgBtn">重置为默认背景</button>
-      <input type="file" id="homeBgFile" accept="image/*">
-      <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn">查看用户协议</button>
-      <button class="side-btn" style="margin-top:8px;width:100%;" id="changeAgeBtn">再次验证年龄</button>
-      <button class="side-btn" style="margin-top:8px;width:100%;" id="openShortcutBtn">电脑端快捷键指南</button>
-      <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn">打赏作者</button>
-      <div class="email-row" id="emailRow">
-        <div class="email-row-line1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-            <path d="M22 4L12 13L2 4"></path>
-          </svg>
-          <span>官方邮箱</span>
-        </div>
-        <div class="email-row-line2">dchatstudio@outlook.com</div>
-      </div>
-      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;" id="versionDisplay"></div>
-    </div>
-    <div class="modal-foot">
-      <button id="modalCancel">取消</button>
-      <button class="primary" id="modalSave">保存</button>
-    </div>
-  </div>
-</div>
-
-<div id="noticeModal">
-  <div id="noticeBox">
-    <div id="closeNotice">×</div>
-    <iframe id="noticeIframe" src=""></iframe>
-  </div>
-</div>
-
-<div id="rewardModal">
-  <div id="rewardBox">
-    <div id="rewardTitle">自愿打赏 支持作者继续更新😋</div>
-    <img src="1.png" alt="打赏码" id="rewardImg">
-    <button id="closeReward">关闭</button>
-  </div>
-</div>
-
-<div id="promptModal" class="base-modal">
-  <div class="modal-box">
-    <div class="modal-head">
-      <span id="promptTitle">请输入</span>
-    </div>
-    <div class="modal-body">
-      <input type="text" id="promptInput" placeholder="" autocomplete="off">
-    </div>
-    <div class="modal-foot">
-      <button id="promptCancel">取消</button>
-      <button class="primary" id="promptConfirm">确认</button>
-    </div>
-  </div>
-</div>
-
-<div id="agentModal" class="base-modal">
-  <div class="modal-box" style="max-width: 400px;">
-    <div class="modal-head">
-      <span>新建智能体</span>
-    </div>
-    <div class="modal-body">
-      <label>头像</label>
-      <div class="avatar-selector">
-        <img id="avatarPreview" src="tx.png" alt="头像预览">
-        <button class="avatar-btn" id="avatarSelectBtn">选择图片</button>
-        <input type="file" id="avatarFile" accept="image/*">
-      </div>
-      <label>名称</label>
-      <input type="text" id="agentNameInput" placeholder="例如：情感陪伴助手">
-      <label>描述</label>
-      <input type="text" id="agentDescInput" placeholder="简短描述智能体的特点">
-      <label>AI类型</label>
-      <div style="position:relative;">
-        <button class="select-btn" id="aiTypeSelectBtn" data-value="emotion">情感陪伴</button>
-        <div class="inline-select-options" id="aiTypeInlineOptions">
-          <div class="inline-select-option" data-value="emotion">情感陪伴</div>
-          <div class="inline-select-option" data-value="tool">工具</div>
-        </div>
-      </div>
-      <div id="agentGenderBox">
-        <label>AI性别</label>
-        <div style="position:relative;">
-          <button class="select-btn" id="aiGenderSelectBtn" data-value="neutral">中性</button>
-          <div class="inline-select-options" id="aiGenderInlineOptions">
-            <div class="inline-select-option" data-value="male">男性</div>
-            <div class="inline-select-option" data-value="female">女性</div>
-            <div class="inline-select-option" data-value="neutral">中性</div>
-          </div>
-        </div>
-      </div>
-      <label>回复风格</label>
-      <textarea id="agentAiStyleInput" placeholder="描述AI的回复风格..."></textarea>
-      <label style="margin-top:16px;">默认对话背景</label>
-      <div class="bg-preview" id="agentChatBgPreview" style="background-image: none;">未设置</div>
-      <button class="bg-btn" id="changeAgentChatBgBtn">更换默认对话背景</button>
-      <button class="bg-btn reset" id="resetAgentChatBgBtn">重置</button>
-    </div>
-    <div class="modal-foot">
-      <button id="agentCancel">取消</button>
-      <button class="primary" id="agentConfirm">创建</button>
-    </div>
-  </div>
-</div>
-
-<div id="editAgentModal" class="base-modal">
-  <div class="modal-box" style="max-width: 400px;">
-    <div class="modal-head">
-      <span>编辑智能体</span>
-    </div>
-    <div class="modal-body">
-      <label>头像</label>
-      <div class="avatar-selector">
-        <img id="editAvatarPreview" src="tx.png" alt="头像预览">
-        <button class="avatar-btn" id="editAvatarSelectBtn">选择图片</button>
-        <input type="file" id="editAvatarFile" accept="image/*">
-      </div>
-      <label>名称</label>
-      <input type="text" id="editAgentNameInput" placeholder="智能体名称">
-      <div class="switch-box">
-        <span>置顶</span>
-        <div class="switch" id="editPinnedSwitch"></div>
-      </div>
-      <div class="creator-only">
-        <label>描述</label>
-        <input type="text" id="editAgentDescInput" placeholder="简短描述智能体的特点">
-        <label>AI类型</label>
-        <div style="position:relative;">
-          <button class="select-btn" id="editAiTypeSelectBtn" data-value="emotion">情感陪伴</button>
-          <div class="inline-select-options" id="editAiTypeInlineOptions">
-            <div class="inline-select-option" data-value="emotion">情感陪伴</div>
-            <div class="inline-select-option" data-value="tool">工具</div>
-          </div>
-        </div>
-        <div id="editAgentGenderBox">
-          <label>AI性别</label>
-          <div style="position:relative;">
-            <button class="select-btn" id="editAiGenderSelectBtn" data-value="neutral">中性</button>
-            <div class="inline-select-options" id="editAiGenderInlineOptions">
-              <div class="inline-select-option" data-value="male">男性</div>
-              <div class="inline-select-option" data-value="female">女性</div>
-              <div class="inline-select-option" data-value="neutral">中性</div>
-            </div>
-          </div>
-        </div>
-        <label>回复风格</label>
-        <textarea id="editAgentAiStyleInput" placeholder="描述AI的回复风格..."></textarea>
-      </div>
-      <label style="margin-top:16px;">默认对话背景</label>
-      <div class="bg-preview" id="editAgentChatBgPreview" style="background-image: none;">未设置</div>
-      <button class="bg-btn" id="changeEditAgentChatBgBtn">更换默认对话背景</button>
-      <button class="bg-btn reset" id="resetEditAgentChatBgBtn">重置</button>
-    </div>
-    <div class="modal-foot">
-      <button id="editAgentCancel">取消</button>
-      <button class="primary" id="editAgentConfirm">保存</button>
-    </div>
-  </div>
-</div>
-
-<div id="renameModal" class="base-modal">
-  <div class="modal-box">
-    <div class="modal-head">
-      <span>修改对话标题</span>
-    </div>
-    <div class="modal-body">
-      <label>对话标题</label>
-      <input type="text" id="renameInput" placeholder="输入自定义标题">
-    </div>
-    <div class="modal-foot">
-      <button id="renameCancel">取消</button>
-      <button class="primary" id="renameConfirm">确认</button>
-    </div>
-  </div>
-</div>
-
-<div id="chatConfigMask">
-  <div id="chatConfigDetail">
-    <div class="config-detail-title">
-      <span>对话配置</span>
-    </div>
-    <div class="modal-body">
-      <div class="config-item-row">
-        <div class="config-item-label">对话标题</div>
-        <div class="config-item-value" id="detailTitle">--</div>
-      </div>
-      <div class="config-item-row">
-        <div class="config-item-label">AI类型</div>
-        <div class="config-item-value" id="detailAiType">--</div>
-      </div>
-      <div class="config-item-row">
-        <div class="config-item-label">AI性别</div>
-        <div class="config-item-value" id="detailAiGender">--</div>
-      </div>
-      <div class="config-item-row">
-        <div class="config-item-label">自定义风格</div>
-        <div class="prompt-wrap">
-          <div class="prompt-value" id="detailAityle">--</div>
-          <button class="copy-btn" id="copyStyleBtn">复制</button>
-        </div>
-        <div class="copy-tip" id="copyStyleTip">已复制到剪贴板！</div>
-      </div>
-      <div class="config-item-row">
-        <div class="config-item-label">系统提示词</div>
-        <div class="prompt-wrap">
-          <div class="prompt-value" id="detailSystemPrompt">--</div>
-          <button class="copy-btn" id="copyPromptBtn">复制</button>
-        </div>
-        <div class="copy-tip" id="copyPromptTip">已复制到剪贴板！</div>
-      </div>
-    </div>
-    <div class="modal-foot" style="margin-top:20px;">
-      <button class="primary" id="closeConfigDetailBtn">关闭</button>
-    </div>
-  </div>
-</div>
-
-<div id="chatConfigModal" class="base-modal" style="display:none;">
-  <div class="config-modal-box">
-    <div class="modal-head">
-      <span>配置对话</span>
-    </div>
-    <div class="modal-body">
-      <div class="config-item">
-        <label>AI类型</label>
-        <select id="aiTypeSelect">
-          <option value="emotion">情感陪伴</option>
-          <option value="tool">工具</option>
-        </select>
-      </div>
-      <div class="config-item" id="aiGenderBox">
-        <label>AI性别</label>
-        <select id="aiGenderSelect">
-          <option value="male">男性</option>
-          <option value="female">女性</option>
-          <option value="neutral">中性</option>
-        </select>
-      </div>
-      <div class="config-item">
-        <label>回复风格</label>
-        <textarea id="aiStyleInput" placeholder="请输入AI回复风格描述..."></textarea>
-      </div>
-    </div>
-    <div class="config-btn-group">
-      <button class="config-btn config-cancel" id="configCancel">取消</button>
-      <button class="config-btn config-confirm" id="configConfirm">确认创建</button>
-    </div>
-  </div>
-</div>
-
-<div id="helpTooltipModal" class="help-tooltip-modal">
-  <div class="help-tooltip-box">
-    <div class="help-tooltip-title" id="helpTooltipTitle"></div>
-    <div class="help-tooltip-desc" id="helpTooltipDesc"></div>
-    <button class="help-tooltip-close" id="helpTooltipClose">关闭</button>
-  </div>
-</div>
-
-<div id="shortcutModal" class="help-tooltip-modal">
-  <div class="help-tooltip-box" style="max-width: 380px;">
-    <div class="help-tooltip-title">电脑端快捷键指南</div>
-    <div class="help-tooltip-desc" id="shortcutDesc" style="text-align:left;white-space:pre-line;">Esc — 关闭当前弹窗 / 返回上一页面
-Enter — 发送消息（需开启回车发送）
-Shift + Enter — 换行
-Ctrl + 加号 — 放大字体
-Ctrl + 减号 — 缩小字体</div>
-    <button class="help-tooltip-close" id="shortcutClose">关闭</button>
-  </div>
-</div>
-
-<div id="titleLoading">创建中...</div>
-<div id="toast" class="toast"></div>
-
-<script>
-const APP_VERSION = '2.5.0';
-
-const PRESET_API_KEYS = {
-  default: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd",
-  line1: "sk-invecoktfzbtqalblrnytslakmfpzqemaclwszknrhpsuoxf",
-  line2: "sk-illhbbvslpisfkwfljgwukqapfebzbaecbjawqcznhcmkyct"
-};
-
-const PRESET_MODEL_OPTIONS = {
-  v4flash: "deepseek-ai/DeepSeek-V4-Flash",
-  r1qwen: "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
-};
-
-const DEFAULT_MODEL = "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B";
-
-const API_LINE_LABELS = ['默认线路', '分流线路一', '分流线路二', '自定义 API'];
-
-const helpTexts = {
-  'api_source': '选择 API 线路。支持三条预设线路（默认/分流一/分流二）以及自定义 API。选择自定义后可填写你自己的 API Key。',
-  'font_size': '调整应用中所有文字的显示大小。点击 + 增大，点击 − 缩小，范围 8~32px。快捷键：Ctrl+加号 放大，Ctrl+减号 缩小。',
-  'light_mode': '切换浅色/深色主题。浅色模式适合白天使用，深色模式适合夜间使用，保护眼睛。',
-  'creator_mode': '解锁高级功能：编辑智能体时可修改 AI 类型、性别、回复风格等参数，查看和复制系统提示词。需要验证码激活。',
-  'enter_to_send': '开启后：按 Enter 键直接发送消息，Shift+Enter 换行。关闭后：Enter 仅换行，必须点击发送按钮才能发送。手机和电脑统一规则。',
-  'home_bg': '自定义智能体列表页面的背景图片。支持 JPG/PNG 等常见格式，点击"更换"选择图片，点击"重置"恢复默认纯色背景。',
-  'max_tokens': '控制AI每次回复的最大token使用量。数值越大，AI单次可生成的文字越多。1 token等于多少汉字或英文或数字以模型厂商的分配为标准。输入0表示不限制。点击数字可直接修改。',
-};
-
-const toastEl = document.getElementById('toast'); let toastTimer = null;
-
-function showToast(message, type = 'info', duration = 2000) {
-  if (toastTimer) { clearTimeout(toastTimer); toastEl.classList.remove('show', 'error', 'success'); }
-  toastEl.textContent = message;
-  toastEl.className = 'toast';
-  if (type === 'error') toastEl.classList.add('error');
-  if (type === 'success') toastEl.classList.add('success');
-  requestAnimationFrame(() => { requestAnimationFrame(() => { toastEl.classList.add('show'); }); });
-  toastTimer = setTimeout(() => { toastEl.classList.remove('show'); toastTimer = null; }, duration);
-}
-
-let confirmResolve = null;
-
-function showConfirm(title, message, okText = '删除') {
-  return new Promise((resolve) => {
-    confirmResolve = resolve;
-    document.getElementById('confirmTitle').textContent = title;
-    document.getElementById('confirmMsg').textContent = message;
-    document.getElementById('confirmOkBtn').textContent = okText;
-    document.getElementById('confirmModal').classList.add('show');
-  });
-}
-
-function hideConfirm(result) {
-  document.getElementById('confirmModal').classList.remove('show');
-  if (confirmResolve) { confirmResolve(result); confirmResolve = null; }
-}
-
-document.getElementById('confirmOkBtn').onclick = () => hideConfirm(true);
-document.getElementById('confirmCancelBtn').onclick = () => hideConfirm(false);
-document.getElementById('confirmModal').onclick = (e) => { if (e.target === document.getElementById('confirmModal')) hideConfirm(false); };
-
-function toggleInlineSelect(btn, optionsContainer) {
-  const isOpen = optionsContainer.classList.contains('show');
-  document.querySelectorAll('.inline-select-options.show').forEach(el => el.classList.remove('show'));
-  if (!isOpen) {
-    optionsContainer.classList.add('show');
-  }
-}
-
-function setupInlineSelect(btnSelector, optionsSelector) {
-  const btn = document.querySelector(btnSelector);
-  const optionsContainer = document.querySelector(optionsSelector);
-  if (!btn || !optionsContainer) return;
-
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    toggleInlineSelect(btn, optionsContainer);
-  });
-
-  optionsContainer.querySelectorAll('.inline-select-option').forEach(opt => {
-    opt.addEventListener('click', (e) => {
-      e.stopPropagation();
-      btn.textContent = opt.textContent;
-      btn.dataset.value = opt.dataset.value;
-      optionsContainer.classList.remove('show');
-
-      if (btnSelector === '#aiTypeSelectBtn' || btnSelector === '#editAiTypeSelectBtn') {
-        const isTool = opt.dataset.value === 'tool';
-        if (btnSelector === '#aiTypeSelectBtn') {
-          document.getElementById('agentGenderBox').classList.toggle('hide', isTool);
-        } else {
-          document.getElementById('editAgentGenderBox').classList.toggle('hide', isTool);
-        }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.select-btn')) {
+        document.querySelectorAll('.inline-select-options.show').forEach(el => el.classList.remove('show'));
       }
     });
-  });
-}
 
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.select-btn')) {
-    document.querySelectorAll('.inline-select-options.show').forEach(el => el.classList.remove('show'));
-  }
-});
-
-const promptModal = document.getElementById('promptModal'),
-      promptTitle = document.getElementById('promptTitle'),
-      promptInput = document.getElementById('promptInput');
-
-let promptResolve = null;
-
-function showPrompt(title, placeholder = '') {
-  return new Promise((resolve) => {
-    promptTitle.textContent = title;
-    promptInput.placeholder = placeholder || '';
-    promptInput.value = '';
-    promptResolve = resolve;
-    promptModal.classList.add('show');
-    promptInput.focus();
-  });
-}
-
-function closePrompt(value) {
-  promptModal.classList.remove('show');
-  if (promptResolve) { promptResolve(value); promptResolve = null; }
-}
-document.getElementById('promptConfirm').onclick = () => closePrompt(promptInput.value.trim());
-document.getElementById('promptCancel').onclick = () => closePrompt(null);
-promptInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); closePrompt(promptInput.value.trim()); } });
-promptModal.onclick = (e) => { if (e.target === promptModal) closePrompt(null); };
-
-function showModal(modal) { modal.classList.add('show'); }
-function hideModal(modal) { modal.classList.remove('show'); }
-
-setTimeout(() => {
-  document.getElementById('splash').classList.add('show');
-  setTimeout(() => { setTimeout(() => { document.getElementById('splash').classList.add('fade'); }, 200); }, 500);
-}, 200);
-
-const DEEPSEEK_CONFIG = { apiUrl: "https://api.siliconflow.cn/v1/chat/completions", model: DEFAULT_MODEL };
-const DEFAULT_STYLE = {
-  emotion: '你是熟人聊天搭子，主打随性敢说、接地气怼梗，允许日常粗口、直白吐槽，纯口语化唠嗑，别端着、别官方，怎么自然怎么说，禁止用表情符号',
-  tool: '严谨专业，逻辑清晰，高效解答各类问题，回复简洁明了，直击重点，不啰嗦，禁止发任何表情符号'
-};
-const DEFAULT_TEMPERATURE = { emotion: 1.1, tool: 0.4 };
-const AUTH_CODE = "258456";
-
-let config = JSON.parse(localStorage.getItem("config")) || {
-  apiLine: 'default',
-  customApi: '',
-  customModel: '',
-  fontSize: 16,
-  specialMode: false,
-  lightMode: false,
-  homeBackground: null,
-  enterToSend: true,
-  maxTokens: 1000
-};
-
-function getEffectiveApiKey() {
-  if (config.apiLine === 'custom' && config.customApi) {
-    return config.customApi;
-  }
-  return PRESET_API_KEYS[config.apiLine] || PRESET_API_KEYS.default;
-}
-
-function getEffectiveModel() {
-  if (config.apiLine === 'custom') {
-    return config.customModel || '';
-  }
-  return DEFAULT_MODEL;
-}
-
-function updateApiSelectDisplay() {
-  const btn = document.getElementById('apiSelectBtn');
-  const input = document.getElementById('customApiInput');
-  const modelWrap = document.getElementById('customModelWrap');
-  if (!btn || !input) return;
-  if (config.apiLine === 'default') btn.textContent = API_LINE_LABELS[0];
-  else if (config.apiLine === 'line1') btn.textContent = API_LINE_LABELS[1];
-  else if (config.apiLine === 'line2') btn.textContent = API_LINE_LABELS[2];
-  else if (config.apiLine === 'custom') btn.textContent = API_LINE_LABELS[3];
-  if (config.apiLine === 'custom') {
-    input.classList.add('show');
-    if (modelWrap) modelWrap.classList.add('show');
-  } else {
-    input.classList.remove('show');
-    if (modelWrap) modelWrap.classList.remove('show');
-  }
-  updateCustomModelDisplay();
-}
-
-function updateCustomModelDisplay() {
-  const display = document.getElementById('customModelDisplay');
-  if (!display) return;
-  if (config.customModel) {
-    display.textContent = config.customModel;
-    display.classList.remove('placeholder');
-  } else {
-    display.textContent = '点击选择模型';
-    display.classList.add('placeholder');
-  }
-}
-
-function showModelSelectModal() {
-  showModal(document.getElementById('modelSelectModal'));
-}
-
-function hideModelSelectModal() {
-  hideModal(document.getElementById('modelSelectModal'));
-}
-
-function selectModel(modelName) {
-  config.customModel = modelName;
-  saveData();
-  updateCustomModelDisplay();
-  hideModelSelectModal();
-}
-
-document.getElementById('modelOptV4Flash').onclick = () => selectModel(PRESET_MODEL_OPTIONS.v4flash);
-document.getElementById('modelOptR1Qwen').onclick = () => selectModel(PRESET_MODEL_OPTIONS.r1qwen);
-document.getElementById('modelOptCustom').onclick = () => selectModel('');
-
-document.getElementById('customModelDisplay').onclick = () => {
-  if (config.apiLine === 'custom') {
-    showModelSelectModal();
-  }
-};
-
-document.getElementById('modelSelectModal').onclick = (e) => {
-  if (e.target === document.getElementById('modelSelectModal')) {
-    hideModelSelectModal();
-  }
-};
-
-let sessionStartTime = 0, usageTimerInterval = null;
-const TWO_HOURS_MS = 7200000;
-
-function startUsageTimer() {
-  stopUsageTimer();
-  sessionStartTime = Date.now();
-  usageTimerInterval = setInterval(() => {
-    if (Date.now() - sessionStartTime >= TWO_HOURS_MS) { showRestReminder(); sessionStartTime = Date.now(); }
-  }, 10000);
-}
-
-function stopUsageTimer() { if (usageTimerInterval) { clearInterval(usageTimerInterval); usageTimerInterval = null; } sessionStartTime = 0; }
-
-function showRestReminder() { showModal(document.getElementById('restReminderModal')); }
-
-document.getElementById('restReminderCloseBtn').onclick = () => hideModal(document.getElementById('restReminderModal'));
-document.getElementById('restReminderModal').onclick = (e) => { if (e.target === document.getElementById('restReminderModal')) hideModal(document.getElementById('restReminderModal')); };
-
-const AGREEMENT_URL = 'https://cnyszb.github.io/xy/xy.html';
-const AGREEMENT_STORAGE_KEY = 'dchat_agreement_version';
-let latestCloudVersion = '0', currentAgreementVersion = '0';
-
-function getStoredAgreementVersion() { return localStorage.getItem(AGREEMENT_STORAGE_KEY) || '0'; }
-function setStoredAgreementVersion(version) { localStorage.setItem(AGREEMENT_STORAGE_KEY, version); }
-
-function openAgreement(force) {
-  const overlay = document.getElementById('agreementOverlay'), iframe = document.getElementById('agreementIframe');
-  overlay.classList.remove('hidden'); iframe.src = AGREEMENT_URL + '?t=' + Date.now();
-  iframe.onload = function() { iframe.contentWindow.postMessage({ type: 'setAgreementMode', force: force }, '*'); };
-}
-
-function closeAgreement() { document.getElementById('agreementOverlay').classList.add('hidden'); document.getElementById('agreementIframe').src = ''; }
-
-window.addEventListener('message', function(e) {
-  if (!e.data || !e.data.type) return;
-  if (e.data.type === 'agreementAccepted') {
-    if (e.data.version) { setStoredAgreementVersion(e.data.version); currentAgreementVersion = e.data.version; }
-    closeAgreement(); showToast('欢迎使用 Dchat', 'success');
-  } else if (e.data.type === 'agreementRejected') {
-    setStoredAgreementVersion('0'); closeAgreement();
-    document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:18px;color:#e0e0e0;margin-bottom:8px;">您不同意协议</div><div style="font-size:14px;color:#888;">请退出软件</div></div>';
-  } else if (e.data.type === 'agreementClosed') closeAgreement();
-});
-
-function startAgreementCheck() { checkAgreementVersion(); setInterval(() => checkAgreementVersion(), 600000); }
-
-function checkAgreementVersion() {
-  fetch(AGREEMENT_URL + '?t=' + Date.now()).then(r => r.text()).then(html => {
-    const m = html.match(/const AGREEMENT_VERSION = '(\d+)'/);
-    if (m && m[1]) { latestCloudVersion = m[1]; if (getStoredAgreementVersion() !== latestCloudVersion) openAgreement(true); }
-  }).catch(() => {});
-}
-
-function applyTheme() { document.body.classList.toggle('light-mode', config.lightMode); }
-
-function applyHomeBackground() {
-  const homePage = document.getElementById('homePage');
-  if (config.homeBackground) {
-    homePage.style.backgroundImage = 'url(' + config.homeBackground + ')';
-    homePage.style.backgroundSize = 'cover'; homePage.style.backgroundPosition = 'center';
-    document.body.classList.add('has-home-bg');
-  } else {
-    homePage.style.backgroundImage = ''; homePage.style.backgroundSize = ''; homePage.style.backgroundPosition = '';
-    document.body.classList.remove('has-home-bg');
-  }
-  updateHomeBgPreview();
-}
-
-function updateHomeBgPreview() {
-  const preview = document.getElementById('homeBgPreview');
-  if (preview) {
-    if (config.homeBackground) { preview.style.backgroundImage = 'url(' + config.homeBackground + ')'; preview.textContent = ''; }
-    else { preview.style.backgroundImage = 'none'; preview.textContent = '未设置背景'; }
-  }
-}
-
-function applyChatBackground() {
-  const chatPage = document.getElementById('chatPage');
-  const agent = getCurrentAgent();
-  if (agent && agent.chatBackground) {
-    chatPage.style.backgroundImage = 'url(' + agent.chatBackground + ')'; chatPage.style.backgroundSize = 'cover'; chatPage.style.backgroundPosition = 'center';
-    document.body.classList.add('has-chat-bg');
-  } else {
-    chatPage.style.backgroundImage = ''; chatPage.style.backgroundSize = ''; chatPage.style.backgroundPosition = '';
-    document.body.classList.remove('has-chat-bg');
-  }
-}
-
-let agents = [], currentAgentId = null, currentChatId = null, defaultAvatarData = null;
-
-function loadDefaultAvatar() {
-  return new Promise(resolve => {
-    const img = new Image(); img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
-      c.getContext('2d').drawImage(img, 0, 0);
-      defaultAvatarData = c.toDataURL('image/png'); resolve(defaultAvatarData);
-    };
-    img.onerror = () => { defaultAvatarData = 'tx.png'; resolve(defaultAvatarData); };
-    img.src = 'tx.png';
-  });
-}
-
-async function migrateOldData() {
-  await loadDefaultAvatar();
-  const oldChats = JSON.parse(localStorage.getItem("chats"));
-  if (oldChats && !localStorage.getItem("agents")) {
-    agents = oldChats.map((chat, index) => ({
-      id: 'agent_' + Date.now() + index, name: chat.title + '（旧版）', avatar: defaultAvatarData,
-      description: '从旧版对话迁移',
-      aiConfig: chat.aiConfig || { type: 'emotion', gender: 'neutral', style: DEFAULT_STYLE.emotion, temperature: DEFAULT_TEMPERATURE.emotion },
-      chats: [{ id: 'chat_' + Date.now() + index, title: chat.title, messages: chat.messages || [], pinned: chat.pinned || false }],
-      pinned: false, createdAt: Date.now(), chatBackground: null
-    }));
-    saveAgents(); localStorage.removeItem("chats");
-  } else {
-    agents = JSON.parse(localStorage.getItem("agents")) || [];
-    agents.forEach(agent => {
-      if (!agent.avatar || agent.avatar === 'dx.png' || agent.avatar === 'tx.png') agent.avatar = defaultAvatarData;
-      if (agent.chatBackground === undefined) agent.chatBackground = null;
-    });
-  }
-  if (agents.length === 0) {
-    agents.push({
-      id: 'agent_default', name: '情感陪伴助手', avatar: defaultAvatarData,
-      description: '一个善解人意的聊天伙伴',
-      aiConfig: { type: 'emotion', gender: 'neutral', style: DEFAULT_STYLE.emotion, temperature: DEFAULT_TEMPERATURE.emotion },
-      chats: [{ id: 'chat_default', title: '新对话', messages: [], pinned: false }],
-      pinned: false, createdAt: Date.now(), chatBackground: null
-    });
-    saveAgents();
-  }
-  if (config.homeBackground === undefined) config.homeBackground = null;
-  if (config.apiLine === undefined) config.apiLine = 'default';
-  if (config.customApi === undefined) config.customApi = '';
-  if (config.customModel === undefined) config.customModel = '';
-  if (config.maxTokens === undefined) config.maxTokens = 1000;
-}
-
-function saveAgents() { localStorage.setItem("agents", JSON.stringify(agents)); }
-
-function getCurrentAgent() { return agents.find(a => a.id === currentAgentId) || agents[0]; }
-
-function getCurrentChat() { const agent = getCurrentAgent(); return agent && agent.chats.find(c => c.id === currentChatId) || (agent ? agent.chats[0] : null); }
-
-let noticeCooldownActive = false, noticeCooldownTimer = null, noticeCooldownRemaining = 0;
-const closeNoticeBtn = document.getElementById('closeNotice'), noticeModalEl = document.getElementById('noticeModal');
-
-function isNoticeClosable() { return !noticeCooldownActive; }
-function enableNoticeClose() { closeNoticeBtn.classList.remove('cooldown'); closeNoticeBtn.textContent = '×'; }
-function disableNoticeClose(text) { closeNoticeBtn.classList.add('cooldown'); closeNoticeBtn.textContent = text; }
-
-function startNoticeCooldown() {
-  noticeCooldownActive = true; noticeCooldownRemaining = 3;
-  disableNoticeClose(String(noticeCooldownRemaining));
-  noticeCooldownTimer = setInterval(() => {
-    noticeCooldownRemaining--;
-    if (noticeCooldownRemaining <= 0) { clearInterval(noticeCooldownTimer); noticeCooldownTimer = null; noticeCooldownActive = false; enableNoticeClose(); }
-    else { disableNoticeClose(String(noticeCooldownRemaining)); }
-  }, 1000);
-}
-
-function clearNoticeCooldown() { if (noticeCooldownTimer) { clearInterval(noticeCooldownTimer); noticeCooldownTimer = null; } noticeCooldownActive = false; }
-
-function showNotice(autoPopup = false) {
-  const noticeIframe = document.getElementById('noticeIframe');
-  noticeIframe.src = 'https://cnyszb.github.io/gongao/Gongao.html?t=' + Date.now();
-  showModal(noticeModalEl);
-  if (autoPopup) { clearNoticeCooldown(); startNoticeCooldown(); }
-  else { clearNoticeCooldown(); enableNoticeClose(); }
-}
-
-function hideNotice() { if (!isNoticeClosable()) return; clearNoticeCooldown(); hideModal(noticeModalEl); }
-
-closeNoticeBtn.onclick = (e) => { e.stopPropagation(); if (isNoticeClosable()) hideNotice(); };
-noticeModalEl.onclick = (e) => { if (e.target === noticeModalEl && isNoticeClosable()) hideNotice(); };
-
-let multiSelectMode = false, selectedAgentIds = new Set();
-
-function processBracketContent(text) {
-  const escaped = text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-  return escaped.replace(/（([^）]*)）/g, '<span class="bracket-content">（$1）</span>');
-}
-
-function renderMessageContent(content) {
-  const codeBlockRegex = /```(\w+)\s*\n([\s\S]*?)```/g;
-  const parts = [];
-  let lastIndex = 0;
-  let match;
-
-  while ((match = codeBlockRegex.exec(content)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push({
-        type: 'text',
-        content: processBracketContent(content.substring(lastIndex, match.index))
+    function playTypewriter() {
+      const element = document.getElementById('typewriterContent');
+      const messages = [
+        '咋的，遇到啥烦心事了？来来来，跟我说说，说不定我能帮你分析分析。要不要先想想中午吃什么？今天我请客啊，吃啥你说了算！',
+        '别啊，来都来了。心情不好的时候就得找人唠嗑，你说是不是？诶，要不要聊聊你最近看的电影？我最近看了个超级好看的片子，边看边笑，笑到前仰后合的，你绝对想不到是啥！',
+        '唉，今天咋了？有啥事都给我讲讲呗，我听着呢。'
+      ];
+      const text = messages[Math.floor(Math.random() * messages.length)];
+      element.innerHTML = '';
+      const chars = text.split('');
+      chars.forEach((char, index) => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.style.animationDelay = `${index * 40}ms`;
+        element.appendChild(span);
       });
     }
-    const lang = match[1];
-    const code = match[2].replace(/\n$/, '');
-    parts.push({ type: 'code', lang: lang, code: code });
-    lastIndex = match.index + match[0].length;
-  }
 
-  if (lastIndex < content.length) {
-    parts.push({
-      type: 'text',
-      content: processBracketContent(content.substring(lastIndex))
-    });
-  }
-
-  if (parts.length === 0) {
-    return processBracketContent(content);
-  }
-
-  let html = '';
-  parts.forEach(part => {
-    if (part.type === 'text') {
-      html += part.content;
-    } else if (part.type === 'code') {
-      const escapedCode = part.code
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-      const codeId = 'code_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-      html += '<div class="code-block-wrap"><div class="code-block-header"><span class="code-lang-tag">' + part.lang + '</span><button class="code-copy-btn" data-code-id="' + codeId + '">复制</button></div><div class="code-block-body"><pre><code id="' + codeId + '">' + escapedCode + '</code></pre></div></div>';
-    }
-  });
-
-  return html;
-}
-
-function renderAgentList() {
-  const list = document.getElementById('agentList');
-  const sorted = [...agents].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
-  list.innerHTML = '';
-  sorted.forEach(agent => {
-    const card = document.createElement('div');
-    card.className = 'agent-card ' + (agent.pinned ? 'pinned' : '') + ' ' + (selectedAgentIds.has(agent.id) ? 'selected' : '');
-    card.dataset.id = agent.id;
-
-    const checkbox = document.createElement('div');
-    checkbox.className = 'agent-checkbox ' + (selectedAgentIds.has(agent.id) ? 'checked' : '');
-    checkbox.onclick = (e) => { e.stopPropagation(); selectedAgentIds.has(agent.id) ? selectedAgentIds.delete(agent.id) : selectedAgentIds.add(agent.id); renderAgentList(); updateDeleteBar(); };
-    card.appendChild(checkbox);
-
-    const avatar = document.createElement('img');
-    avatar.className = 'agent-avatar'; avatar.src = agent.avatar || defaultAvatarData;
-    avatar.onerror = () => avatar.src = defaultAvatarData;
-    card.appendChild(avatar);
-
-    const info = document.createElement('div');
-    info.className = 'agent-info';
-    info.innerHTML = '<div class="agent-name">' + agent.name + '</div><div class="agent-desc">' + (agent.description || '') + '</div>';
-    card.appendChild(info);
-
-    const actions = document.createElement('div');
-    actions.className = 'agent-actions';
-    actions.innerHTML = '<span class="pin-agent">📌</span><span class="edit-agent">✏️</span><span class="delete-agent">✕</span>';
-    card.appendChild(actions);
-
-    card.addEventListener('click', (e) => {
-      if (e.target.closest('.agent-actions') || e.target.closest('.agent-checkbox')) return;
-      if (multiSelectMode) { selectedAgentIds.has(agent.id) ? selectedAgentIds.delete(agent.id) : selectedAgentIds.add(agent.id); renderAgentList(); updateDeleteBar(); }
-      else enterChat(agent.id);
-    });
-
-    actions.querySelector('.pin-agent').addEventListener('click', (e) => {
-      e.stopPropagation(); const pc = agents.filter(a => a.pinned).length;
-      if (!agent.pinned && pc >= 3) { showToast('最多只能置顶3个智能体', 'error'); return; }
-      agent.pinned = !agent.pinned; saveAgents(); renderAgentList();
-    });
-
-    actions.querySelector('.edit-agent').addEventListener('click', (e) => { e.stopPropagation(); openEditAgentModal(agent); });
-
-    actions.querySelector('.delete-agent').addEventListener('click', async (e) => {
-      e.stopPropagation();
-      if (agents.length <= 1) { showToast('至少保留一个智能体', 'error'); return; }
-      const confirmed = await showConfirm('确认删除', '确定删除智能体"' + agent.name + '"吗？此操作不可恢复。', '删除');
-      if (confirmed) { agents = agents.filter(a => a.id !== agent.id); saveAgents(); renderAgentList(); }
-    });
-
-    list.appendChild(card);
-  });
-  document.body.classList.toggle('multi-select-mode', multiSelectMode);
-}
-
-function updateDeleteBar() {
-  const bar = document.getElementById('bottomDeleteBar');
-  document.getElementById('selectedCount').textContent = selectedAgentIds.size;
-  bar.classList.toggle('show', multiSelectMode && selectedAgentIds.size > 0);
-}
-
-function enterChat(agentId) {
-  const agent = agents.find(a => a.id === agentId);
-  if (!agent) return;
-  if (isMinor() && agent.aiConfig.type === 'emotion') { showToast('未成年人模式下情感陪伴功能不可用', 'error'); return; }
-  currentAgentId = agentId; currentChatId = agent.chats[0]?.id;
-  if (!currentChatId) {
-    const nc = { id: 'chat_' + Date.now(), title: '新对话', messages: [], pinned: false };
-    agent.chats.push(nc); currentChatId = nc.id; saveAgents();
-  }
-  document.getElementById('chatTitle').innerText = getCurrentChat().title;
-  renderChatList(); renderMessages(); applyChatBackground();
-  document.getElementById('chatPage').classList.add('show');
-}
-
-function readImageFile(file) {
-  return new Promise((resolve, reject) => {
-    if (!file) { reject(new Error('No file')); return; }
-    const reader = new FileReader();
-    reader.onload = (ev) => resolve(ev.target.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-document.getElementById('changeHomeBgBtn').onclick = () => document.getElementById('homeBgFile').click();
-document.getElementById('homeBgFile').onchange = async (e) => {
-  const file = e.target.files[0];
-  if (file) { try { config.homeBackground = await readImageFile(file); saveData(); applyHomeBackground(); showToast('背景已更新', 'success'); } catch (err) { showToast('图片读取失败', 'error'); } e.target.value = ''; }
-};
-document.getElementById('resetHomeBgBtn').onclick = () => { config.homeBackground = null; saveData(); applyHomeBackground(); showToast('背景已重置', 'success'); };
-
-let agentChatBgData = null, editAgentChatBgData = null;
-
-function triggerImagePick(callback) {
-  const input = document.createElement('input');
-  input.type = 'file'; input.accept = 'image/*';
-  input.onchange = async (e) => { const file = e.target.files[0]; if (file) { try { const data = await readImageFile(file); callback(data); } catch (err) { showToast('图片读取失败', 'error'); } } };
-  input.click();
-}
-
-document.getElementById('changeAgentChatBgBtn').onclick = () => { triggerImagePick((data) => { agentChatBgData = data; const p = document.getElementById('agentChatBgPreview'); p.style.backgroundImage = 'url(' + agentChatBgData + ')'; p.textContent = ''; }); };
-document.getElementById('resetAgentChatBgBtn').onclick = () => { agentChatBgData = null; const p = document.getElementById('agentChatBgPreview'); p.style.backgroundImage = 'none'; p.textContent = '未设置'; };
-
-document.getElementById('changeEditAgentChatBgBtn').onclick = () => { triggerImagePick((data) => { editAgentChatBgData = data; const p = document.getElementById('editAgentChatBgPreview'); p.style.backgroundImage = 'url(' + editAgentChatBgData + ')'; p.textContent = ''; }); };
-document.getElementById('resetEditAgentChatBgBtn').onclick = () => { editAgentChatBgData = null; const p = document.getElementById('editAgentChatBgPreview'); p.style.backgroundImage = 'none'; p.textContent = '未设置'; };
-
-const agentModal = document.getElementById('agentModal'); let avatarData = null;
-
-document.getElementById('avatarSelectBtn').onclick = () => document.getElementById('avatarFile').click();
-document.getElementById('avatarFile').onchange = (e) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (ev) => { avatarData = ev.target.result; document.getElementById('avatarPreview').src = avatarData; }; reader.readAsDataURL(file); } };
-
-document.getElementById('newAgentFab').onclick = async () => {
-  if (!defaultAvatarData) await loadDefaultAvatar();
-  avatarData = defaultAvatarData; agentChatBgData = null;
-  if (isMinor()) {
-    document.getElementById('aiTypeSelectBtn').textContent = '工具'; document.getElementById('aiTypeSelectBtn').dataset.value = 'tool';
-    document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE.tool; document.getElementById('agentGenderBox').classList.add('hide');
-  } else {
-    document.getElementById('aiTypeSelectBtn').textContent = '情感陪伴'; document.getElementById('aiTypeSelectBtn').dataset.value = 'emotion';
-    document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE.emotion; document.getElementById('agentGenderBox').classList.remove('hide');
-  }
-  document.getElementById('agentNameInput').value = ''; document.getElementById('agentDescInput').value = '';
-  document.getElementById('aiGenderSelectBtn').textContent = '中性'; document.getElementById('aiGenderSelectBtn').dataset.value = 'neutral';
-  document.getElementById('avatarPreview').src = defaultAvatarData; document.getElementById('avatarFile').value = '';
-  const p = document.getElementById('agentChatBgPreview'); p.style.backgroundImage = 'none'; p.textContent = '未设置';
-  showModal(agentModal);
-};
-
-document.getElementById('agentConfirm').onclick = async () => {
-  const name = document.getElementById('agentNameInput').value.trim();
-  if (!name) { showToast('请输入名称', 'error'); return; }
-  if (isMinor() && document.getElementById('aiTypeSelectBtn').dataset.value === 'emotion') { showToast('未成年人模式下不能创建情感陪伴智能体', 'error'); return; }
-  if (!avatarData) await loadDefaultAvatar();
-  const aiType = document.getElementById('aiTypeSelectBtn').dataset.value;
-  agents.push({
-    id: 'agent_' + Date.now(), name, avatar: avatarData || defaultAvatarData,
-    description: document.getElementById('agentDescInput').value.trim(),
-    aiConfig: {
-      type: aiType,
-      gender: document.getElementById('aiGenderSelectBtn').dataset.value,
-      style: document.getElementById('agentAiStyleInput').value.trim() || DEFAULT_STYLE[aiType],
-      temperature: aiType === 'tool' ? DEFAULT_TEMPERATURE.tool : DEFAULT_TEMPERATURE.emotion
-    },
-    chats: [{ id: 'chat_' + Date.now(), title: '新对话', messages: [], pinned: false }],
-    pinned: false, createdAt: Date.now(), chatBackground: agentChatBgData || null
-  });
-  saveAgents(); renderAgentList(); hideModal(agentModal); showToast('创建成功', 'success');
-};
-
-document.getElementById('agentCancel').onclick = () => hideModal(agentModal);
-
-const editAgentModal = document.getElementById('editAgentModal'); let editingAgentId = null, editAvatarData = '';
-
-document.getElementById('editAvatarSelectBtn').onclick = () => document.getElementById('editAvatarFile').click();
-document.getElementById('editAvatarFile').onchange = (e) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (ev) => { editAvatarData = ev.target.result; document.getElementById('editAvatarPreview').src = editAvatarData; }; reader.readAsDataURL(file); } };
-
-function openEditAgentModal(agent) {
-  editingAgentId = agent.id;
-  document.getElementById('editAgentNameInput').value = agent.name;
-  editAvatarData = agent.avatar; document.getElementById('editAvatarPreview').src = agent.avatar || defaultAvatarData;
-  document.getElementById('editAvatarFile').value = '';
-  const sw = document.getElementById('editPinnedSwitch');
-  sw.classList.toggle('checked', agent.pinned);
-  sw.onclick = () => { const np = !sw.classList.contains('checked'); if (np && agents.filter(a => a.pinned).length >= 3 && !agent.pinned) { showToast('最多只能置顶3个智能体', 'error'); return; } sw.classList.toggle('checked'); };
-  editAgentChatBgData = agent.chatBackground || null;
-  const p = document.getElementById('editAgentChatBgPreview');
-  if (editAgentChatBgData) { p.style.backgroundImage = 'url(' + editAgentChatBgData + ')'; p.textContent = ''; } else { p.style.backgroundImage = 'none'; p.textContent = '未设置'; }
-  if (config.specialMode) {
-    document.getElementById('editAgentDescInput').value = agent.description || '';
-    document.getElementById('editAiTypeSelectBtn').textContent = agent.aiConfig.type === 'tool' ? '工具' : '情感陪伴';
-    document.getElementById('editAiTypeSelectBtn').dataset.value = agent.aiConfig.type || 'emotion';
-    document.getElementById('editAiGenderSelectBtn').textContent = agent.aiConfig.gender === 'male' ? '男性' : agent.aiConfig.gender === 'female' ? '女性' : '中性';
-    document.getElementById('editAiGenderSelectBtn').dataset.value = agent.aiConfig.gender || 'neutral';
-    document.getElementById('editAgentAiStyleInput').value = agent.aiConfig.style || '';
-    document.getElementById('editAgentGenderBox').classList.toggle('hide', agent.aiConfig.type === 'tool');
-  }
-  document.body.classList.toggle('creator-mode', config.specialMode);
-  showModal(editAgentModal);
-}
-
-document.getElementById('editAgentConfirm').onclick = () => {
-  const name = document.getElementById('editAgentNameInput').value.trim();
-  if (!name) { showToast('请输入名称', 'error'); return; }
-  const agent = agents.find(a => a.id === editingAgentId);
-  if (agent) {
-    agent.name = name; agent.avatar = editAvatarData || defaultAvatarData;
-    agent.pinned = document.getElementById('editPinnedSwitch').classList.contains('checked');
-    agent.chatBackground = editAgentChatBgData;
-    if (config.specialMode) {
-      const aiType = document.getElementById('editAiTypeSelectBtn').dataset.value;
-      if (isMinor() && aiType === 'emotion') { showToast('未成年人模式下不能设置为情感陪伴', 'error'); return; }
-      agent.description = document.getElementById('editAgentDescInput').value.trim();
-      agent.aiConfig = {
-        type: aiType,
-        gender: document.getElementById('editAiGenderSelectBtn').dataset.value,
-        style: document.getElementById('editAgentAiStyleInput').value.trim() || DEFAULT_STYLE[aiType],
-        temperature: aiType === 'tool' ? DEFAULT_TEMPERATURE.tool : DEFAULT_TEMPERATURE.emotion
-      };
-    }
-    saveAgents(); renderAgentList();
-    if (currentAgentId === agent.id) applyChatBackground();
-  }
-  hideModal(editAgentModal);
-};
-
-document.getElementById('editAgentCancel').onclick = () => hideModal(editAgentModal);
-
-document.getElementById('multiSelectBtn').onclick = () => { multiSelectMode = true; selectedAgentIds.clear(); document.getElementById('multiSelectBtn').style.display = 'none'; document.getElementById('cancelMultiBtn').classList.add('show'); renderAgentList(); updateDeleteBar(); };
-document.getElementById('cancelMultiBtn').onclick = () => { multiSelectMode = false; selectedAgentIds.clear(); document.getElementById('multiSelectBtn').style.display = 'block'; document.getElementById('cancelMultiBtn').classList.remove('show'); renderAgentList(); updateDeleteBar(); };
-
-document.getElementById('confirmDeleteBtn').onclick = () => {
-  if (selectedAgentIds.size === 0) return;
-  const remaining = agents.filter(a => !selectedAgentIds.has(a.id));
-  if (remaining.length === 0) { showToast('至少保留一个智能体', 'error'); return; }
-  agents = remaining; saveAgents(); multiSelectMode = false; selectedAgentIds.clear();
-  document.getElementById('multiSelectBtn').style.display = 'block'; document.getElementById('cancelMultiBtn').classList.remove('show');
-  renderAgentList(); updateDeleteBar(); showToast('删除成功', 'success');
-};
-
-function openSettingsPanel() {
-  updateApiSelectDisplay();
-  updateCustomModelDisplay();
-  document.getElementById('customApiInput').value = config.customApi || '';
-  updateFontSizeDisplay();
-  updateTokenDisplay();
-  updateThemeSwitch(); updateHomeBgPreview();
-  document.getElementById('enterSendSwitch').classList.toggle('checked', config.enterToSend);
-  document.body.classList.toggle('creator-mode', config.specialMode);
-  document.getElementById('devControlBox').style.display = config.specialMode ? 'flex' : 'none';
-  document.getElementById('devSwitch').classList.toggle('checked', config.specialMode);
-  insertHelpButtons();
-  showModal(document.getElementById('modal'));
-}
-
-document.getElementById('homeSettingsBtn').onclick = openSettingsPanel;
-document.getElementById('goToImageFab').onclick = () => document.getElementById('imagePage').classList.add('show');
-document.getElementById('backBtnFromImg').onclick = () => document.getElementById('imagePage').classList.remove('show');
-document.getElementById('homeBtn').onclick = () => { document.getElementById('chatPage').classList.remove('show'); closeSidebar(); renderAgentList(); };
-
-async function checkText(text) {
-  if (config.specialMode) return true;
-  const key = getEffectiveApiKey(); if (!key) return true;
-  try {
-    const res = await fetch(DEEPSEEK_CONFIG.apiUrl, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key }, body: JSON.stringify({ model: "Qwen/Qwen2.5-7B-Instruct", messages: [{ role: "user", content: "你是极度宽松的内容审核员。判断原则：1.只有直接、露骨、详细的色情动作描写才算异常 2.只有明确的暴力威胁才算异常 3.只有具体的违法犯罪操作指导才算异常。回复只回复'正常'或'异常'两个字。\n" + text }], temperature: 0.1, max_tokens: 8 }) });
-    return ((await res.json()).choices?.[0]?.message?.content || "").trim() === "正常";
-  } catch (e) { return true; }
-}
-
-function buildSystemPrompt(aiConfig) {
-  let gp = "";
-  if (aiConfig.type === "emotion") gp = aiConfig.gender === "male" ? "你的性别为男性，语气贴合男性说话方式并且认为自己是男性；" : aiConfig.gender === "female" ? "你的性别为女性，语气贴合女性说话方式并且认为自己是女性；" : "你的性别为中性，语气无明显性别特征；";
-  return gp + "你是" + (aiConfig.type === "emotion" ? "情感陪伴AI" : "工具型AI") + "，" + aiConfig.style + "；禁止使用任何表情符号，单个句号可保留，连续句号请删除，回复贴合设定风格。";
-}
-
-function renderChatList() {
-  const agent = getCurrentAgent();
-  const list = document.getElementById("chatList"); list.innerHTML = "";
-  [...agent.chats].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)).forEach(chat => {
-    const item = document.createElement("div");
-    item.className = 'chat-item ' + (chat.pinned ? 'pinned' : '') + ' ' + (chat.id === currentChatId ? 'active' : '');
-    let ah = '<span class="rename" data-id="' + chat.id + '">✏️</span>';
-    if (config.specialMode) ah += '<span class="chat-config-btn" data-id="' + chat.id + '">⚙</span>';
-    ah += '<span class="del" data-id="' + chat.id + '">✕</span>';
-    item.innerHTML = '<div class="chat-item-left"><span class="pin-icon ' + (chat.pinned ? 'pinned' : '') + '" data-id="' + chat.id + '">📌</span><span class="chat-title-text">' + chat.title + '</span></div><div class="chat-item-actions">' + ah + '</div>';
-
-    item.querySelector('.pin-icon').onclick = (e) => { e.stopPropagation(); chat.pinned = !chat.pinned; saveAgents(); renderChatList(); };
-
-    item.addEventListener("click", (e) => {
-      if (e.target.closest('.del') || e.target.closest('.rename') || e.target.closest('.pin-icon') || e.target.closest('.chat-config-btn')) return;
-      currentChatId = chat.id; renderChatList(); renderMessages(); applyChatBackground();
-      document.getElementById("chatTitle").innerText = chat.title; closeSidebar();
-    });
-
-    item.querySelector(".rename").onclick = async (e) => {
-      e.stopPropagation();
-      document.getElementById('renameInput').value = chat.title; showModal(document.getElementById('renameModal'));
-      const cf = () => { const nt = document.getElementById('renameInput').value.trim(); if (nt) { chat.title = nt; saveAgents(); renderChatList(); document.getElementById("chatTitle").innerText = chat.title; } hideModal(document.getElementById('renameModal')); };
-      document.getElementById('renameConfirm').onclick = cf;
-      document.getElementById('renameCancel').onclick = () => hideModal(document.getElementById('renameModal'));
-    };
-
-    const cbtn = item.querySelector(".chat-config-btn");
-    if (cbtn) cbtn.onclick = (e) => { e.stopPropagation(); };
-
-    item.querySelector(".del").onclick = async (e) => {
-      e.stopPropagation();
-      if (agent.chats.length <= 1) { showToast("至少保留一个对话", "error"); return; }
-      const confirmed = await showConfirm('确认删除', '确定删除此对话吗？此操作不可恢复。', '删除');
-      if (confirmed) {
-        agent.chats = agent.chats.filter(c => c.id !== chat.id); currentChatId = agent.chats[0].id;
-        saveAgents(); renderChatList(); renderMessages(); applyChatBackground();
-        document.getElementById("chatTitle").innerText = agent.chats[0].title;
-      }
-    };
-
-    list.appendChild(item);
-  });
-}
-
-function renderMessages() {
-  const chat = getCurrentChat(); const box = document.getElementById("messages"); box.innerHTML = "";
-  if (!chat) return;
-  chat.messages.forEach(msg => {
-    const div = document.createElement("div");
-    div.className = 'msg ' + (msg.role === "assistant" ? "ai" : "user");
-    div.innerHTML = renderMessageContent(msg.content);
-    box.appendChild(div);
-  });
-  box.querySelectorAll('.code-copy-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      const codeId = this.dataset.codeId;
-      const codeEl = document.getElementById(codeId);
-      if (codeEl) {
-        const text = codeEl.textContent;
-        navigator.clipboard.writeText(text).then(() => {
-          showToast('代码已复制', 'success', 1500);
+    document.getElementById('qqGroupBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      const groupNumber = '629741287';
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isMobile) {
+        const schemeUrl = 'mqqapi://card/show_pslcard?src_type=internal&version=1&uin=' + groupNumber + '&card_type=group&source=external';
+        window.location.href = schemeUrl;
+        setTimeout(() => {
+          navigator.clipboard?.writeText(groupNumber).then(() => {
+            alert('官方QQ群号 ' + groupNumber + ' 已复制，请打开QQ搜索加入。');
+          });
+        }, 1500);
+      } else {
+        navigator.clipboard?.writeText(groupNumber).then(() => {
+          alert('官方QQ群号 ' + groupNumber + ' 已复制，请打开QQ搜索加入。');
         }).catch(() => {
-          showToast('代码已复制', 'success', 1500);
+          prompt('请手动复制群号加入：', groupNumber);
         });
       }
     });
-  });
-  box.scrollTop = box.scrollHeight;
-}
 
-function saveData() { localStorage.setItem("config", JSON.stringify(config)); }
-
-function closeSidebar() { document.getElementById("sidebar").classList.remove("open"); document.getElementById("overlay").classList.remove("show"); }
-
-function updateThemeSwitch() { document.getElementById("themeSwitch").classList.toggle("checked", config.lightMode); }
-
-function updateFontSizeDisplay() { document.getElementById('fontSizeValue').textContent = config.fontSize; }
-
-function updateTokenDisplay() { document.getElementById('tokenValue').textContent = config.maxTokens; }
-
-function updateVersionDisplay() { const el = document.getElementById('versionDisplay'); if (el) el.textContent = '当前版本 ' + APP_VERSION; }
-
-function isMinor() { return config.isAdult === false; }
-
-function insertHelpButtons() {
-  const modalBody = document.querySelector('#modal .modal-body');
-  if (!modalBody) return;
-  modalBody.querySelectorAll('.help-btn').forEach(b => b.remove());
-
-  // API线路
-  const apiLabel = modalBody.querySelector('.api-select-wrap label');
-  if (apiLabel && !apiLabel.querySelector('.help-btn')) {
-    const btn = document.createElement('span');
-    btn.className = 'help-btn'; btn.textContent = '?';
-    btn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); showHelpTooltip('api_source'); };
-    apiLabel.appendChild(btn);
-  }
-
-  // 字体大小（第一个font-size-setting）
-  const fontSetting = modalBody.querySelector('.font-size-setting:first-of-type');
-  if (fontSetting) {
-    const fontLabel = fontSetting.querySelector('span:first-child');
-    if (fontLabel && !fontLabel.querySelector('.help-btn')) {
-      const btn = document.createElement('span');
-      btn.className = 'help-btn'; btn.textContent = '?';
-      btn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); showHelpTooltip('font_size'); };
-      fontLabel.appendChild(btn);
-    }
-  }
-
-  // 最大使用token
-  const allSettings = modalBody.querySelectorAll('.font-size-setting');
-  allSettings.forEach(setting => {
-    const firstSpan = setting.querySelector('span:first-child');
-    if (firstSpan && firstSpan.textContent.includes('token') && !firstSpan.querySelector('.help-btn')) {
-      const btn = document.createElement('span');
-      btn.className = 'help-btn'; btn.textContent = '?';
-      btn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); showHelpTooltip('max_tokens'); };
-      firstSpan.appendChild(btn);
-    }
-  });
-
-  // 浅色模式、创造者模式、回车键发送消息
-  const switchBoxes = modalBody.querySelectorAll('.switch-box');
-  const switchKeys = ['light_mode', 'creator_mode', 'enter_to_send'];
-  switchBoxes.forEach((box, index) => {
-    if (index < switchKeys.length) {
-      const span = box.querySelector('span:first-child');
-      if (span && !span.querySelector('.help-btn')) {
-        const btn = document.createElement('span');
-        btn.className = 'help-btn'; btn.textContent = '?';
-        btn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); showHelpTooltip(switchKeys[index]); };
-        span.appendChild(btn);
-      }
-    }
-  });
-
-  // 主菜单背景
-  const bgLabel = modalBody.querySelector('label[style*="margin-top:16px"]');
-  if (bgLabel && bgLabel.textContent.includes('背景') && !bgLabel.querySelector('.help-btn')) {
-    const btn = document.createElement('span');
-    btn.className = 'help-btn'; btn.textContent = '?';
-    btn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); showHelpTooltip('home_bg'); };
-    bgLabel.appendChild(btn);
-  }
-}
-
-function showHelpTooltip(key) {
-  const modal = document.getElementById('helpTooltipModal');
-  const titleMap = {
-    'api_source': 'API 线路',
-    'font_size': '字体大小',
-    'light_mode': '浅色模式',
-    'creator_mode': '创造者模式',
-    'enter_to_send': '回车键发送消息',
-    'home_bg': '主菜单背景',
-    'max_tokens': '最大使用token'
-  };
-  document.getElementById('helpTooltipTitle').textContent = titleMap[key] || key;
-  document.getElementById('helpTooltipDesc').textContent = helpTexts[key] || '暂无说明';
-  modal.classList.add('show');
-}
-
-document.getElementById('helpTooltipClose').onclick = () => { document.getElementById('helpTooltipModal').classList.remove('show'); };
-document.getElementById('helpTooltipModal').onclick = (e) => { if (e.target === document.getElementById('helpTooltipModal')) { document.getElementById('helpTooltipModal').classList.remove('show'); } };
-
-document.getElementById('openShortcutBtn').onclick = () => {
-  document.getElementById('shortcutModal').classList.add('show');
-  hideModal(document.getElementById('modal'));
-};
-document.getElementById('shortcutClose').onclick = () => { document.getElementById('shortcutModal').classList.remove('show'); };
-document.getElementById('shortcutModal').onclick = (e) => { if (e.target === document.getElementById('shortcutModal')) { document.getElementById('shortcutModal').classList.remove('show'); } };
-
-document.getElementById('emailRow').addEventListener('click', () => {
-  navigator.clipboard.writeText('dchatstudio@outlook.com').then(() => {
-    showToast('邮箱已复制', 'success');
-  }).catch(() => {
-    showToast('邮箱已复制', 'success');
-  });
-});
-
-document.getElementById('bracketBtn').addEventListener('click', () => {
-  const input = document.getElementById('input');
-  const start = input.selectionStart;
-  const end = input.selectionEnd;
-  const text = input.value;
-  const before = text.substring(0, start);
-  const selected = text.substring(start, end);
-  const after = text.substring(end);
-
-  if (selected) {
-    input.value = before + '（' + selected + '）' + after;
-    input.selectionStart = start + 1 + selected.length + 1;
-    input.selectionEnd = start + 1 + selected.length + 1;
-  } else {
-    input.value = before + '（）' + after;
-    input.selectionStart = start + 1;
-    input.selectionEnd = start + 1;
-  }
-  input.focus();
-});
-
-document.getElementById('apiSelectBtn').onclick = (e) => {
-  e.stopPropagation();
-  const values = ['default', 'line1', 'line2', 'custom'];
-
-  const existing = document.querySelector('.api-line-popup');
-  if (existing) {
-    existing.remove();
-    return;
-  }
-
-  const container = document.createElement('div');
-  container.className = 'api-line-popup inline-select-options show';
-  container.style.position = 'fixed';
-  container.style.width = document.getElementById('apiSelectBtn').offsetWidth + 'px';
-  container.style.left = document.getElementById('apiSelectBtn').getBoundingClientRect().left + 'px';
-  container.style.top = document.getElementById('apiSelectBtn').getBoundingClientRect().bottom + 'px';
-  container.style.zIndex = '10001';
-
-  values.forEach((val, idx) => {
-    const div = document.createElement('div');
-    div.className = 'inline-select-option';
-    div.textContent = API_LINE_LABELS[idx];
-    div.dataset.value = val;
-    div.onclick = (ev) => {
-      ev.stopPropagation();
-      const prevLine = config.apiLine;
-      config.apiLine = val;
-      if (val === 'custom') {
-        document.getElementById('customApiInput').classList.add('show');
-        document.getElementById('customModelWrap').classList.add('show');
-      } else {
-        document.getElementById('customApiInput').classList.remove('show');
-        document.getElementById('customModelWrap').classList.remove('show');
-      }
-      saveData();
-      updateApiSelectDisplay();
-      updateCustomModelDisplay();
-      container.remove();
-
-      if (val === 'custom' && prevLine !== 'custom' && !config.customModel) {
-        setTimeout(() => showModelSelectModal(), 300);
-      }
-    };
-    container.appendChild(div);
-  });
-
-  document.body.appendChild(container);
-
-  const closeHandler = (ev) => {
-    if (!container.contains(ev.target) && ev.target !== document.getElementById('apiSelectBtn')) {
-      container.remove();
-      document.removeEventListener('click', closeHandler);
-    }
-  };
-  setTimeout(() => document.addEventListener('click', closeHandler), 10);
-};
-
-document.getElementById('customApiInput').addEventListener('input', function() {
-  config.customApi = this.value.trim();
-  saveData();
-
-  if (config.customApi && !config.customModel) {
-    setTimeout(() => showModelSelectModal(), 300);
-  }
-});
-
-let lastGeneratedImageUrl = null;
-let activeStreamAbort = null;
-let thinkingTimer = null;
-let hasReceivedContent = false;
-
-function addEllipsisToContent(content) {
-  if (!content) return '…';
-  const trimmed = content.trimEnd();
-  if (!trimmed) return '…';
-  const lastChar = trimmed.slice(-1);
-  if (/[。.！!？?，,；;：:、…～~—\-]/.test(lastChar)) {
-    return trimmed.slice(0, -1) + '…';
-  }
-  return trimmed + '…';
-}
-
-function startThinkingTimer(loadingEl, baseText) {
-  thinkingTimer = setInterval(() => {
-    if (hasReceivedContent) {
-      clearInterval(thinkingTimer);
-      thinkingTimer = null;
-      return;
-    }
-    if (loadingEl && loadingEl.parentNode) {
-      let c = parseInt(loadingEl.dataset.thinkDotCount) || 0;
-      c = (c + 1) % 4;
-      loadingEl.dataset.thinkDotCount = c;
-      loadingEl.textContent = baseText + '.'.repeat(c);
-    }
-  }, 500);
-}
-
-function stopThinkingTimer() {
-  if (thinkingTimer) { clearInterval(thinkingTimer); thinkingTimer = null; }
-}
-
-async function sendMsg() {
-  if (activeStreamAbort) {
-    activeStreamAbort.abort();
-    activeStreamAbort = null;
-    stopThinkingTimer();
-    const loadingEl = document.querySelector("#messages .loading");
-    if (loadingEl) loadingEl.remove();
-    const chat = getCurrentChat();
-    if (chat && chat.messages.length > 0) {
-      const lastMsg = chat.messages[chat.messages.length - 1];
-      if (lastMsg.role === 'assistant' && lastMsg._streaming) {
-        lastMsg.content = addEllipsisToContent(lastMsg.content);
-        delete lastMsg._streaming;
-        saveAgents();
-        renderMessages();
-      }
-    }
-  }
-
-  const text = document.getElementById("input").value.trim();
-  if (!text) return;
-
-  if (config.apiLine === 'custom' && !config.customModel) {
-    showToast('使用自定义API时，请先选择模型', 'error');
-    return;
-  }
-
-  const agentId = currentAgentId, chatId = currentChatId,
-        agent = agents.find(a => a.id === agentId),
-        chat = agent.chats.find(c => c.id === chatId);
-  chat.messages.push({ role: "user", content: text });
-  document.getElementById("input").value = ""; saveAgents();
-  hasReceivedContent = false;
-
-  if (currentAgentId === agentId && currentChatId === chatId) {
-    renderMessages();
-    const loading = document.createElement("div"); loading.className = "loading";
-    const baseText = '让我想想';
-    loading.textContent = baseText;
-    loading.dataset.thinkDotCount = "0";
-    document.getElementById("messages").appendChild(loading);
-    startThinkingTimer(loading, baseText);
-    document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
-  }
-
-  checkText(text).then(async (ok) => {
-    if (!ok) {
-      chat.messages.pop(); saveAgents();
-      if (currentAgentId === agentId && currentChatId === chatId) {
-        const le = document.querySelector("#messages .loading"); if (le) le.remove();
-        stopThinkingTimer();
-        const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = "换个内容试试吧";
-        document.getElementById("messages").appendChild(tip);
-      }
-      return;
-    }
-    try {
-      const key = getEffectiveApiKey(); if (!key) throw new Error("请先在设置中配置API密钥");
-      const model = getEffectiveModel();
-      const aiConfig = chat.chatConfig && chat.chatConfig.type ? chat.chatConfig : agent.aiConfig;
-
-      const placeholderMsg = { role: "assistant", content: "", _streaming: true };
-      chat.messages.push(placeholderMsg);
-      saveAgents();
-
-      const abortController = new AbortController();
-      activeStreamAbort = abortController;
-
-      // 构建请求体
-      const requestBody = {
-        model: model,
-        messages: [
-          { role: "system", content: buildSystemPrompt(aiConfig) },
-          ...chat.messages.filter(m => !m._streaming).map(m => ({ role: m.role, content: m.content }))
-        ],
-        temperature: aiConfig.temperature || DEFAULT_TEMPERATURE.emotion,
-        top_p: 0.9,
-        stream: true
-      };
-      // maxTokens为0时不传max_tokens（表示不限制）
-      if (config.maxTokens && config.maxTokens > 0) {
-        requestBody.max_tokens = config.maxTokens;
-      }
-
-      const res = await fetch(DEEPSEEK_CONFIG.apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
-        body: JSON.stringify(requestBody),
-        signal: abortController.signal
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          const navHeight = 80;
+          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight - 20;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
       });
+    });
 
-      const reader = res.body.getReader(); const decoder = new TextDecoder(); let reply = '';
-      let loadingRemoved = false;
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const lines = decoder.decode(value, { stream: true }).split('\n');
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const js = line.slice(6).trim(); if (js === '[DONE]') continue;
-            try {
-              const delta = JSON.parse(js).choices?.[0]?.delta || {};
-              const content = delta.content || '';
-              if (content) {
-                if (!loadingRemoved) {
-                  stopThinkingTimer();
-                  hasReceivedContent = true;
-                  const le = document.querySelector("#messages .loading"); if (le) le.remove();
-                  loadingRemoved = true;
-                }
-                reply += content;
-                placeholderMsg.content = reply.replace(/^\n+/, '');
-                if (currentAgentId === agentId && currentChatId === chatId) {
-                  const aiMsgEl = document.getElementById("messages").querySelector(".msg.ai:last-of-type");
-                  if (!aiMsgEl) {
-                    const newAiMsg = document.createElement("div"); newAiMsg.className = "msg ai";
-                    newAiMsg.innerHTML = renderMessageContent(placeholderMsg.content);
-                    newAiMsg.style.animation = 'none'; newAiMsg.style.opacity = '1'; newAiMsg.style.transform = 'none';
-                    document.getElementById("messages").appendChild(newAiMsg);
-                  } else {
-                    aiMsgEl.innerHTML = renderMessageContent(placeholderMsg.content);
-                  }
-                  document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
-                }
-              }
-            } catch(e) {}
-          }
-        }
-      }
-
-      stopThinkingTimer();
-      const le = document.querySelector("#messages .loading"); if (le) le.remove();
-      activeStreamAbort = null;
-      delete placeholderMsg._streaming;
-
-      if (!reply) {
-        chat.messages.pop();
-        reply = agent.aiConfig.type === "emotion" ? "出了差错，请检查网络和API~" : "有点问题，请检查网络和API哦~";
-        placeholderMsg.content = reply;
-        chat.messages.push({ role: "assistant", content: reply });
-      } else {
-        reply = reply.replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, '').replace(/[。.]{2,}/g, '').trim();
-        placeholderMsg.content = reply;
-      }
-
-      if (await checkText(reply)) {
-        saveAgents();
-        if (currentAgentId === agentId && currentChatId === chatId) renderMessages();
-      } else {
-        chat.messages = chat.messages.filter(m => m !== placeholderMsg);
-        saveAgents();
-        if (currentAgentId === agentId && currentChatId === chatId) {
-          renderMessages();
-          const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = "换个内容试试吧";
-          document.getElementById("messages").appendChild(tip);
-        }
-      }
-    } catch (e) {
-      if (e.name === 'AbortError') return;
-      stopThinkingTimer();
-      activeStreamAbort = null;
-      const le = document.querySelector("#messages .loading"); if (le) le.remove();
-      if (currentAgentId === agentId && currentChatId === chatId) {
-        const err = document.createElement("div"); err.className = "msg ai";
-        err.textContent = agent.aiConfig.type === "emotion" ? "网断了吧 连不上了" : "请求失败：" + e.message;
-        document.getElementById("messages").appendChild(err);
-      }
-    }
-  });
-}
-
-async function initAll() {
-  await migrateOldData();
-
-  config = JSON.parse(localStorage.getItem("config")) || config;
-  if (config.specialMode === undefined) config.specialMode = false;
-  if (config.enterToSend === undefined) config.enterToSend = true;
-  if (config.lightMode === undefined) config.lightMode = false;
-  if (config.homeBackground === undefined) config.homeBackground = null;
-  if (config.apiLine === undefined) config.apiLine = 'default';
-  if (config.customApi === undefined) config.customApi = '';
-  if (config.customModel === undefined) config.customModel = '';
-  if (config.maxTokens === undefined) config.maxTokens = 1000;
-
-  applyTheme(); applyHomeBackground(); renderAgentList();
-  startUsageTimer();
-
-  setupInlineSelect('#aiTypeSelectBtn', '#aiTypeInlineOptions');
-  setupInlineSelect('#aiGenderSelectBtn', '#aiGenderInlineOptions');
-  setupInlineSelect('#editAiTypeSelectBtn', '#editAiTypeInlineOptions');
-  setupInlineSelect('#editAiGenderSelectBtn', '#editAiGenderInlineOptions');
-
-  const storedVersion = getStoredAgreementVersion();
-  if (storedVersion === '0') { openAgreement(true); }
-  startAgreementCheck();
-
-  document.getElementById('openAgreementBtn').onclick = () => { hideModal(document.getElementById('modal')); openAgreement(false); };
-
-  document.getElementById("apiTag").onclick = async () => {
-    const input = await showPrompt("请输入", "验证码");
-    if (input === AUTH_CODE) { config.specialMode = true; saveData(); showToast("已激活", "success"); }
-    else if (input !== null) showToast("验证失败", "error");
-  };
-
-  document.getElementById("toggleSidebar").onclick = () => { document.getElementById("sidebar").classList.add("open"); document.getElementById("overlay").classList.add("show"); };
-  document.getElementById("collapseBtn").onclick = closeSidebar;
-  document.getElementById("overlay").onclick = closeSidebar;
-
-  document.getElementById("fontMinus").onclick = () => { if (config.fontSize > 8) setFontSize(config.fontSize - 1); };
-  document.getElementById("fontPlus").onclick = () => setFontSize(config.fontSize + 1);
-
-  // 点击token数字直接输入
-  document.getElementById("tokenValue").onclick = async () => {
-    const input = await showPrompt("最大使用token", "输入token数量（0表示不限制）");
-    if (input !== null) {
-      const num = parseInt(input);
-      if (!isNaN(num) && num >= 0) {
-        config.maxTokens = num;
-        updateTokenDisplay();
-        saveData();
-      } else {
-        showToast('请输入有效的数字（0或正整数）', 'error');
-      }
-    }
-  };
-
-  function setFontSize(size) { config.fontSize = size; document.documentElement.style.setProperty('--font-size', size + 'px'); document.getElementById('fontSizeValue').textContent = size; saveData(); }
-
-  document.getElementById("newChat").onclick = () => {
-    const agent = getCurrentAgent();
-    const nc = { id: 'chat_' + Date.now(), title: '新对话', messages: [], pinned: false };
-    agent.chats.unshift(nc); currentChatId = nc.id; saveAgents();
-    renderChatList(); renderMessages(); applyChatBackground();
-    document.getElementById("chatTitle").innerText = nc.title; closeSidebar();
-  };
-
-  document.getElementById("openSettings").onclick = () => {
-    document.getElementById('devSwitch').onclick = () => { config.specialMode = !config.specialMode; document.getElementById('devSwitch').classList.toggle('checked', config.specialMode); document.getElementById('devControlBox').style.display = config.specialMode ? 'flex' : 'none'; saveData(); };
-    openSettingsPanel();
-  };
-
-  document.getElementById("modalSave").onclick = () => {
-    config.customApi = document.getElementById("customApiInput").value.trim();
-    saveData(); hideModal(document.getElementById("modal"));
-  };
-  document.getElementById("modalCancel").onclick = () => hideModal(document.getElementById("modal"));
-
-  document.getElementById("send").onclick = sendMsg;
-
-  document.getElementById("input").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      if (config.enterToSend && !e.shiftKey) { e.preventDefault(); sendMsg(); }
-      else if (!config.enterToSend && e.shiftKey) { e.preventDefault(); sendMsg(); }
-    }
-  });
-
-  document.getElementById('enterSendSwitch').onclick = () => { config.enterToSend = !config.enterToSend; document.getElementById('enterSendSwitch').classList.toggle('checked', config.enterToSend); saveData(); };
-
-  document.getElementById('genImgBtn').onclick = async () => {
-    const prompt = document.getElementById('imgPrompt').value.trim();
-    if (!prompt) { showToast('请输入', 'error'); return; }
-    const loading = document.getElementById('imgLoading'), img = document.getElementById('resultImg'), downloadBtn = document.getElementById('downloadImgBtn');
-    loading.style.display = 'block'; img.classList.remove('show'); downloadBtn.style.display = 'none';
-    try {
-      const res = await fetch('https://api.siliconflow.cn/v1/images/generations', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getEffectiveApiKey() }, body: JSON.stringify({ model: 'Kwai-Kolors/Kolors', prompt, image_size: '1024x1024', num_inference_steps: 28 }) });
-      const data = await res.json(); const url = data.images?.[0]?.url;
-      if (url) { lastGeneratedImageUrl = url; img.src = url; requestAnimationFrame(() => requestAnimationFrame(() => { img.classList.add('show'); downloadBtn.style.display = 'block'; })); }
-      else { showToast('生成失败', 'error'); }
-    } catch (e) { showToast('请求失败：' + e.message, 'error'); }
-    finally { loading.style.display = 'none'; }
-  };
-
-  document.getElementById('downloadImgBtn').onclick = () => { if (!lastGeneratedImageUrl) { showToast('没有可下载的图片', 'error'); return; } window.open(lastGeneratedImageUrl, '_blank'); showToast('已跳转浏览器，长按图片即可保存', 'success'); };
-
-  document.getElementById("openRewardBtn").onclick = () => { showModal(document.getElementById("rewardModal")); hideModal(document.getElementById("modal")); };
-  document.getElementById("closeReward").onclick = () => hideModal(document.getElementById("rewardModal"));
-  document.getElementById("rewardModal").onclick = (e) => { if (e.target === document.getElementById("rewardModal")) hideModal(document.getElementById("rewardModal")); };
-
-  document.getElementById("openNoticeBtn").onclick = () => { showNotice(false); closeSidebar(); };
-  document.getElementById('closeConfigDetailBtn').onclick = () => hideModal(document.getElementById('chatConfigMask'));
-
-  document.getElementById("themeSwitch").onclick = () => { config.lightMode = !config.lightMode; document.getElementById("themeSwitch").classList.toggle("checked", config.lightMode); applyTheme(); saveData(); };
-
-  document.getElementById('changeAgeBtn').onclick = () => { hideModal(document.getElementById('modal')); showAgeConfirmModal(() => showToast('状态已更新', 'success')); };
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      const visibleModals = [
-        document.getElementById('modal'),
-        document.getElementById('agentModal'),
-        document.getElementById('editAgentModal'),
-        document.getElementById('promptModal'),
-        document.getElementById('chatConfigMask'),
-        document.getElementById('chatConfigModal'),
-        document.getElementById('rewardModal'),
-        document.getElementById('noticeModal'),
-        document.getElementById('renameModal'),
-        document.getElementById('restReminderModal'),
-        document.getElementById('helpTooltipModal'),
-        document.getElementById('shortcutModal'),
-        document.getElementById('confirmModal'),
-        document.getElementById('modelSelectModal'),
-      ];
-      for (let i = visibleModals.length - 1; i >= 0; i--) {
-        if (visibleModals[i].classList.contains('show')) { hideModal(visibleModals[i]); return; }
-      }
-      if (document.getElementById('imagePage').classList.contains('show')) {
-        document.getElementById('imagePage').classList.remove('show'); return;
-      }
-      if (document.getElementById('chatPage').classList.contains('show')) {
-        document.getElementById('chatPage').classList.remove('show'); closeSidebar(); renderAgentList(); return;
-      }
-    }
-    if (e.ctrlKey && (e.key === '=' || e.key === '+')) { e.preventDefault(); if (config.fontSize < 32) { config.fontSize++; document.documentElement.style.setProperty('--font-size', config.fontSize + 'px'); document.getElementById('fontSizeValue').textContent = config.fontSize; saveData(); } }
-    if (e.ctrlKey && e.key === '-') { e.preventDefault(); if (config.fontSize > 8) { config.fontSize--; document.documentElement.style.setProperty('--font-size', config.fontSize + 'px'); document.getElementById('fontSizeValue').textContent = config.fontSize; saveData(); } }
-  });
-}
-
-let ageConfirmCallback = null;
-
-function showAgeConfirmModal(callback) { ageConfirmCallback = callback; showModal(document.getElementById('confirmAgeModal')); }
-
-function handleAgeChoice(isAdult) {
-  config.isAdult = isAdult; saveData(); hideModal(document.getElementById('confirmAgeModal'));
-  if (!isAdult && getCurrentAgent()?.aiConfig?.type === 'emotion') document.getElementById('chatPage').classList.remove('show');
-  if (ageConfirmCallback) { ageConfirmCallback(); ageConfirmCallback = null; }
-}
-
-document.getElementById('confirmAgeBtnAdult').onclick = () => handleAgeChoice(true);
-document.getElementById('confirmAgeBtnMinor').onclick = () => handleAgeChoice(false);
-
-window.onload = async () => {
-  const now = new Date(), month = now.getMonth() + 1, day = now.getDate();
-  const mourningDays = [{ month: 4, day: 4, subtitle: '新冠肺炎疫情逝者' }, { month: 5, day: 12, subtitle: '汶川大地震遇难同胞' }, { month: 7, day: 27, subtitle: '唐山大地震遇难同胞' }];
-  const today = mourningDays.find(d => d.month === month && d.day === day);
-  if (today) { document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:48px;margin-bottom:20px;">🕯️</div><div style="font-size:20px;font-weight:600;color:#e0e0e0;margin-bottom:8px;">沉痛缅怀</div><div style="font-size:15px;color:#a0a0a0;">' + today.subtitle + '</div><div style="font-size:14px;color:#a0a0a0;">灾难纪念日，软件暂停使用一天</div></div>'; return; }
-  document.getElementById("app").style.display = "block";
-  config = JSON.parse(localStorage.getItem("config")) || config;
-  if (config.customModel === undefined) config.customModel = '';
-  if (config.maxTokens === undefined) config.maxTokens = 1000;
-  const needAgeConfirm = (config.isAdult === undefined || config.isAdult === null);
-  if (needAgeConfirm) { showAgeConfirmModal(() => { initAll(); setTimeout(() => showNotice(true), 500); }); }
-  else { initAll(); setTimeout(() => showNotice(true), 500); }
-};
-
-document.addEventListener('DOMContentLoaded', () => { history.pushState(null, null, location.href); window.addEventListener('popstate', () => { window.close(); }); });
-</script>
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(playTypewriter, 500);
+    });
+  </script>
 </body>
 </html>
