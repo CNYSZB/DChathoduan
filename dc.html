@@ -15,44 +15,12 @@
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
   }
-  /* 括号内文字样式 */
   .bracket-content {
     font-style: italic;
     color: #888;
   }
   body.light-mode .bracket-content {
     color: #999;
-  }
-
-  .lang-select-wrap {
-    margin-top: 16px;
-  }
-  .lang-select-wrap label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: calc(var(--font-size) - 2px);
-    color: var(--subtext);
-    font-weight: 500;
-  }
-  .lang-select-btn {
-    width: 100%;
-    padding: 12px 14px;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    color: var(--text);
-    font-size: var(--font-size);
-    outline: none;
-    cursor: pointer;
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .lang-select-btn::after {
-    content: '▼';
-    font-size: 12px;
-    color: var(--subtext);
   }
 
   .api-select-wrap {
@@ -99,6 +67,161 @@
   }
   .custom-api-input.show {
     display: block;
+  }
+
+  .custom-model-wrap {
+    margin-top: 8px;
+    display: none;
+  }
+  .custom-model-wrap.show {
+    display: block;
+  }
+  .custom-model-wrap label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    font-weight: 500;
+  }
+  .custom-model-display {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    font-size: var(--font-size);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 48px;
+  }
+  .custom-model-display::after {
+    content: '✎';
+    font-size: 14px;
+    color: var(--subtext);
+  }
+  .custom-model-display.placeholder {
+    color: #5a5c64;
+  }
+
+  #modelSelectModal .modal-box {
+    max-width: 380px;
+  }
+  .model-select-title {
+    font-size: calc(var(--font-size) + 4px);
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .model-select-subtitle {
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .model-option-btn {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    color: var(--text);
+    font-size: var(--font-size);
+    cursor: pointer;
+    text-align: left;
+    margin-bottom: 10px;
+    transition: background 0.15s ease;
+    line-height: 1.4;
+  }
+  .model-option-btn:active {
+    background: var(--primary-bg);
+    border-color: var(--primary);
+  }
+  .model-option-btn .model-name {
+    font-weight: 600;
+    display: block;
+  }
+  .model-option-btn .model-desc {
+    font-size: calc(var(--font-size) - 3px);
+    color: var(--subtext);
+    display: block;
+    margin-top: 2px;
+  }
+  .model-option-btn.custom-model-btn {
+    text-align: center;
+    font-weight: 500;
+  }
+
+  /* 代码块样式 */
+  .code-block-wrap {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  body.light-mode .code-block-wrap {
+    background: #f6f8fa;
+    border-color: #d0d7de;
+  }
+  .code-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 14px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+  }
+  body.light-mode .code-block-header {
+    background: #eaeef2;
+    border-color: #d0d7de;
+  }
+  .code-lang-tag {
+    font-size: 11px;
+    color: #8b949e;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .code-copy-btn {
+    font-size: 11px;
+    padding: 4px 10px;
+    background: #21262d;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  body.light-mode .code-copy-btn {
+    background: #ffffff;
+    color: #24292f;
+    border-color: #d0d7de;
+  }
+  .code-copy-btn:active {
+    background: #30363d;
+  }
+  .code-block-body {
+    padding: 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .code-block-body pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .code-block-body code {
+    font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+    font-size: 13px;
+    color: #c9d1d9;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  body.light-mode .code-block-body code {
+    color: #24292f;
   }
 
   .email-row {
@@ -194,8 +317,7 @@
   body.light-mode #renameInput::placeholder,
   body.light-mode #chatConfigAiStyleInput::placeholder { color: #8e8e93; }
   body.light-mode .select-btn { color: var(--text); }
-  body.light-mode .select-options { background: var(--surface); }
-  body.light-mode .select-option { color: var(--text); border-color: var(--border); }
+  body.light-mode .inline-select-option { color: var(--text); border-color: var(--border); }
   body.light-mode .switch-box span { color: var(--text); }
   body.light-mode .prompt-value { color: var(--text); }
   body.light-mode .config-item-value { color: var(--text); }
@@ -213,10 +335,12 @@
   body.light-mode #genImgBtn { color: #fff; }
   body.light-mode .api-tag { color: var(--primary); }
   body.light-mode #closeReward { color: #fff; }
-  body.light-mode .lang-select-btn { color: var(--text); }
   body.light-mode .api-select-btn { color: var(--text); }
   body.light-mode .custom-api-input { color: var(--text); }
   body.light-mode .custom-api-input::placeholder { color: #8e8e93; }
+  body.light-mode .custom-model-display { color: var(--text); }
+  body.light-mode .custom-model-display.placeholder { color: #8e8e93; }
+  body.light-mode .model-option-btn { color: var(--text); }
   body.light-mode .email-row { color: var(--subtext); }
 
   body {
@@ -963,7 +1087,7 @@
   }
   #send:active { transform: scale(0.92); }
 
-  .base-modal, #chatConfigModal, #promptModal, #agentModal, #editAgentModal, #selectModal, #chatConfigEditModal, #confirmAgeModal, #restReminderModal, #langSelectModal, #confirmModal {
+  .base-modal, #chatConfigModal, #promptModal, #agentModal, #editAgentModal, #selectModal, #chatConfigEditModal, #confirmAgeModal, #restReminderModal, #confirmModal, #modelSelectModal {
     position: fixed;
     left: 0; top: 0;
     width: 100%; height: 100%;
@@ -976,9 +1100,9 @@
     justify-content: center;
     z-index: 9999;
   }
-  .base-modal.show, #chatConfigModal.show, #promptModal.show, #agentModal.show, #editAgentModal.show, #selectModal.show, #chatConfigEditModal.show, #confirmAgeModal.show, #restReminderModal.show, #langSelectModal.show, #confirmModal.show { opacity: 1; visibility: visible; }
+  .base-modal.show, #chatConfigModal.show, #promptModal.show, #agentModal.show, #editAgentModal.show, #selectModal.show, #chatConfigEditModal.show, #confirmAgeModal.show, #restReminderModal.show, #confirmModal.show, #modelSelectModal.show { opacity: 1; visibility: visible; }
 
-  .modal-box, .config-modal-box, #chatConfigDetail, #langSelectBox, #confirmBox {
+  .modal-box, .config-modal-box, #chatConfigDetail, #confirmBox {
     background: var(--surface);
     width: 90%;
     max-width: 360px;
@@ -996,7 +1120,6 @@
   body.light-mode .modal-box,
   body.light-mode .config-modal-box,
   body.light-mode #chatConfigDetail,
-  body.light-mode #langSelectBox,
   body.light-mode #confirmBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
   .base-modal.show .modal-box,
   .base-modal.show .config-modal-box,
@@ -1008,8 +1131,8 @@
   #chatConfigEditModal.show .modal-box,
   #confirmAgeModal.show .modal-box,
   #restReminderModal.show .modal-box,
-  #langSelectModal.show #langSelectBox,
-  #confirmModal.show #confirmBox { transform: scale(1); }
+  #confirmModal.show #confirmBox,
+  #modelSelectModal.show .modal-box { transform: scale(1); }
 
   #confirmBox {
     max-width: 340px;
@@ -1049,42 +1172,6 @@
     border-color: var(--danger);
   }
   #confirmBtnGroup button:active { transform: scale(0.96); }
-
-  #langSelectBox {
-    max-width: 300px;
-    padding: 20px;
-  }
-  .lang-select-title {
-    font-size: calc(var(--font-size) + 4px);
-    font-weight: 700;
-    margin-bottom: 16px;
-    text-align: center;
-  }
-  .lang-option {
-    padding: 14px 16px;
-    margin: 4px 0;
-    border-radius: 16px;
-    cursor: pointer;
-    font-size: var(--font-size);
-    transition: background 0.15s ease;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid transparent;
-  }
-  .lang-option:hover { background: var(--surface-light); }
-  .lang-option.active {
-    background: var(--primary-bg);
-    border: 1px solid var(--primary);
-  }
-  .lang-option .check-mark {
-    color: var(--primary);
-    font-size: 18px;
-    font-weight: 700;
-    display: none;
-  }
-  .lang-option.active .check-mark { display: block; }
-  .lang-option:active { transform: scale(0.98); }
 
   .modal-head, .config-detail-title {
     display: flex;
@@ -1259,6 +1346,18 @@
   }
   body.light-mode .font-size-control button { color: var(--text); }
   .font-size-control span { min-width: 40px; text-align: center; font-size: var(--font-size); }
+
+  /* 可点击的token数字 */
+  .token-clickable {
+    cursor: pointer;
+    border-bottom: 1px dashed var(--subtext);
+    padding: 2px 4px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .token-clickable:hover {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+  }
 
   .avatar-selector { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
   #avatarPreview, #editAvatarPreview { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
@@ -1647,9 +1746,12 @@
 
   .hide { display: none !important; }
 
-  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #3a3c44; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb { background: #4a4c55; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #5a5c66; }
+  body.light-mode ::-webkit-scrollbar-thumb { background: #c1c1c6; }
+  body.light-mode ::-webkit-scrollbar-thumb:hover { background: #a1a1a6; }
 
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(10px); }
@@ -1661,12 +1763,11 @@
     .notice-btn:hover, #send:hover, #toggleSidebar:hover, #backBtnFromImg:hover,
     #genImgBtn:hover, #closeReward:hover,
     #confirmDeleteBtn:hover, .chat-item:hover, .agent-card:hover, .select-btn:hover,
-    .select-option:hover, .avatar-btn:hover, .copy-btn:hover, .api-tag:hover,
-    .bg-btn:hover { filter: brightness(1.15); }
+    .inline-select-option:hover, .avatar-btn:hover, .copy-btn:hover, .api-tag:hover,
+    .bg-btn:hover, .custom-model-display:hover, .model-option-btn:hover { filter: brightness(1.15); }
     .chat-item .del:hover, .chat-item .rename:hover { transform: scale(1.15); }
     .agent-actions span:hover { background: #242830; }
     #closeNotice.cooldown:hover { filter: none; }
-    .lang-option:hover { background: var(--surface-light); }
   }
 </style>
 </head>
@@ -1686,11 +1787,11 @@
   <div class="page" id="homePage">
     <div class="homeWrap">
       <div class="homeHeader">
-        <div class="homeTitle" data-i18n="agents">智能体</div>
+        <div class="homeTitle">智能体</div>
         <div class="homeActions">
-          <button class="homeActionBtn" id="multiSelectBtn" data-i18n="delete">删除</button>
-          <button class="homeActionBtn" id="cancelMultiBtn" data-i18n="cancel">取消</button>
-          <button class="homeActionBtn" id="homeSettingsBtn" data-i18n="settings">设置</button>
+          <button class="homeActionBtn" id="multiSelectBtn">删除</button>
+          <button class="homeActionBtn" id="cancelMultiBtn">取消</button>
+          <button class="homeActionBtn" id="homeSettingsBtn">设置</button>
         </div>
       </div>
       <div id="agentList"></div>
@@ -1700,8 +1801,8 @@
       <button class="fab gen-img" id="goToImageFab">🎨</button>
     </div>
     <div class="bottom-delete-bar" id="bottomDeleteBar">
-      <span><span data-i18n="selected">已选择</span> <span id="selectedCount">0</span> <span data-i18n="agents_count">个智能体</span></span>
-      <button id="confirmDeleteBtn" data-i18n="delete">删除</button>
+      <span>已选择 <span id="selectedCount">0</span> 个智能体</span>
+      <button id="confirmDeleteBtn">删除</button>
     </div>
   </div>
 
@@ -1710,14 +1811,14 @@
       <div id="chat-container">
         <div class="chat-header">
           <button id="toggleSidebar">☰</button>
-          <div class="chat-title" id="chatTitle" data-i18n="new_chat">新对话</div>
-          <span class="api-tag" id="apiTag" data-i18n="thanks">内容由 ai 生成，仅供参考</span>
+          <div class="chat-title" id="chatTitle">新对话</div>
+          <span class="api-tag" id="apiTag">内容由 ai 生成，仅供参考</span>
         </div>
         <div id="messages"></div>
         <div class="input-bar">
           <div class="input-wrapper">
             <button id="bracketBtn">( )</button>
-            <textarea id="input" data-i18n-placeholder="input_placeholder" placeholder="想说点什么就跟我说吧..."></textarea>
+            <textarea id="input" placeholder="想说点什么就跟我说吧..."></textarea>
             <button id="send">↑</button>
           </div>
         </div>
@@ -1728,13 +1829,13 @@
   <div class="page" id="imagePage">
     <div class="imgPageWrap">
       <div class="imgHeader">
-        <button id="backBtnFromImg" data-i18n="back">← 返回</button>
-        <div class="imgTitle" data-i18n="ai_image">AI生图</div>
+        <button id="backBtnFromImg">← 返回</button>
+        <div class="imgTitle">AI生图</div>
       </div>
-      <textarea id="imgPrompt" data-i18n-placeholder="img_prompt_placeholder" placeholder="输入画面描述，例如：一只可爱的橘猫，夕阳下，治愈风，高清，细节丰富"></textarea>
-      <button id="genImgBtn" data-i18n="generate">开始生成</button>
-      <button id="downloadImgBtn" data-i18n="download">下载图片</button>
-      <div id="imgLoading" data-i18n="generating">生成中...</div>
+      <textarea id="imgPrompt" placeholder="输入画面描述，例如：一只可爱的橘猫，夕阳下，治愈风，高清，细节丰富"></textarea>
+      <button id="genImgBtn">开始生成</button>
+      <button id="downloadImgBtn">下载图片</button>
+      <div id="imgLoading">生成中...</div>
       <div id="imgResult">
         <img id="resultImg" alt="生成结果">
       </div>
@@ -1744,117 +1845,133 @@
 
 <div id="sidebar">
   <div class="side-header">
-    <span data-i18n="chat_list">对话列表</span>
+    <span>对话列表</span>
     <div class="side-header-actions">
       <button id="homeBtn">⌂</button>
       <button id="collapseBtn">←</button>
     </div>
   </div>
-  <button class="notice-btn" id="openNoticeBtn" data-i18n="notice">📢 公告</button>
-  <button class="new-chat" id="newChat" data-i18n="new_chat_btn">+ 新建对话</button>
+  <button class="notice-btn" id="openNoticeBtn">📢 公告</button>
+  <button class="new-chat" id="newChat">+ 新建对话</button>
   <div id="chatList" class="chat-list"></div>
   <div class="side-bottom">
-    <button class="side-btn" id="openSettings" data-i18n="settings">设置</button>
+    <button class="side-btn" id="openSettings">设置</button>
   </div>
 </div>
 
 <div id="overlay"></div>
 
-<!-- 通用确认弹窗 -->
 <div id="confirmModal" class="base-modal" style="z-index:100003;">
   <div id="confirmBox">
     <div id="confirmTitle"></div>
     <div id="confirmMsg"></div>
     <div id="confirmBtnGroup">
-      <button id="confirmCancelBtn" data-i18n="cancel">取消</button>
-      <button class="primary" id="confirmOkBtn" data-i18n="delete">删除</button>
+      <button id="confirmCancelBtn">取消</button>
+      <button class="primary" id="confirmOkBtn">删除</button>
     </div>
   </div>
 </div>
 
-<div id="langSelectModal" class="base-modal" style="z-index:100002;">
-  <div id="langSelectBox">
-    <div class="lang-select-title" data-i18n="language">语言 / Language</div>
-    <div id="langOptionsList"></div>
+<div id="modelSelectModal" class="base-modal" style="z-index:100004;">
+  <div class="modal-box">
+    <div class="model-select-title">选择自定义模型</div>
+    <div class="model-select-subtitle">请选择你要使用的模型，或自行填写</div>
+    <button class="model-option-btn" id="modelOptV4Flash">
+      <span class="model-name">DeepSeek-V4-Flash</span>
+      <span class="model-desc">deepseek-ai/DeepSeek-V4-Flash，V4系列中算便宜的</span>
+    </button>
+    <button class="model-option-btn" id="modelOptR1Qwen">
+      <span class="model-name">DeepSeek-R1-0528-Qwen3-8B</span>
+      <span class="model-desc">deepseek-ai/DeepSeek-R1-0528-Qwen3-8B，免费</span>
+    </button>
+    <button class="model-option-btn custom-model-btn" id="modelOptCustom">
+      不用上面两个，我自己填
+    </button>
   </div>
 </div>
 
 <div id="confirmAgeModal" class="base-modal" style="z-index:100000;">
   <div id="confirmAgeBox">
-    <div id="confirmAgeTitle" data-i18n="age_title">请问您是否已成年？</div>
-    <div id="confirmAgeDesc" data-i18n="age_desc">未成年用户将无法使用情感陪伴功能，并受到使用时长限制。</div>
-    <button id="confirmAgeBtnAdult" data-i18n="adult">我已成年</button>
-    <button id="confirmAgeBtnMinor" data-i18n="minor">我未成年</button>
+    <div id="confirmAgeTitle">请问您是否已成年？</div>
+    <div id="confirmAgeDesc">未成年用户将无法使用情感陪伴功能，并受到使用时长限制。</div>
+    <button id="confirmAgeBtnAdult">我已成年</button>
+    <button id="confirmAgeBtnMinor">我未成年</button>
   </div>
 </div>
 
 <div id="restReminderModal" class="base-modal" style="z-index:100001;">
   <div id="restReminderBox">
-    <div id="restReminderTitle" data-i18n="rest_title">⏰ 休息提醒</div>
-    <div id="restReminderDesc" data-i18n="rest_desc">您已使用两个小时，建议休息一会。</div>
-    <button id="restReminderCloseBtn" data-i18n="close">关闭</button>
+    <div id="restReminderTitle">⏰ 休息提醒</div>
+    <div id="restReminderDesc">您已使用两个小时，建议休息一会。</div>
+    <button id="restReminderCloseBtn">关闭</button>
   </div>
 </div>
 
 <div id="modal" class="base-modal">
   <div class="modal-box">
     <div class="modal-head">
-      <span data-i18n="settings">设置</span>
+      <span>设置</span>
     </div>
     <div class="modal-body">
       <div class="api-select-wrap">
-        <label data-i18n="api_source">API 线路</label>
-        <button class="api-select-btn" id="apiSelectBtn" data-i18n="api_default">默认线路</button>
-        <input type="password" class="custom-api-input" id="customApiInput" data-i18n-placeholder="api_key_placeholder" placeholder="输入你的自定义 API Key">
+        <label>API 线路</label>
+        <button class="api-select-btn" id="apiSelectBtn">默认线路</button>
+        <input type="password" class="custom-api-input" id="customApiInput" placeholder="输入你的自定义 API Key">
       </div>
-      <div class="lang-select-wrap">
-        <label data-i18n="language">语言 / Language</label>
-        <button class="lang-select-btn" id="langSelectBtn"></button>
+      <div class="custom-model-wrap" id="customModelWrap">
+        <label>自定义模型</label>
+        <div class="custom-model-display placeholder" id="customModelDisplay">点击选择模型</div>
       </div>
       <div class="font-size-setting">
-        <span data-i18n="font_size">字体大小</span>
+        <span>字体大小</span>
         <div class="font-size-control">
           <button id="fontMinus">−</button>
           <span id="fontSizeValue">16</span>
           <button id="fontPlus">+</button>
         </div>
       </div>
+      <div class="font-size-setting" style="margin-top:8px;">
+        <span>最大使用token</span>
+        <div class="font-size-control">
+          <span id="tokenValue" class="token-clickable">1000</span>
+        </div>
+      </div>
       <div class="switch-box">
-        <span style="font-size:14px;" data-i18n="light_mode">浅色模式</span>
+        <span style="font-size:14px;">浅色模式</span>
         <div class="switch" id="themeSwitch"></div>
       </div>
       <div class="switch-box" id="devControlBox" style="margin-top:12px;display:none;">
-        <span style="font-size:14px" data-i18n="creator_mode">创造者模式</span>
+        <span style="font-size:14px">创造者模式</span>
         <div class="switch" id="devSwitch"></div>
       </div>
       <div class="switch-box">
-        <span style="font-size:14px;" data-i18n="enter_to_send">回车键发送消息</span>
+        <span style="font-size:14px;">回车键发送消息</span>
         <div class="switch checked" id="enterSendSwitch"></div>
       </div>
-      <label data-i18n="home_bg" style="margin-top:16px;">主菜单背景</label>
+      <label style="margin-top:16px;">主菜单背景</label>
       <div class="bg-preview" id="homeBgPreview" style="background-image: none;">未设置背景</div>
-      <button class="bg-btn" id="changeHomeBgBtn" data-i18n="change_home_bg">更换主菜单背景</button>
-      <button class="bg-btn reset" id="resetHomeBgBtn" data-i18n="reset_home_bg">重置为默认背景</button>
+      <button class="bg-btn" id="changeHomeBgBtn">更换主菜单背景</button>
+      <button class="bg-btn reset" id="resetHomeBgBtn">重置为默认背景</button>
       <input type="file" id="homeBgFile" accept="image/*">
-      <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn" data-i18n="view_agreement">查看用户协议</button>
-      <button class="side-btn" style="margin-top:8px;width:100%;" id="changeAgeBtn" data-i18n="verify_age_again">再次验证年龄</button>
-      <button class="side-btn" style="margin-top:8px;width:100%;" id="openShortcutBtn" data-i18n="shortcut_guide">电脑端快捷键指南</button>
-      <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn" data-i18n="reward">打赏作者</button>
+      <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn">查看用户协议</button>
+      <button class="side-btn" style="margin-top:8px;width:100%;" id="changeAgeBtn">再次验证年龄</button>
+      <button class="side-btn" style="margin-top:8px;width:100%;" id="openShortcutBtn">电脑端快捷键指南</button>
+      <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn">打赏作者</button>
       <div class="email-row" id="emailRow">
         <div class="email-row-line1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="4" width="20" height="16" rx="2"></rect>
             <path d="M22 4L12 13L2 4"></path>
           </svg>
-          <span data-i18n="official_email">官方邮箱</span>
+          <span>官方邮箱</span>
         </div>
         <div class="email-row-line2">dchatstudio@outlook.com</div>
       </div>
       <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;" id="versionDisplay"></div>
     </div>
     <div class="modal-foot">
-      <button id="modalCancel" data-i18n="cancel">取消</button>
-      <button class="primary" id="modalSave" data-i18n="save">保存</button>
+      <button id="modalCancel">取消</button>
+      <button class="primary" id="modalSave">保存</button>
     </div>
   </div>
 </div>
@@ -1868,23 +1985,23 @@
 
 <div id="rewardModal">
   <div id="rewardBox">
-    <div id="rewardTitle" data-i18n="reward_title">自愿打赏 支持作者继续更新😋</div>
+    <div id="rewardTitle">自愿打赏 支持作者继续更新😋</div>
     <img src="1.png" alt="打赏码" id="rewardImg">
-    <button id="closeReward" data-i18n="close">关闭</button>
+    <button id="closeReward">关闭</button>
   </div>
 </div>
 
 <div id="promptModal" class="base-modal">
   <div class="modal-box">
     <div class="modal-head">
-      <span id="promptTitle" data-i18n="please_input">请输入</span>
+      <span id="promptTitle">请输入</span>
     </div>
     <div class="modal-body">
       <input type="text" id="promptInput" placeholder="" autocomplete="off">
     </div>
     <div class="modal-foot">
-      <button id="promptCancel" data-i18n="cancel">取消</button>
-      <button class="primary" id="promptConfirm" data-i18n="confirm">确认</button>
+      <button id="promptCancel">取消</button>
+      <button class="primary" id="promptConfirm">确认</button>
     </div>
   </div>
 </div>
@@ -1892,48 +2009,48 @@
 <div id="agentModal" class="base-modal">
   <div class="modal-box" style="max-width: 400px;">
     <div class="modal-head">
-      <span data-i18n="new_agent">新建智能体</span>
+      <span>新建智能体</span>
     </div>
     <div class="modal-body">
-      <label data-i18n="avatar">头像</label>
+      <label>头像</label>
       <div class="avatar-selector">
         <img id="avatarPreview" src="tx.png" alt="头像预览">
-        <button class="avatar-btn" id="avatarSelectBtn" data-i18n="select_image">选择图片</button>
+        <button class="avatar-btn" id="avatarSelectBtn">选择图片</button>
         <input type="file" id="avatarFile" accept="image/*">
       </div>
-      <label data-i18n="name">名称</label>
-      <input type="text" id="agentNameInput" data-i18n-placeholder="agent_name_placeholder" placeholder="例如：情感陪伴助手">
-      <label data-i18n="description">描述</label>
-      <input type="text" id="agentDescInput" data-i18n-placeholder="agent_desc_placeholder" placeholder="简短描述智能体的特点">
-      <label data-i18n="ai_type">AI类型</label>
+      <label>名称</label>
+      <input type="text" id="agentNameInput" placeholder="例如：情感陪伴助手">
+      <label>描述</label>
+      <input type="text" id="agentDescInput" placeholder="简短描述智能体的特点">
+      <label>AI类型</label>
       <div style="position:relative;">
-        <button class="select-btn" id="aiTypeSelectBtn" data-value="emotion" data-i18n="emotion">情感陪伴</button>
+        <button class="select-btn" id="aiTypeSelectBtn" data-value="emotion">情感陪伴</button>
         <div class="inline-select-options" id="aiTypeInlineOptions">
-          <div class="inline-select-option" data-value="emotion" data-i18n="emotion">情感陪伴</div>
-          <div class="inline-select-option" data-value="tool" data-i18n="tool">工具</div>
+          <div class="inline-select-option" data-value="emotion">情感陪伴</div>
+          <div class="inline-select-option" data-value="tool">工具</div>
         </div>
       </div>
       <div id="agentGenderBox">
-        <label data-i18n="ai_gender">AI性别</label>
+        <label>AI性别</label>
         <div style="position:relative;">
-          <button class="select-btn" id="aiGenderSelectBtn" data-value="neutral" data-i18n="neutral">中性</button>
+          <button class="select-btn" id="aiGenderSelectBtn" data-value="neutral">中性</button>
           <div class="inline-select-options" id="aiGenderInlineOptions">
-            <div class="inline-select-option" data-value="male" data-i18n="male">男性</div>
-            <div class="inline-select-option" data-value="female" data-i18n="female">女性</div>
-            <div class="inline-select-option" data-value="neutral" data-i18n="neutral">中性</div>
+            <div class="inline-select-option" data-value="male">男性</div>
+            <div class="inline-select-option" data-value="female">女性</div>
+            <div class="inline-select-option" data-value="neutral">中性</div>
           </div>
         </div>
       </div>
-      <label data-i18n="reply_style">回复风格</label>
-      <textarea id="agentAiStyleInput" data-i18n-placeholder="style_placeholder" placeholder="描述AI的回复风格..."></textarea>
-      <label data-i18n="agent_chat_bg" style="margin-top:16px;">默认对话背景</label>
+      <label>回复风格</label>
+      <textarea id="agentAiStyleInput" placeholder="描述AI的回复风格..."></textarea>
+      <label style="margin-top:16px;">默认对话背景</label>
       <div class="bg-preview" id="agentChatBgPreview" style="background-image: none;">未设置</div>
-      <button class="bg-btn" id="changeAgentChatBgBtn" data-i18n="change_chat_bg">更换默认对话背景</button>
-      <button class="bg-btn reset" id="resetAgentChatBgBtn" data-i18n="reset_chat_bg">重置</button>
+      <button class="bg-btn" id="changeAgentChatBgBtn">更换默认对话背景</button>
+      <button class="bg-btn reset" id="resetAgentChatBgBtn">重置</button>
     </div>
     <div class="modal-foot">
-      <button id="agentCancel" data-i18n="cancel">取消</button>
-      <button class="primary" id="agentConfirm" data-i18n="create">创建</button>
+      <button id="agentCancel">取消</button>
+      <button class="primary" id="agentConfirm">创建</button>
     </div>
   </div>
 </div>
@@ -1941,54 +2058,54 @@
 <div id="editAgentModal" class="base-modal">
   <div class="modal-box" style="max-width: 400px;">
     <div class="modal-head">
-      <span data-i18n="edit_agent">编辑智能体</span>
+      <span>编辑智能体</span>
     </div>
     <div class="modal-body">
-      <label data-i18n="avatar">头像</label>
+      <label>头像</label>
       <div class="avatar-selector">
         <img id="editAvatarPreview" src="tx.png" alt="头像预览">
-        <button class="avatar-btn" id="editAvatarSelectBtn" data-i18n="select_image">选择图片</button>
+        <button class="avatar-btn" id="editAvatarSelectBtn">选择图片</button>
         <input type="file" id="editAvatarFile" accept="image/*">
       </div>
-      <label data-i18n="name">名称</label>
-      <input type="text" id="editAgentNameInput" data-i18n-placeholder="agent_name_placeholder2" placeholder="智能体名称">
+      <label>名称</label>
+      <input type="text" id="editAgentNameInput" placeholder="智能体名称">
       <div class="switch-box">
-        <span data-i18n="pin">置顶</span>
+        <span>置顶</span>
         <div class="switch" id="editPinnedSwitch"></div>
       </div>
       <div class="creator-only">
-        <label data-i18n="description">描述</label>
-        <input type="text" id="editAgentDescInput" data-i18n-placeholder="agent_desc_placeholder2" placeholder="简短描述智能体的特点">
-        <label data-i18n="ai_type">AI类型</label>
+        <label>描述</label>
+        <input type="text" id="editAgentDescInput" placeholder="简短描述智能体的特点">
+        <label>AI类型</label>
         <div style="position:relative;">
-          <button class="select-btn" id="editAiTypeSelectBtn" data-value="emotion" data-i18n="emotion">情感陪伴</button>
+          <button class="select-btn" id="editAiTypeSelectBtn" data-value="emotion">情感陪伴</button>
           <div class="inline-select-options" id="editAiTypeInlineOptions">
-            <div class="inline-select-option" data-value="emotion" data-i18n="emotion">情感陪伴</div>
-            <div class="inline-select-option" data-value="tool" data-i18n="tool">工具</div>
+            <div class="inline-select-option" data-value="emotion">情感陪伴</div>
+            <div class="inline-select-option" data-value="tool">工具</div>
           </div>
         </div>
         <div id="editAgentGenderBox">
-          <label data-i18n="ai_gender">AI性别</label>
+          <label>AI性别</label>
           <div style="position:relative;">
-            <button class="select-btn" id="editAiGenderSelectBtn" data-value="neutral" data-i18n="neutral">中性</button>
+            <button class="select-btn" id="editAiGenderSelectBtn" data-value="neutral">中性</button>
             <div class="inline-select-options" id="editAiGenderInlineOptions">
-              <div class="inline-select-option" data-value="male" data-i18n="male">男性</div>
-              <div class="inline-select-option" data-value="female" data-i18n="female">女性</div>
-              <div class="inline-select-option" data-value="neutral" data-i18n="neutral">中性</div>
+              <div class="inline-select-option" data-value="male">男性</div>
+              <div class="inline-select-option" data-value="female">女性</div>
+              <div class="inline-select-option" data-value="neutral">中性</div>
             </div>
           </div>
         </div>
-        <label data-i18n="reply_style">回复风格</label>
-        <textarea id="editAgentAiStyleInput" data-i18n-placeholder="style_placeholder2" placeholder="描述AI的回复风格..."></textarea>
+        <label>回复风格</label>
+        <textarea id="editAgentAiStyleInput" placeholder="描述AI的回复风格..."></textarea>
       </div>
-      <label data-i18n="agent_chat_bg" style="margin-top:16px;">默认对话背景</label>
+      <label style="margin-top:16px;">默认对话背景</label>
       <div class="bg-preview" id="editAgentChatBgPreview" style="background-image: none;">未设置</div>
-      <button class="bg-btn" id="changeEditAgentChatBgBtn" data-i18n="change_chat_bg">更换默认对话背景</button>
-      <button class="bg-btn reset" id="resetEditAgentChatBgBtn" data-i18n="reset_chat_bg">重置</button>
+      <button class="bg-btn" id="changeEditAgentChatBgBtn">更换默认对话背景</button>
+      <button class="bg-btn reset" id="resetEditAgentChatBgBtn">重置</button>
     </div>
     <div class="modal-foot">
-      <button id="editAgentCancel" data-i18n="cancel">取消</button>
-      <button class="primary" id="editAgentConfirm" data-i18n="save">保存</button>
+      <button id="editAgentCancel">取消</button>
+      <button class="primary" id="editAgentConfirm">保存</button>
     </div>
   </div>
 </div>
@@ -1996,15 +2113,15 @@
 <div id="renameModal" class="base-modal">
   <div class="modal-box">
     <div class="modal-head">
-      <span data-i18n="rename_chat">修改对话标题</span>
+      <span>修改对话标题</span>
     </div>
     <div class="modal-body">
-      <label data-i18n="chat_title_label">对话标题</label>
-      <input type="text" id="renameInput" data-i18n-placeholder="custom_title_placeholder" placeholder="输入自定义标题">
+      <label>对话标题</label>
+      <input type="text" id="renameInput" placeholder="输入自定义标题">
     </div>
     <div class="modal-foot">
-      <button id="renameCancel" data-i18n="cancel">取消</button>
-      <button class="primary" id="renameConfirm" data-i18n="confirm">确认</button>
+      <button id="renameCancel">取消</button>
+      <button class="primary" id="renameConfirm">确认</button>
     </div>
   </div>
 </div>
@@ -2012,40 +2129,40 @@
 <div id="chatConfigMask">
   <div id="chatConfigDetail">
     <div class="config-detail-title">
-      <span data-i18n="chat_config">对话配置</span>
+      <span>对话配置</span>
     </div>
     <div class="modal-body">
       <div class="config-item-row">
-        <div class="config-item-label" data-i18n="chat_title_label">对话标题</div>
+        <div class="config-item-label">对话标题</div>
         <div class="config-item-value" id="detailTitle">--</div>
       </div>
       <div class="config-item-row">
-        <div class="config-item-label" data-i18n="ai_type">AI类型</div>
+        <div class="config-item-label">AI类型</div>
         <div class="config-item-value" id="detailAiType">--</div>
       </div>
       <div class="config-item-row">
-        <div class="config-item-label" data-i18n="ai_gender">AI性别</div>
+        <div class="config-item-label">AI性别</div>
         <div class="config-item-value" id="detailAiGender">--</div>
       </div>
       <div class="config-item-row">
-        <div class="config-item-label" data-i18n="custom_style">自定义风格</div>
+        <div class="config-item-label">自定义风格</div>
         <div class="prompt-wrap">
           <div class="prompt-value" id="detailAityle">--</div>
-          <button class="copy-btn" id="copyStyleBtn" data-i18n="copy">复制</button>
+          <button class="copy-btn" id="copyStyleBtn">复制</button>
         </div>
-        <div class="copy-tip" id="copyStyleTip" data-i18n="copied">已复制到剪贴板！</div>
+        <div class="copy-tip" id="copyStyleTip">已复制到剪贴板！</div>
       </div>
       <div class="config-item-row">
-        <div class="config-item-label" data-i18n="system_prompt">系统提示词</div>
+        <div class="config-item-label">系统提示词</div>
         <div class="prompt-wrap">
           <div class="prompt-value" id="detailSystemPrompt">--</div>
-          <button class="copy-btn" id="copyPromptBtn" data-i18n="copy">复制</button>
+          <button class="copy-btn" id="copyPromptBtn">复制</button>
         </div>
-        <div class="copy-tip" id="copyPromptTip" data-i18n="copied">已复制到剪贴板！</div>
+        <div class="copy-tip" id="copyPromptTip">已复制到剪贴板！</div>
       </div>
     </div>
     <div class="modal-foot" style="margin-top:20px;">
-      <button class="primary" id="closeConfigDetailBtn" data-i18n="close">关闭</button>
+      <button class="primary" id="closeConfigDetailBtn">关闭</button>
     </div>
   </div>
 </div>
@@ -2053,32 +2170,32 @@
 <div id="chatConfigModal" class="base-modal" style="display:none;">
   <div class="config-modal-box">
     <div class="modal-head">
-      <span data-i18n="config_chat">配置对话</span>
+      <span>配置对话</span>
     </div>
     <div class="modal-body">
       <div class="config-item">
-        <label data-i18n="ai_type">AI类型</label>
+        <label>AI类型</label>
         <select id="aiTypeSelect">
-          <option value="emotion" data-i18n="emotion">情感陪伴</option>
-          <option value="tool" data-i18n="tool">工具</option>
+          <option value="emotion">情感陪伴</option>
+          <option value="tool">工具</option>
         </select>
       </div>
       <div class="config-item" id="aiGenderBox">
-        <label data-i18n="ai_gender">AI性别</label>
+        <label>AI性别</label>
         <select id="aiGenderSelect">
-          <option value="male" data-i18n="male">男性</option>
-          <option value="female" data-i18n="female">女性</option>
-          <option value="neutral" data-i18n="neutral">中性</option>
+          <option value="male">男性</option>
+          <option value="female">女性</option>
+          <option value="neutral">中性</option>
         </select>
       </div>
       <div class="config-item">
-        <label data-i18n="reply_style">回复风格</label>
-        <textarea id="aiStyleInput" data-i18n-placeholder="style_placeholder3" placeholder="请输入AI回复风格描述..."></textarea>
+        <label>回复风格</label>
+        <textarea id="aiStyleInput" placeholder="请输入AI回复风格描述..."></textarea>
       </div>
     </div>
     <div class="config-btn-group">
-      <button class="config-btn config-cancel" id="configCancel" data-i18n="cancel">取消</button>
-      <button class="config-btn config-confirm" id="configConfirm" data-i18n="confirm_create">确认创建</button>
+      <button class="config-btn config-cancel" id="configCancel">取消</button>
+      <button class="config-btn config-confirm" id="configConfirm">确认创建</button>
     </div>
   </div>
 </div>
@@ -2087,23 +2204,27 @@
   <div class="help-tooltip-box">
     <div class="help-tooltip-title" id="helpTooltipTitle"></div>
     <div class="help-tooltip-desc" id="helpTooltipDesc"></div>
-    <button class="help-tooltip-close" id="helpTooltipClose" data-i18n="close">关闭</button>
+    <button class="help-tooltip-close" id="helpTooltipClose">关闭</button>
   </div>
 </div>
 
 <div id="shortcutModal" class="help-tooltip-modal">
   <div class="help-tooltip-box" style="max-width: 380px;">
-    <div class="help-tooltip-title" data-i18n="shortcut_guide">电脑端快捷键指南</div>
-    <div class="help-tooltip-desc" id="shortcutDesc" style="text-align:left;white-space:pre-line;"></div>
-    <button class="help-tooltip-close" id="shortcutClose" data-i18n="close">关闭</button>
+    <div class="help-tooltip-title">电脑端快捷键指南</div>
+    <div class="help-tooltip-desc" id="shortcutDesc" style="text-align:left;white-space:pre-line;">Esc — 关闭当前弹窗 / 返回上一页面
+Enter — 发送消息（需开启回车发送）
+Shift + Enter — 换行
+Ctrl + 加号 — 放大字体
+Ctrl + 减号 — 缩小字体</div>
+    <button class="help-tooltip-close" id="shortcutClose">关闭</button>
   </div>
 </div>
 
-<div id="titleLoading" data-i18n="creating">创建中...</div>
+<div id="titleLoading">创建中...</div>
 <div id="toast" class="toast"></div>
 
 <script>
-const APP_VERSION = '2.4.0';
+const APP_VERSION = '2.5.0';
 
 const PRESET_API_KEYS = {
   default: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd",
@@ -2111,309 +2232,24 @@ const PRESET_API_KEYS = {
   line2: "sk-illhbbvslpisfkwfljgwukqapfebzbaecbjawqcznhcmkyct"
 };
 
-const API_LINE_LABELS = {
-  'zh-CN': ['默认线路', '分流线路一', '分流线路二', '自定义 API'],
-  'zh-HK': ['預設線路', '分流線路一', '分流線路二', '自訂 API'],
-  'zh-TW': ['預設線路', '分流線路一', '分流線路二', '自訂 API'],
-  'en': ['Default Line', 'Line 1', 'Line 2', 'Custom API']
+const PRESET_MODEL_OPTIONS = {
+  v4flash: "deepseek-ai/DeepSeek-V4-Flash",
+  r1qwen: "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
 };
 
-const i18nData = {
-  'zh-CN': {
-    agents: '智能体', delete: '删除', cancel: '取消', settings: '设置', selected: '已选择',
-    agents_count: '个智能体', new_chat: '新对话', thanks: '内容由 ai 生成仅供参考',
-    input_placeholder: '想说点什么就跟我说吧...', back: '← 返回', ai_image: 'AI生图',
-    img_prompt_placeholder: '输入画面描述，例如：一只可爱的橘猫，夕阳下，治愈风，高清，细节丰富',
-    generate: '开始生成', download: '下载图片', generating: '生成中...', chat_list: '对话列表',
-    notice: '📢 公告', new_chat_btn: '+ 新建对话', age_title: '请问您是否已成年？',
-    age_desc: '未成年用户将无法使用情感陪伴功能，并受到使用时长限制。', adult: '我已成年', minor: '我未成年',
-    rest_title: '⏰ 休息提醒', rest_desc: '您已使用两个小时，建议休息一会。', close: '关闭',
-    api_key_label: '自己的API密钥', api_key_placeholder: '填写你自己的API', language: '语言 / Language',
-    api_source: 'API 线路', api_default: '默认线路',
-    font_size: '字体大小', light_mode: '浅色模式',
-    creator_mode: '创造者模式', view_agreement: '查看用户协议', verify_age_again: '再次验证年龄',
-    reward: '打赏作者', version: '当前版本 ' + APP_VERSION, save: '保存', please_input: '请输入', confirm: '确认',
-    new_agent: '新建智能体', avatar: '头像', select_image: '选择图片', name: '名称',
-    agent_name_placeholder: '例如：情感陪伴助手', description: '描述', agent_desc_placeholder: '简短描述智能体的特点',
-    ai_type: 'AI类型', emotion: '情感陪伴', ai_gender: 'AI性别', neutral: '中性', reply_style: '回复风格',
-    style_placeholder: '描述AI的回复风格...', create: '创建',
-    edit_agent: '编辑智能体', pin: '置顶', agent_name_placeholder2: '智能体名称',
-    agent_desc_placeholder2: '简短描述智能体的特点', style_placeholder2: '描述AI的回复风格...',
-    rename_chat: '修改对话标题', chat_title_label: '对话标题', custom_title_placeholder: '输入自定义标题',
-    chat_config: '对话配置', custom_style: '自定义风格', copy: '复制', copied: '已复制到剪贴板！',
-    system_prompt: '系统提示词', config_chat: '配置对话', tool: '工具', male: '男性', female: '女性',
-    style_placeholder3: '请输入AI回复风格描述...', confirm_create: '确认创建', creating: '创建中...',
-    reward_title: '自愿打赏 支持作者继续更新😋', home_bg: '主菜单背景', change_home_bg: '更换主菜单背景',
-    reset_home_bg: '重置为默认背景', agent_chat_bg: '默认对话背景', change_chat_bg: '更换默认对话背景',
-    reset_chat_bg: '重置',
-    toast_welcome: '欢迎使用 Dchat', toast_create_success: '创建成功', toast_delete_success: '删除成功',
-    toast_min_agents: '至少保留一个智能体', toast_min_chats: '至少保留一个对话',
-    toast_max_pinned: '最多只能置顶3个智能体', toast_name_required: '请输入名称',
-    toast_minor_emotion: '未成年人模式下情感陪伴功能不可用', toast_minor_create_emotion: '未成年人模式下不能创建情感陪伴智能体',
-    toast_minor_set_emotion: '未成年人模式下不能设置为情感陪伴', toast_change_content: '换个内容试试吧',
-    toast_no_api: '请先在设置中配置API密钥', toast_gen_failed: '生成失败', toast_req_failed: '请求失败：',
-    toast_network_error: '网断了吧 连不上了', toast_no_download: '没有可下载的图片',
-    toast_download_tip: '已跳转浏览器，长按图片即可保存',
-    toast_activated: '已激活', toast_verify_failed: '验证失败', toast_status_updated: '状态已更新',
-    toast_bg_updated: '背景已更新', toast_bg_reset: '背景已重置',
-    loading_emotion: '让我想想', loading_tool: '正在思考', error_network: '网断了吧 连不上了',
-    enter_to_send: '回车键发送消息',
-    shortcut_guide: '电脑端快捷键指南',
-    shortcut_content: 'Esc — 关闭当前弹窗 / 返回上一页面\nEnter — 发送消息（需开启回车发送）\nShift + Enter — 换行\nCtrl + 加号 — 放大字体\nCtrl + 减号 — 缩小字体',
-    thinking: '让我想想',
-    custom_api_label: '自定义 API Key',
-    official_email: '官方邮箱',
-    email_copied: '邮箱已复制',
-    confirm_delete_title: '确认删除',
-    confirm_delete_agent: '确定删除智能体"${name}"吗？此操作不可恢复。',
-    confirm_delete_chat: '确定删除此对话吗？此操作不可恢复。',
-  },
-  'zh-HK': {
-    agents: '智能體', delete: '刪除', cancel: '取消', settings: '設定', selected: '已選擇',
-    agents_count: '個智能體', new_chat: '新對話', thanks: '內容由 ai 生成僅供參考',
-    input_placeholder: '想講啲咩就同我講啦...', back: '← 返回', ai_image: 'AI生圖',
-    img_prompt_placeholder: '輸入畫面描述，例如：一隻可愛嘅橘貓，夕陽下，治愈風，高清，細節豐富',
-    generate: '開始生成', download: '下載圖片', generating: '生成中...', chat_list: '對話列表',
-    notice: '📢 公告', new_chat_btn: '+ 新增對話', age_title: '請問您是否已成年？',
-    age_desc: '未成年用戶將無法使用情感陪伴功能，並受到使用時長限制。', adult: '我已成年', minor: '我未成年',
-    rest_title: '⏰ 休息提醒', rest_desc: '您已使用兩個小時，建議休息一陣。', close: '關閉',
-    api_key_label: '自己嘅API密鑰', api_key_placeholder: '填寫你自己嘅API', language: '語言 / Language',
-    api_source: 'API 線路', api_default: '預設線路',
-    font_size: '字體大小', light_mode: '淺色模式',
-    creator_mode: '創造者模式', view_agreement: '查看用戶協議', verify_age_again: '再次驗證年齡',
-    reward: '打賞作者', version: '當前版本 ' + APP_VERSION, save: '儲存', please_input: '請輸入', confirm: '確認',
-    new_agent: '新增智能體', avatar: '頭像', select_image: '選擇圖片', name: '名稱',
-    agent_name_placeholder: '例如：情感陪伴助手', description: '描述', agent_desc_placeholder: '簡短描述智能體嘅特點',
-    ai_type: 'AI類型', emotion: '情感陪伴', ai_gender: 'AI性別', neutral: '中性', reply_style: '回覆風格',
-    style_placeholder: '描述AI嘅回覆風格...', create: '創建',
-    edit_agent: '編輯智能體', pin: '置頂', agent_name_placeholder2: '智能體名稱',
-    agent_desc_placeholder2: '簡短描述智能體嘅特點', style_placeholder2: '描述AI嘅回覆風格...',
-    rename_chat: '修改對話標題', chat_title_label: '對話標題', custom_title_placeholder: '輸入自訂標題',
-    chat_config: '對話配置', custom_style: '自訂風格', copy: '複製', copied: '已複製到剪貼板！',
-    system_prompt: '系統提示詞', config_chat: '配置對話', tool: '工具', male: '男性', female: '女性',
-    style_placeholder3: '請輸入AI回覆風格描述...', confirm_create: '確認創建', creating: '創建中...',
-    reward_title: '自願打賞 支持作者繼續更新😋', home_bg: '主菜單背景', change_home_bg: '更換主菜單背景',
-    reset_home_bg: '重設為預設背景', agent_chat_bg: '預設對話背景', change_chat_bg: '更換預設對話背景',
-    reset_chat_bg: '重設',
-    toast_welcome: '歡迎使用 Dchat', toast_create_success: '創建成功', toast_delete_success: '刪除成功',
-    toast_min_agents: '最少保留一個智能體', toast_min_chats: '最少保留一個對話',
-    toast_max_pinned: '最多只可以置頂3個智能體', toast_name_required: '請輸入名稱',
-    toast_minor_emotion: '未成年人模式下情感陪伴功能不可用', toast_minor_create_emotion: '未成年人模式下唔可以創建情感陪伴智能體',
-    toast_minor_set_emotion: '未成年人模式下唔可以設置為情感陪伴', toast_change_content: '換個內容試下啦',
-    toast_no_api: '請先在設定中配置API密鑰', toast_gen_failed: '生成失敗', toast_req_failed: '請求失敗：',
-    toast_network_error: '網絡斷咗 連唔到', toast_no_download: '冇可下載嘅圖片',
-    toast_download_tip: '已跳轉瀏覽器，長按圖片即可儲存',
-    toast_activated: '已激活', toast_verify_failed: '驗證失敗', toast_status_updated: '狀態已更新',
-    toast_bg_updated: '背景已更新', toast_bg_reset: '背景已重設',
-    loading_emotion: '等我諗下', loading_tool: '思考', error_network: '網絡斷咗 連唔到',
-    enter_to_send: 'Enter鍵發送訊息',
-    shortcut_guide: '電腦端快捷鍵指南',
-    shortcut_content: 'Esc — 關閉當前彈窗 / 返回上一頁面\nEnter — 發送訊息（需開啟Enter發送）\nShift + Enter — 換行\nCtrl + 加號 — 放大字體\nCtrl + 減號 — 縮小字體',
-    thinking: '等我諗下',
-    custom_api_label: '自訂 API Key',
-    official_email: '官方郵箱',
-    email_copied: '郵箱已複製',
-    confirm_delete_title: '確認刪除',
-    confirm_delete_agent: '確定刪除智能體"${name}"嗎？此操作不可恢復。',
-    confirm_delete_chat: '確定刪除此對話嗎？此操作不可恢復。',
-  },
-  'zh-TW': {
-    agents: '智能體', delete: '刪除', cancel: '取消', settings: '設定', selected: '已選擇',
-    agents_count: '個智能體', new_chat: '新對話', thanks: '內容由AI生成，仅供参考',
-    input_placeholder: '想說點什麼就跟我說吧...', back: '← 返回', ai_image: 'AI生圖',
-    img_prompt_placeholder: '輸入畫面描述，例如：一隻可愛的橘貓，夕陽下，治癒風，高清，細節豐富',
-    generate: '開始生成', download: '下載圖片', generating: '生成中...', chat_list: '對話列表',
-    notice: '📢 公告', new_chat_btn: '+ 新增對話', age_title: '請問您是否已成年？',
-    age_desc: '未成年使用者將無法使用情感陪伴功能，並受到使用時間限制。', adult: '我已成年', minor: '我未成年',
-    rest_title: '⏰ 休息提醒', rest_desc: '您已使用兩個小時，建議休息一會。', close: '關閉',
-    api_key_label: '自己的API金鑰', api_key_placeholder: '填寫你自己的API', language: '語言 / Language',
-    api_source: 'API 線路', api_default: '預設線路',
-    font_size: '字型大小', light_mode: '淺色模式',
-    creator_mode: '創造者模式', view_agreement: '檢視使用者協議', verify_age_again: '再次驗證年齡',
-    reward: '打賞作者', version: '當前版本 ' + APP_VERSION, save: '儲存', please_input: '請輸入', confirm: '確認',
-    new_agent: '新增智能體', avatar: '頭像', select_image: '選擇圖片', name: '名稱',
-    agent_name_placeholder: '例如：情感陪伴助手', description: '描述', agent_desc_placeholder: '簡短描述智能體的特點',
-    ai_type: 'AI類型', emotion: '情感陪伴', ai_gender: 'AI性別', neutral: '中性', reply_style: '回覆風格',
-    style_placeholder: '描述AI的回覆風格...', create: '建立',
-    edit_agent: '編輯智能體', pin: '置頂', agent_name_placeholder2: '智能體名稱',
-    agent_desc_placeholder2: '簡短描述智能體的特點', style_placeholder2: '描述AI的回覆風格...',
-    rename_chat: '修改對話標題', chat_title_label: '對話標題', custom_title_placeholder: '輸入自訂標題',
-    chat_config: '對話配置', custom_style: '自訂風格', copy: '複製', copied: '已複製到剪貼簿！',
-    system_prompt: '系統提示詞', config_chat: '配置對話', tool: '工具', male: '男性', female: '女性',
-    style_placeholder3: '請輸入AI回覆風格描述...', confirm_create: '確認建立', creating: '建立中...',
-    reward_title: '自願打賞 支持作者繼續更新😋', home_bg: '主選單背景', change_home_bg: '更換主選單背景',
-    reset_home_bg: '重設為預設背景', agent_chat_bg: '預設對話背景', change_chat_bg: '更換預設對話背景',
-    reset_chat_bg: '重設',
-    toast_welcome: '歡迎使用 Dchat', toast_create_success: '建立成功', toast_delete_success: '刪除成功',
-    toast_min_agents: '至少保留一個智能體', toast_min_chats: '至少保留一個對話',
-    toast_max_pinned: '最多只能置頂3個智能體', toast_name_required: '請輸入名稱',
-    toast_minor_emotion: '未成年人模式下情感陪伴功能不可用', toast_minor_create_emotion: '未成年人模式下不能建立情感陪伴智能體',
-    toast_minor_set_emotion: '未成年人模式下不能設定為情感陪伴', toast_change_content: '換個內容試試吧',
-    toast_no_api: '請先在設定中配置API金鑰', toast_gen_failed: '生成失敗', toast_req_failed: '請求失敗：',
-    toast_network_error: '網路斷了 連不上了', toast_no_download: '沒有可下載的圖片',
-    toast_download_tip: '已跳轉瀏覽器，長按圖片即可儲存',
-    toast_activated: '已啟用', toast_verify_failed: '驗證失敗', toast_status_updated: '狀態已更新',
-    toast_bg_updated: '背景已更新', toast_bg_reset: '背景已重設',
-    loading_emotion: '讓我想想', loading_tool: '思考', error_network: '網路斷了 連不上了',
-    enter_to_send: 'Enter鍵發送訊息',
-    shortcut_guide: '電腦端快捷鍵指南',
-    shortcut_content: 'Esc — 關閉當前彈窗 / 返回上一頁面\nEnter — 發送訊息（需開啟Enter發送）\nShift + Enter — 換行\nCtrl + 加號 — 放大字型\nCtrl + 減號 — 縮小字型',
-    thinking: '讓我想想',
-    custom_api_label: '自訂 API Key',
-    official_email: '官方郵箱',
-    email_copied: '郵箱已複製',
-    confirm_delete_title: '確認刪除',
-    confirm_delete_agent: '確定刪除智能體"${name}"嗎？此操作不可恢復。',
-    confirm_delete_chat: '確定刪除此對話嗎？此操作不可恢復。',
-  },
-  'en': {
-    agents: 'Agents', delete: 'Delete', cancel: 'Cancel', settings: 'Settings', selected: 'Selected',
-    agents_count: 'agents', new_chat: 'New Chat', thanks: 'The content is generated by AI and is for reference only',
-    input_placeholder: 'Say something to me...', back: '← Back', ai_image: 'AI Image',
-    img_prompt_placeholder: 'Enter image description, e.g.: A cute orange cat, sunset, healing style, HD, rich details',
-    generate: 'Generate', download: 'Download Image', generating: 'Generating...', chat_list: 'Chat List',
-    notice: '📢 Notice', new_chat_btn: '+ New Chat', age_title: 'Are you an adult?',
-    age_desc: 'Underage users cannot use the emotional companion feature and are subject to usage time limits.',
-    adult: 'I am an adult', minor: 'I am a minor', rest_title: '⏰ Rest Reminder',
-    rest_desc: 'You have been using for two hours, please take a break.', close: 'Close',
-    api_key_label: 'Your API Key', api_key_placeholder: 'Enter your API key', language: 'Language / 语言',
-    api_source: 'API Line', api_default: 'Default Line',
-    font_size: 'Font Size', light_mode: 'Light Mode',
-    creator_mode: 'Creator Mode', view_agreement: 'View User Agreement', verify_age_again: 'Verify Age Again',
-    reward: 'Tip the Author', version: 'Current Version ' + APP_VERSION, save: 'Save', please_input: 'Please Input',
-    confirm: 'Confirm', new_agent: 'New Agent', avatar: 'Avatar', select_image: 'Select Image', name: 'Name',
-    agent_name_placeholder: 'e.g.: Emotional Companion', description: 'Description',
-    agent_desc_placeholder: 'Brief description of the agent', ai_type: 'AI Type', emotion: 'Emotional Companion',
-    ai_gender: 'AI Gender', neutral: 'Neutral', reply_style: 'Reply Style',
-    style_placeholder: 'Describe the AI reply style...', create: 'Create',
-    edit_agent: 'Edit Agent', pin: 'Pin', agent_name_placeholder2: 'Agent name',
-    agent_desc_placeholder2: 'Brief description of the agent', style_placeholder2: 'Describe the AI reply style...',
-    rename_chat: 'Rename Chat', chat_title_label: 'Chat Title', custom_title_placeholder: 'Enter custom title',
-    chat_config: 'Chat Config', custom_style: 'Custom Style', copy: 'Copy', copied: 'Copied to clipboard!',
-    system_prompt: 'System Prompt', config_chat: 'Configure Chat', tool: 'Tool', male: 'Male', female: 'Female',
-    style_placeholder3: 'Enter AI reply style description...', confirm_create: 'Confirm Create', creating: 'Creating...',
-    reward_title: 'Voluntary tip to support the author 😋',
-    home_bg: 'Home Background', change_home_bg: 'Change Home Background', reset_home_bg: 'Reset to Default',
-    agent_chat_bg: 'Default Chat Background', change_chat_bg: 'Change Default Chat Background', reset_chat_bg: 'Reset',
-    toast_welcome: 'Welcome to Dchat', toast_create_success: 'Created successfully',
-    toast_delete_success: 'Deleted successfully', toast_min_agents: 'Keep at least one agent',
-    toast_min_chats: 'Keep at least one chat', toast_max_pinned: 'Maximum 3 pinned agents',
-    toast_name_required: 'Please enter a name', toast_minor_emotion: 'Emotional companion is not available in minor mode',
-    toast_minor_create_emotion: 'Cannot create emotional companion in minor mode',
-    toast_minor_set_emotion: 'Cannot set as emotional companion in minor mode',
-    toast_change_content: 'Try something else', toast_no_api: 'Please configure API key in settings first',
-    toast_gen_failed: 'Generation failed', toast_req_failed: 'Request failed: ',
-    toast_network_error: 'Network disconnected', toast_no_download: 'No image to download',
-    toast_download_tip: 'Browser opened, long press image to save',
-    toast_activated: 'Activated', toast_verify_failed: 'Verification failed', toast_status_updated: 'Status updated',
-    toast_bg_updated: 'Background updated', toast_bg_reset: 'Background reset',
-    loading_emotion: 'Let me think...', loading_tool: 'Thinking...', error_network: 'Network disconnected',
-    enter_to_send: 'Enter to Send',
-    shortcut_guide: 'Desktop Shortcut Guide',
-    shortcut_content: 'Esc — Close current popup / Return to previous page\nEnter — Send message (when Enter to Send is on)\nShift + Enter — New line\nCtrl + Plus — Increase font size\nCtrl + Minus — Decrease font size',
-    thinking: 'Let me think...',
-    custom_api_label: 'Custom API Key',
-    official_email: 'Official Email',
-    email_copied: 'Email copied',
-    confirm_delete_title: 'Confirm Delete',
-    confirm_delete_agent: 'Are you sure you want to delete "${name}"? This action cannot be undone.',
-    confirm_delete_chat: 'Are you sure you want to delete this chat? This action cannot be undone.',
-  }
-};
+const DEFAULT_MODEL = "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B";
+
+const API_LINE_LABELS = ['默认线路', '分流线路一', '分流线路二', '自定义 API'];
 
 const helpTexts = {
-  'api_key_label': {
-    'zh-CN': '在此填写你自己的 API 密钥，用于调用 AI 大模型服务。密钥仅保存在你设备的浏览器中，不会上传到任何服务器。不填写也可使用默认密钥。',
-    'zh-HK': '在此填寫你自己嘅 API 密鑰，用於調用 AI 大模型服務。密鑰僅保存在你設備嘅瀏覽器中，唔會上傳到任何伺服器。唔填寫亦可使用預設密鑰。',
-    'zh-TW': '在此填寫你自己的 API 金鑰，用於調用 AI 大模型服務。金鑰僅保存在你裝置的瀏覽器中，不會上傳到任何伺服器。不填寫也可使用預設金鑰。',
-    'en': 'Enter your own API key here to call the AI large model service. The key is only saved in your device browser and will not be uploaded to any server. You can also use the default key without filling in.'
-  },
-  'api_source': {
-    'zh-CN': '选择 API 线路。支持三条预设线路（默认/分流一/分流二）以及自定义 API。选择自定义后可填写你自己的 API Key。',
-    'zh-HK': '選擇 API 線路。支援三條預設線路（預設/分流一/分流二）以及自訂 API。選擇自訂後可填寫你自己嘅 API Key。',
-    'zh-TW': '選擇 API 線路。支援三條預設線路（預設/分流一/分流二）以及自訂 API。選擇自訂後可填寫你自己的 API Key。',
-    'en': 'Select API line. Supports three preset lines (Default/Line 1/Line 2) and custom API. After selecting custom, you can enter your own API Key.'
-  },
-  'language': {
-    'zh-CN': '切换界面显示语言。更改后即时生效，支持简体中文、繁体中文（香港/台湾）和英文。',
-    'zh-HK': '切換界面顯示語言。更改後即時生效，支援簡體中文、繁體中文（香港/台灣）和英文。',
-    'zh-TW': '切換介面顯示語言。更改後即時生效，支援簡體中文、繁體中文（香港/台灣）和英文。',
-    'en': 'Switch the interface display language. Changes take effect immediately. Supports Simplified Chinese, Traditional Chinese (HK/TW) and English.'
-  },
-  'font_size': {
-    'zh-CN': '调整应用中所有文字的显示大小。点击 + 增大，点击 − 缩小，范围 8~32px。快捷键：Ctrl+加号 放大，Ctrl+减号 缩小。',
-    'zh-HK': '調整應用中所有文字嘅顯示大小。點擊 + 增大，點擊 − 縮小，範圍 8~32px。快捷鍵：Ctrl+加號 放大，Ctrl+減號 縮小。',
-    'zh-TW': '調整應用中所有文字的顯示大小。點選 + 增大，點選 − 縮小，範圍 8~32px。快速鍵：Ctrl+加號 放大，Ctrl+減號 縮小。',
-    'en': 'Adjust the display size of all text in the app. Click + to increase, click − to decrease, range 8~32px. Shortcut: Ctrl+Plus to zoom in, Ctrl+Minus to zoom out.'
-  },
-  'light_mode': {
-    'zh-CN': '切换浅色/深色主题。浅色模式适合白天使用，深色模式适合夜间使用，保护眼睛。',
-    'zh-HK': '切換淺色/深色主題。淺色模式適合日間使用，深色模式適合夜間使用，保護眼睛。',
-    'zh-TW': '切換淺色/深色主題。淺色模式適合白天使用，深色模式適合夜間使用，保護眼睛。',
-    'en': 'Switch between light/dark theme. Light mode is suitable for daytime use, dark mode is suitable for nighttime use to protect your eyes.'
-  },
-  'creator_mode': {
-    'zh-CN': '解锁高级功能：编辑智能体时可修改 AI 类型、性别、回复风格等参数，查看和复制系统提示词。需要验证码激活。',
-    'zh-HK': '解鎖高級功能：編輯智能體時可修改 AI 類型、性別、回覆風格等參數，查看和複製系統提示詞。需要驗證碼啟動。',
-    'zh-TW': '解鎖進階功能：編輯智能體時可修改 AI 類型、性別、回覆風格等參數，檢視和複製系統提示詞。需要驗證碼啟用。',
-    'en': 'Unlock advanced features: when editing agents, you can modify AI type, gender, reply style and other parameters, view and copy system prompts. Requires a verification code to activate.'
-  },
-  'enter_to_send': {
-    'zh-CN': '开启后：按 Enter 键直接发送消息，Shift+Enter 换行。关闭后：Enter 仅换行，必须点击发送按钮才能发送。手机和电脑统一规则。',
-    'zh-HK': '開啟後：按 Enter 鍵直接發送訊息，Shift+Enter 換行。關閉後：Enter 僅換行，必須點擊發送按鈕才能發送。手機和電腦統一規則。',
-    'zh-TW': '開啟後：按 Enter 鍵直接傳送訊息，Shift+Enter 換行。關閉後：Enter 僅換行，必須點選傳送按鈕才能傳送。手機和電腦統一規則。',
-    'en': 'When enabled: Press Enter to send message directly, Shift+Enter for new line. When disabled: Enter only for new line, must click the send button to send. Unified rule for mobile and desktop.'
-  },
-  'home_bg': {
-    'zh-CN': '自定义智能体列表页面的背景图片。支持 JPG/PNG 等常见格式，点击"更换"选择图片，点击"重置"恢复默认纯色背景。',
-    'zh-HK': '自訂智能體列表頁面嘅背景圖片。支援 JPG/PNG 等常見格式，點擊「更換」選擇圖片，點擊「重設」恢復預設純色背景。',
-    'zh-TW': '自訂智能體列表頁面的背景圖片。支援 JPG/PNG 等常見格式，點選「更換」選擇圖片，點選「重設」恢復預設純色背景。',
-    'en': 'Customize the background image of the agent list page. Supports JPG/PNG and other common formats. Click "Change" to select an image, click "Reset" to restore the default solid background.'
-  },
+  'api_source': '选择 API 线路。支持三条预设线路（默认/分流一/分流二）以及自定义 API。选择自定义后可填写你自己的 API Key。',
+  'font_size': '调整应用中所有文字的显示大小。点击 + 增大，点击 − 缩小，范围 8~32px。快捷键：Ctrl+加号 放大，Ctrl+减号 缩小。',
+  'light_mode': '切换浅色/深色主题。浅色模式适合白天使用，深色模式适合夜间使用，保护眼睛。',
+  'creator_mode': '解锁高级功能：编辑智能体时可修改 AI 类型、性别、回复风格等参数，查看和复制系统提示词。需要验证码激活。',
+  'enter_to_send': '开启后：按 Enter 键直接发送消息，Shift+Enter 换行。关闭后：Enter 仅换行，必须点击发送按钮才能发送。手机和电脑统一规则。',
+  'home_bg': '自定义智能体列表页面的背景图片。支持 JPG/PNG 等常见格式，点击"更换"选择图片，点击"重置"恢复默认纯色背景。',
+  'max_tokens': '控制AI每次回复的最大token使用量。数值越大，AI单次可生成的文字越多。1 token等于多少汉字或英文或数字以模型厂商的分配为标准。输入0表示不限制。点击数字可直接修改。',
 };
-
-let currentLang = localStorage.getItem('dchat_lang') || 'zh-CN';
-
-function t(key) { return i18nData[currentLang]?.[key] || i18nData['zh-CN'][key] || key; }
-
-function applyLanguage(lang) {
-  currentLang = lang;
-  localStorage.setItem('dchat_lang', lang);
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {}
-    else if (el.tagName === 'OPTION') el.textContent = t(key);
-    else el.textContent = t(key);
-  });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-    el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
-  });
-  updateApiSelectDisplay();
-  updateLangSelectDisplay();
-  updateVersionDisplay();
-  insertHelpButtons();
-}
-
-function insertHelpButtons() {
-  const modalBody = document.querySelector('#modal .modal-body');
-  if (!modalBody) return;
-  modalBody.querySelectorAll('.help-btn').forEach(b => b.remove());
-
-  const labels = modalBody.querySelectorAll('label[data-i18n]');
-  labels.forEach(label => {
-    const key = label.getAttribute('data-i18n');
-    if (helpTexts[key]) label.appendChild(createHelpBtn(key));
-  });
-
-  const switchSpans = modalBody.querySelectorAll('.switch-box span[data-i18n]');
-  switchSpans.forEach(span => {
-    const key = span.getAttribute('data-i18n');
-    if (helpTexts[key]) {
-      const existing = span.querySelector('.help-btn');
-      if (!existing) span.appendChild(createHelpBtn(key));
-    }
-  });
-}
 
 const toastEl = document.getElementById('toast'); let toastTimer = null;
 
@@ -2427,7 +2263,6 @@ function showToast(message, type = 'info', duration = 2000) {
   toastTimer = setTimeout(() => { toastEl.classList.remove('show'); toastTimer = null; }, duration);
 }
 
-// ========== 通用确认弹窗 ==========
 let confirmResolve = null;
 
 function showConfirm(title, message, okText = '删除') {
@@ -2449,10 +2284,8 @@ document.getElementById('confirmOkBtn').onclick = () => hideConfirm(true);
 document.getElementById('confirmCancelBtn').onclick = () => hideConfirm(false);
 document.getElementById('confirmModal').onclick = (e) => { if (e.target === document.getElementById('confirmModal')) hideConfirm(false); };
 
-// ========== 内联选择器 ==========
 function toggleInlineSelect(btn, optionsContainer) {
   const isOpen = optionsContainer.classList.contains('show');
-  // 关闭所有内联选择器
   document.querySelectorAll('.inline-select-options.show').forEach(el => el.classList.remove('show'));
   if (!isOpen) {
     optionsContainer.classList.add('show');
@@ -2476,7 +2309,6 @@ function setupInlineSelect(btnSelector, optionsSelector) {
       btn.dataset.value = opt.dataset.value;
       optionsContainer.classList.remove('show');
 
-      // 同步更新编辑弹窗中性别框的显示/隐藏
       if (btnSelector === '#aiTypeSelectBtn' || btnSelector === '#editAiTypeSelectBtn') {
         const isTool = opt.dataset.value === 'tool';
         if (btnSelector === '#aiTypeSelectBtn') {
@@ -2489,7 +2321,6 @@ function setupInlineSelect(btnSelector, optionsSelector) {
   });
 }
 
-// 点击外部关闭所有内联选择器
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.select-btn')) {
     document.querySelectorAll('.inline-select-options.show').forEach(el => el.classList.remove('show'));
@@ -2530,7 +2361,7 @@ setTimeout(() => {
   setTimeout(() => { setTimeout(() => { document.getElementById('splash').classList.add('fade'); }, 200); }, 500);
 }, 200);
 
-const DEEPSEEK_CONFIG = { apiUrl: "https://api.siliconflow.cn/v1/chat/completions", model: "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B" };
+const DEEPSEEK_CONFIG = { apiUrl: "https://api.siliconflow.cn/v1/chat/completions", model: DEFAULT_MODEL };
 const DEFAULT_STYLE = {
   emotion: '你是熟人聊天搭子，主打随性敢说、接地气怼梗，允许日常粗口、直白吐槽，纯口语化唠嗑，别端着、别官方，怎么自然怎么说，禁止用表情符号',
   tool: '严谨专业，逻辑清晰，高效解答各类问题，回复简洁明了，直击重点，不啰嗦，禁止发任何表情符号'
@@ -2541,11 +2372,13 @@ const AUTH_CODE = "258456";
 let config = JSON.parse(localStorage.getItem("config")) || {
   apiLine: 'default',
   customApi: '',
+  customModel: '',
   fontSize: 16,
   specialMode: false,
   lightMode: false,
   homeBackground: null,
-  enterToSend: true
+  enterToSend: true,
+  maxTokens: 1000
 };
 
 function getEffectiveApiKey() {
@@ -2555,34 +2388,74 @@ function getEffectiveApiKey() {
   return PRESET_API_KEYS[config.apiLine] || PRESET_API_KEYS.default;
 }
 
+function getEffectiveModel() {
+  if (config.apiLine === 'custom') {
+    return config.customModel || '';
+  }
+  return DEFAULT_MODEL;
+}
+
 function updateApiSelectDisplay() {
   const btn = document.getElementById('apiSelectBtn');
   const input = document.getElementById('customApiInput');
+  const modelWrap = document.getElementById('customModelWrap');
   if (!btn || !input) return;
-  const labels = API_LINE_LABELS[currentLang] || API_LINE_LABELS['zh-CN'];
-  if (config.apiLine === 'default') btn.textContent = labels[0];
-  else if (config.apiLine === 'line1') btn.textContent = labels[1];
-  else if (config.apiLine === 'line2') btn.textContent = labels[2];
-  else if (config.apiLine === 'custom') btn.textContent = labels[3];
+  if (config.apiLine === 'default') btn.textContent = API_LINE_LABELS[0];
+  else if (config.apiLine === 'line1') btn.textContent = API_LINE_LABELS[1];
+  else if (config.apiLine === 'line2') btn.textContent = API_LINE_LABELS[2];
+  else if (config.apiLine === 'custom') btn.textContent = API_LINE_LABELS[3];
   if (config.apiLine === 'custom') {
     input.classList.add('show');
-    input.value = config.customApi || '';
+    if (modelWrap) modelWrap.classList.add('show');
   } else {
     input.classList.remove('show');
+    if (modelWrap) modelWrap.classList.remove('show');
+  }
+  updateCustomModelDisplay();
+}
+
+function updateCustomModelDisplay() {
+  const display = document.getElementById('customModelDisplay');
+  if (!display) return;
+  if (config.customModel) {
+    display.textContent = config.customModel;
+    display.classList.remove('placeholder');
+  } else {
+    display.textContent = '点击选择模型';
+    display.classList.add('placeholder');
   }
 }
 
-function updateLangSelectDisplay() {
-  const btn = document.getElementById('langSelectBtn');
-  if (!btn) return;
-  const langNames = {
-    'zh-CN': '简体中文',
-    'zh-HK': '繁體中文（香港）',
-    'zh-TW': '繁體中文（台灣）',
-    'en': 'English'
-  };
-  btn.textContent = langNames[currentLang] || currentLang;
+function showModelSelectModal() {
+  showModal(document.getElementById('modelSelectModal'));
 }
+
+function hideModelSelectModal() {
+  hideModal(document.getElementById('modelSelectModal'));
+}
+
+function selectModel(modelName) {
+  config.customModel = modelName;
+  saveData();
+  updateCustomModelDisplay();
+  hideModelSelectModal();
+}
+
+document.getElementById('modelOptV4Flash').onclick = () => selectModel(PRESET_MODEL_OPTIONS.v4flash);
+document.getElementById('modelOptR1Qwen').onclick = () => selectModel(PRESET_MODEL_OPTIONS.r1qwen);
+document.getElementById('modelOptCustom').onclick = () => selectModel('');
+
+document.getElementById('customModelDisplay').onclick = () => {
+  if (config.apiLine === 'custom') {
+    showModelSelectModal();
+  }
+};
+
+document.getElementById('modelSelectModal').onclick = (e) => {
+  if (e.target === document.getElementById('modelSelectModal')) {
+    hideModelSelectModal();
+  }
+};
 
 let sessionStartTime = 0, usageTimerInterval = null;
 const TWO_HOURS_MS = 7200000;
@@ -2621,7 +2494,7 @@ window.addEventListener('message', function(e) {
   if (!e.data || !e.data.type) return;
   if (e.data.type === 'agreementAccepted') {
     if (e.data.version) { setStoredAgreementVersion(e.data.version); currentAgreementVersion = e.data.version; }
-    closeAgreement(); showToast(t('toast_welcome'), 'success');
+    closeAgreement(); showToast('欢迎使用 Dchat', 'success');
   } else if (e.data.type === 'agreementRejected') {
     setStoredAgreementVersion('0'); closeAgreement();
     document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:18px;color:#e0e0e0;margin-bottom:8px;">您不同意协议</div><div style="font-size:14px;color:#888;">请退出软件</div></div>';
@@ -2642,7 +2515,7 @@ function applyTheme() { document.body.classList.toggle('light-mode', config.ligh
 function applyHomeBackground() {
   const homePage = document.getElementById('homePage');
   if (config.homeBackground) {
-    homePage.style.backgroundImage = `url(${config.homeBackground})`;
+    homePage.style.backgroundImage = 'url(' + config.homeBackground + ')';
     homePage.style.backgroundSize = 'cover'; homePage.style.backgroundPosition = 'center';
     document.body.classList.add('has-home-bg');
   } else {
@@ -2655,7 +2528,7 @@ function applyHomeBackground() {
 function updateHomeBgPreview() {
   const preview = document.getElementById('homeBgPreview');
   if (preview) {
-    if (config.homeBackground) { preview.style.backgroundImage = `url(${config.homeBackground})`; preview.textContent = ''; }
+    if (config.homeBackground) { preview.style.backgroundImage = 'url(' + config.homeBackground + ')'; preview.textContent = ''; }
     else { preview.style.backgroundImage = 'none'; preview.textContent = '未设置背景'; }
   }
 }
@@ -2664,7 +2537,7 @@ function applyChatBackground() {
   const chatPage = document.getElementById('chatPage');
   const agent = getCurrentAgent();
   if (agent && agent.chatBackground) {
-    chatPage.style.backgroundImage = `url(${agent.chatBackground})`; chatPage.style.backgroundSize = 'cover'; chatPage.style.backgroundPosition = 'center';
+    chatPage.style.backgroundImage = 'url(' + agent.chatBackground + ')'; chatPage.style.backgroundSize = 'cover'; chatPage.style.backgroundPosition = 'center';
     document.body.classList.add('has-chat-bg');
   } else {
     chatPage.style.backgroundImage = ''; chatPage.style.backgroundSize = ''; chatPage.style.backgroundPosition = '';
@@ -2719,6 +2592,8 @@ async function migrateOldData() {
   if (config.homeBackground === undefined) config.homeBackground = null;
   if (config.apiLine === undefined) config.apiLine = 'default';
   if (config.customApi === undefined) config.customApi = '';
+  if (config.customModel === undefined) config.customModel = '';
+  if (config.maxTokens === undefined) config.maxTokens = 1000;
 }
 
 function saveAgents() { localStorage.setItem("agents", JSON.stringify(agents)); }
@@ -2759,35 +2634,64 @@ function hideNotice() { if (!isNoticeClosable()) return; clearNoticeCooldown(); 
 closeNoticeBtn.onclick = (e) => { e.stopPropagation(); if (isNoticeClosable()) hideNotice(); };
 noticeModalEl.onclick = (e) => { if (e.target === noticeModalEl && isNoticeClosable()) hideNotice(); };
 
-let multiSelectMode = false, selectedAgentIds = new Set(), loadingDotsTimer = null;
+let multiSelectMode = false, selectedAgentIds = new Set();
 
-// ========== 括号内容处理 ==========
 function processBracketContent(text) {
-  // 先转义 HTML 特殊字符防止 XSS
   const escaped = text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
-  // 匹配中文括号及其内容，替换为斜体灰色
   return escaped.replace(/（([^）]*)）/g, '<span class="bracket-content">（$1）</span>');
 }
 
 function renderMessageContent(content) {
-  return processBracketContent(content);
-}
+  const codeBlockRegex = /```(\w+)\s*\n([\s\S]*?)```/g;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
 
-function startLoadingDots() {
-  if (loadingDotsTimer) return;
-  loadingDotsTimer = setInterval(() => {
-    const el = document.querySelector("#messages .loading");
-    if (!el) { clearInterval(loadingDotsTimer); loadingDotsTimer = null; return; }
-    let c = parseInt(el.dataset.dotCount) || 0; c = (c + 1) % 4; el.dataset.dotCount = c;
-    el.textContent = (el.dataset.baseText || el.textContent.replace(/\.+$/, '')) + '.'.repeat(c);
-  }, 500);
-}
+  while ((match = codeBlockRegex.exec(content)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push({
+        type: 'text',
+        content: processBracketContent(content.substring(lastIndex, match.index))
+      });
+    }
+    const lang = match[1];
+    const code = match[2].replace(/\n$/, '');
+    parts.push({ type: 'code', lang: lang, code: code });
+    lastIndex = match.index + match[0].length;
+  }
 
-function stopLoadingDots() { if (loadingDotsTimer) { clearInterval(loadingDotsTimer); loadingDotsTimer = null; } }
+  if (lastIndex < content.length) {
+    parts.push({
+      type: 'text',
+      content: processBracketContent(content.substring(lastIndex))
+    });
+  }
+
+  if (parts.length === 0) {
+    return processBracketContent(content);
+  }
+
+  let html = '';
+  parts.forEach(part => {
+    if (part.type === 'text') {
+      html += part.content;
+    } else if (part.type === 'code') {
+      const escapedCode = part.code
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+      const codeId = 'code_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+      html += '<div class="code-block-wrap"><div class="code-block-header"><span class="code-lang-tag">' + part.lang + '</span><button class="code-copy-btn" data-code-id="' + codeId + '">复制</button></div><div class="code-block-body"><pre><code id="' + codeId + '">' + escapedCode + '</code></pre></div></div>';
+    }
+  });
+
+  return html;
+}
 
 function renderAgentList() {
   const list = document.getElementById('agentList');
@@ -2795,11 +2699,11 @@ function renderAgentList() {
   list.innerHTML = '';
   sorted.forEach(agent => {
     const card = document.createElement('div');
-    card.className = `agent-card ${agent.pinned ? 'pinned' : ''} ${selectedAgentIds.has(agent.id) ? 'selected' : ''}`;
+    card.className = 'agent-card ' + (agent.pinned ? 'pinned' : '') + ' ' + (selectedAgentIds.has(agent.id) ? 'selected' : '');
     card.dataset.id = agent.id;
 
     const checkbox = document.createElement('div');
-    checkbox.className = `agent-checkbox ${selectedAgentIds.has(agent.id) ? 'checked' : ''}`;
+    checkbox.className = 'agent-checkbox ' + (selectedAgentIds.has(agent.id) ? 'checked' : '');
     checkbox.onclick = (e) => { e.stopPropagation(); selectedAgentIds.has(agent.id) ? selectedAgentIds.delete(agent.id) : selectedAgentIds.add(agent.id); renderAgentList(); updateDeleteBar(); };
     card.appendChild(checkbox);
 
@@ -2810,12 +2714,12 @@ function renderAgentList() {
 
     const info = document.createElement('div');
     info.className = 'agent-info';
-    info.innerHTML = `<div class="agent-name">${agent.name}</div><div class="agent-desc">${agent.description || ''}</div>`;
+    info.innerHTML = '<div class="agent-name">' + agent.name + '</div><div class="agent-desc">' + (agent.description || '') + '</div>';
     card.appendChild(info);
 
     const actions = document.createElement('div');
     actions.className = 'agent-actions';
-    actions.innerHTML = `<span class="pin-agent">📌</span><span class="edit-agent">✏️</span><span class="delete-agent">✕</span>`;
+    actions.innerHTML = '<span class="pin-agent">📌</span><span class="edit-agent">✏️</span><span class="delete-agent">✕</span>';
     card.appendChild(actions);
 
     card.addEventListener('click', (e) => {
@@ -2826,7 +2730,7 @@ function renderAgentList() {
 
     actions.querySelector('.pin-agent').addEventListener('click', (e) => {
       e.stopPropagation(); const pc = agents.filter(a => a.pinned).length;
-      if (!agent.pinned && pc >= 3) { showToast(t('toast_max_pinned'), 'error'); return; }
+      if (!agent.pinned && pc >= 3) { showToast('最多只能置顶3个智能体', 'error'); return; }
       agent.pinned = !agent.pinned; saveAgents(); renderAgentList();
     });
 
@@ -2834,15 +2738,9 @@ function renderAgentList() {
 
     actions.querySelector('.delete-agent').addEventListener('click', async (e) => {
       e.stopPropagation();
-      if (agents.length <= 1) { showToast(t('toast_min_agents'), 'error'); return; }
-      const confirmed = await showConfirm(
-        t('confirm_delete_title'),
-        t('confirm_delete_agent').replace('${name}', agent.name),
-        t('delete')
-      );
-      if (confirmed) {
-        agents = agents.filter(a => a.id !== agent.id); saveAgents(); renderAgentList();
-      }
+      if (agents.length <= 1) { showToast('至少保留一个智能体', 'error'); return; }
+      const confirmed = await showConfirm('确认删除', '确定删除智能体"' + agent.name + '"吗？此操作不可恢复。', '删除');
+      if (confirmed) { agents = agents.filter(a => a.id !== agent.id); saveAgents(); renderAgentList(); }
     });
 
     list.appendChild(card);
@@ -2859,10 +2757,10 @@ function updateDeleteBar() {
 function enterChat(agentId) {
   const agent = agents.find(a => a.id === agentId);
   if (!agent) return;
-  if (isMinor() && agent.aiConfig.type === 'emotion') { showToast(t('toast_minor_emotion'), 'error'); return; }
+  if (isMinor() && agent.aiConfig.type === 'emotion') { showToast('未成年人模式下情感陪伴功能不可用', 'error'); return; }
   currentAgentId = agentId; currentChatId = agent.chats[0]?.id;
   if (!currentChatId) {
-    const nc = { id: 'chat_' + Date.now(), title: t('new_chat'), messages: [], pinned: false };
+    const nc = { id: 'chat_' + Date.now(), title: '新对话', messages: [], pinned: false };
     agent.chats.push(nc); currentChatId = nc.id; saveAgents();
   }
   document.getElementById('chatTitle').innerText = getCurrentChat().title;
@@ -2883,9 +2781,9 @@ function readImageFile(file) {
 document.getElementById('changeHomeBgBtn').onclick = () => document.getElementById('homeBgFile').click();
 document.getElementById('homeBgFile').onchange = async (e) => {
   const file = e.target.files[0];
-  if (file) { try { config.homeBackground = await readImageFile(file); saveData(); applyHomeBackground(); showToast(t('toast_bg_updated'), 'success'); } catch (err) { showToast('图片读取失败', 'error'); } e.target.value = ''; }
+  if (file) { try { config.homeBackground = await readImageFile(file); saveData(); applyHomeBackground(); showToast('背景已更新', 'success'); } catch (err) { showToast('图片读取失败', 'error'); } e.target.value = ''; }
 };
-document.getElementById('resetHomeBgBtn').onclick = () => { config.homeBackground = null; saveData(); applyHomeBackground(); showToast(t('toast_bg_reset'), 'success'); };
+document.getElementById('resetHomeBgBtn').onclick = () => { config.homeBackground = null; saveData(); applyHomeBackground(); showToast('背景已重置', 'success'); };
 
 let agentChatBgData = null, editAgentChatBgData = null;
 
@@ -2896,10 +2794,10 @@ function triggerImagePick(callback) {
   input.click();
 }
 
-document.getElementById('changeAgentChatBgBtn').onclick = () => { triggerImagePick((data) => { agentChatBgData = data; const p = document.getElementById('agentChatBgPreview'); p.style.backgroundImage = `url(${agentChatBgData})`; p.textContent = ''; }); };
+document.getElementById('changeAgentChatBgBtn').onclick = () => { triggerImagePick((data) => { agentChatBgData = data; const p = document.getElementById('agentChatBgPreview'); p.style.backgroundImage = 'url(' + agentChatBgData + ')'; p.textContent = ''; }); };
 document.getElementById('resetAgentChatBgBtn').onclick = () => { agentChatBgData = null; const p = document.getElementById('agentChatBgPreview'); p.style.backgroundImage = 'none'; p.textContent = '未设置'; };
 
-document.getElementById('changeEditAgentChatBgBtn').onclick = () => { triggerImagePick((data) => { editAgentChatBgData = data; const p = document.getElementById('editAgentChatBgPreview'); p.style.backgroundImage = `url(${editAgentChatBgData})`; p.textContent = ''; }); };
+document.getElementById('changeEditAgentChatBgBtn').onclick = () => { triggerImagePick((data) => { editAgentChatBgData = data; const p = document.getElementById('editAgentChatBgPreview'); p.style.backgroundImage = 'url(' + editAgentChatBgData + ')'; p.textContent = ''; }); };
 document.getElementById('resetEditAgentChatBgBtn').onclick = () => { editAgentChatBgData = null; const p = document.getElementById('editAgentChatBgPreview'); p.style.backgroundImage = 'none'; p.textContent = '未设置'; };
 
 const agentModal = document.getElementById('agentModal'); let avatarData = null;
@@ -2911,14 +2809,14 @@ document.getElementById('newAgentFab').onclick = async () => {
   if (!defaultAvatarData) await loadDefaultAvatar();
   avatarData = defaultAvatarData; agentChatBgData = null;
   if (isMinor()) {
-    document.getElementById('aiTypeSelectBtn').textContent = t('tool'); document.getElementById('aiTypeSelectBtn').dataset.value = 'tool';
+    document.getElementById('aiTypeSelectBtn').textContent = '工具'; document.getElementById('aiTypeSelectBtn').dataset.value = 'tool';
     document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE.tool; document.getElementById('agentGenderBox').classList.add('hide');
   } else {
-    document.getElementById('aiTypeSelectBtn').textContent = t('emotion'); document.getElementById('aiTypeSelectBtn').dataset.value = 'emotion';
+    document.getElementById('aiTypeSelectBtn').textContent = '情感陪伴'; document.getElementById('aiTypeSelectBtn').dataset.value = 'emotion';
     document.getElementById('agentAiStyleInput').value = DEFAULT_STYLE.emotion; document.getElementById('agentGenderBox').classList.remove('hide');
   }
   document.getElementById('agentNameInput').value = ''; document.getElementById('agentDescInput').value = '';
-  document.getElementById('aiGenderSelectBtn').textContent = t('neutral'); document.getElementById('aiGenderSelectBtn').dataset.value = 'neutral';
+  document.getElementById('aiGenderSelectBtn').textContent = '中性'; document.getElementById('aiGenderSelectBtn').dataset.value = 'neutral';
   document.getElementById('avatarPreview').src = defaultAvatarData; document.getElementById('avatarFile').value = '';
   const p = document.getElementById('agentChatBgPreview'); p.style.backgroundImage = 'none'; p.textContent = '未设置';
   showModal(agentModal);
@@ -2926,8 +2824,8 @@ document.getElementById('newAgentFab').onclick = async () => {
 
 document.getElementById('agentConfirm').onclick = async () => {
   const name = document.getElementById('agentNameInput').value.trim();
-  if (!name) { showToast(t('toast_name_required'), 'error'); return; }
-  if (isMinor() && document.getElementById('aiTypeSelectBtn').dataset.value === 'emotion') { showToast(t('toast_minor_create_emotion'), 'error'); return; }
+  if (!name) { showToast('请输入名称', 'error'); return; }
+  if (isMinor() && document.getElementById('aiTypeSelectBtn').dataset.value === 'emotion') { showToast('未成年人模式下不能创建情感陪伴智能体', 'error'); return; }
   if (!avatarData) await loadDefaultAvatar();
   const aiType = document.getElementById('aiTypeSelectBtn').dataset.value;
   agents.push({
@@ -2939,10 +2837,10 @@ document.getElementById('agentConfirm').onclick = async () => {
       style: document.getElementById('agentAiStyleInput').value.trim() || DEFAULT_STYLE[aiType],
       temperature: aiType === 'tool' ? DEFAULT_TEMPERATURE.tool : DEFAULT_TEMPERATURE.emotion
     },
-    chats: [{ id: 'chat_' + Date.now(), title: t('new_chat'), messages: [], pinned: false }],
+    chats: [{ id: 'chat_' + Date.now(), title: '新对话', messages: [], pinned: false }],
     pinned: false, createdAt: Date.now(), chatBackground: agentChatBgData || null
   });
-  saveAgents(); renderAgentList(); hideModal(agentModal); showToast(t('toast_create_success'), 'success');
+  saveAgents(); renderAgentList(); hideModal(agentModal); showToast('创建成功', 'success');
 };
 
 document.getElementById('agentCancel').onclick = () => hideModal(agentModal);
@@ -2959,15 +2857,15 @@ function openEditAgentModal(agent) {
   document.getElementById('editAvatarFile').value = '';
   const sw = document.getElementById('editPinnedSwitch');
   sw.classList.toggle('checked', agent.pinned);
-  sw.onclick = () => { const np = !sw.classList.contains('checked'); if (np && agents.filter(a => a.pinned).length >= 3 && !agent.pinned) { showToast(t('toast_max_pinned'), 'error'); return; } sw.classList.toggle('checked'); };
+  sw.onclick = () => { const np = !sw.classList.contains('checked'); if (np && agents.filter(a => a.pinned).length >= 3 && !agent.pinned) { showToast('最多只能置顶3个智能体', 'error'); return; } sw.classList.toggle('checked'); };
   editAgentChatBgData = agent.chatBackground || null;
   const p = document.getElementById('editAgentChatBgPreview');
-  if (editAgentChatBgData) { p.style.backgroundImage = `url(${editAgentChatBgData})`; p.textContent = ''; } else { p.style.backgroundImage = 'none'; p.textContent = '未设置'; }
+  if (editAgentChatBgData) { p.style.backgroundImage = 'url(' + editAgentChatBgData + ')'; p.textContent = ''; } else { p.style.backgroundImage = 'none'; p.textContent = '未设置'; }
   if (config.specialMode) {
     document.getElementById('editAgentDescInput').value = agent.description || '';
-    document.getElementById('editAiTypeSelectBtn').textContent = agent.aiConfig.type === 'tool' ? t('tool') : t('emotion');
+    document.getElementById('editAiTypeSelectBtn').textContent = agent.aiConfig.type === 'tool' ? '工具' : '情感陪伴';
     document.getElementById('editAiTypeSelectBtn').dataset.value = agent.aiConfig.type || 'emotion';
-    document.getElementById('editAiGenderSelectBtn').textContent = agent.aiConfig.gender === 'male' ? t('male') : agent.aiConfig.gender === 'female' ? t('female') : t('neutral');
+    document.getElementById('editAiGenderSelectBtn').textContent = agent.aiConfig.gender === 'male' ? '男性' : agent.aiConfig.gender === 'female' ? '女性' : '中性';
     document.getElementById('editAiGenderSelectBtn').dataset.value = agent.aiConfig.gender || 'neutral';
     document.getElementById('editAgentAiStyleInput').value = agent.aiConfig.style || '';
     document.getElementById('editAgentGenderBox').classList.toggle('hide', agent.aiConfig.type === 'tool');
@@ -2978,7 +2876,7 @@ function openEditAgentModal(agent) {
 
 document.getElementById('editAgentConfirm').onclick = () => {
   const name = document.getElementById('editAgentNameInput').value.trim();
-  if (!name) { showToast(t('toast_name_required'), 'error'); return; }
+  if (!name) { showToast('请输入名称', 'error'); return; }
   const agent = agents.find(a => a.id === editingAgentId);
   if (agent) {
     agent.name = name; agent.avatar = editAvatarData || defaultAvatarData;
@@ -2986,7 +2884,7 @@ document.getElementById('editAgentConfirm').onclick = () => {
     agent.chatBackground = editAgentChatBgData;
     if (config.specialMode) {
       const aiType = document.getElementById('editAiTypeSelectBtn').dataset.value;
-      if (isMinor() && aiType === 'emotion') { showToast(t('toast_minor_set_emotion'), 'error'); return; }
+      if (isMinor() && aiType === 'emotion') { showToast('未成年人模式下不能设置为情感陪伴', 'error'); return; }
       agent.description = document.getElementById('editAgentDescInput').value.trim();
       agent.aiConfig = {
         type: aiType,
@@ -3009,16 +2907,19 @@ document.getElementById('cancelMultiBtn').onclick = () => { multiSelectMode = fa
 document.getElementById('confirmDeleteBtn').onclick = () => {
   if (selectedAgentIds.size === 0) return;
   const remaining = agents.filter(a => !selectedAgentIds.has(a.id));
-  if (remaining.length === 0) { showToast(t('toast_min_agents'), 'error'); return; }
+  if (remaining.length === 0) { showToast('至少保留一个智能体', 'error'); return; }
   agents = remaining; saveAgents(); multiSelectMode = false; selectedAgentIds.clear();
   document.getElementById('multiSelectBtn').style.display = 'block'; document.getElementById('cancelMultiBtn').classList.remove('show');
-  renderAgentList(); updateDeleteBar(); showToast(t('toast_delete_success'), 'success');
+  renderAgentList(); updateDeleteBar(); showToast('删除成功', 'success');
 };
 
 function openSettingsPanel() {
   updateApiSelectDisplay();
-  updateLangSelectDisplay();
-  updateFontSizeDisplay(); updateThemeSwitch(); updateHomeBgPreview();
+  updateCustomModelDisplay();
+  document.getElementById('customApiInput').value = config.customApi || '';
+  updateFontSizeDisplay();
+  updateTokenDisplay();
+  updateThemeSwitch(); updateHomeBgPreview();
   document.getElementById('enterSendSwitch').classList.toggle('checked', config.enterToSend);
   document.body.classList.toggle('creator-mode', config.specialMode);
   document.getElementById('devControlBox').style.display = config.specialMode ? 'flex' : 'none';
@@ -3044,7 +2945,7 @@ async function checkText(text) {
 function buildSystemPrompt(aiConfig) {
   let gp = "";
   if (aiConfig.type === "emotion") gp = aiConfig.gender === "male" ? "你的性别为男性，语气贴合男性说话方式并且认为自己是男性；" : aiConfig.gender === "female" ? "你的性别为女性，语气贴合女性说话方式并且认为自己是女性；" : "你的性别为中性，语气无明显性别特征；";
-  return `${gp}你是${aiConfig.type === "emotion" ? "情感陪伴AI" : "工具型AI"}，${aiConfig.style}；禁止使用任何表情符号，单个句号可保留，连续句号请删除，回复贴合设定风格。`;
+  return gp + "你是" + (aiConfig.type === "emotion" ? "情感陪伴AI" : "工具型AI") + "，" + aiConfig.style + "；禁止使用任何表情符号，单个句号可保留，连续句号请删除，回复贴合设定风格。";
 }
 
 function renderChatList() {
@@ -3052,11 +2953,11 @@ function renderChatList() {
   const list = document.getElementById("chatList"); list.innerHTML = "";
   [...agent.chats].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)).forEach(chat => {
     const item = document.createElement("div");
-    item.className = `chat-item ${chat.pinned ? 'pinned' : ''} ${chat.id === currentChatId ? 'active' : ''}`;
-    let ah = `<span class="rename" data-id="${chat.id}">✏️</span>`;
-    if (config.specialMode) ah += `<span class="chat-config-btn" data-id="${chat.id}">⚙</span>`;
-    ah += `<span class="del" data-id="${chat.id}">✕</span>`;
-    item.innerHTML = `<div class="chat-item-left"><span class="pin-icon ${chat.pinned ? 'pinned' : ''}" data-id="${chat.id}">📌</span><span class="chat-title-text">${chat.title}</span></div><div class="chat-item-actions">${ah}</div>`;
+    item.className = 'chat-item ' + (chat.pinned ? 'pinned' : '') + ' ' + (chat.id === currentChatId ? 'active' : '');
+    let ah = '<span class="rename" data-id="' + chat.id + '">✏️</span>';
+    if (config.specialMode) ah += '<span class="chat-config-btn" data-id="' + chat.id + '">⚙</span>';
+    ah += '<span class="del" data-id="' + chat.id + '">✕</span>';
+    item.innerHTML = '<div class="chat-item-left"><span class="pin-icon ' + (chat.pinned ? 'pinned' : '') + '" data-id="' + chat.id + '">📌</span><span class="chat-title-text">' + chat.title + '</span></div><div class="chat-item-actions">' + ah + '</div>';
 
     item.querySelector('.pin-icon').onclick = (e) => { e.stopPropagation(); chat.pinned = !chat.pinned; saveAgents(); renderChatList(); };
 
@@ -3079,12 +2980,8 @@ function renderChatList() {
 
     item.querySelector(".del").onclick = async (e) => {
       e.stopPropagation();
-      if (agent.chats.length <= 1) { showToast(t("toast_min_chats"), "error"); return; }
-      const confirmed = await showConfirm(
-        t('confirm_delete_title'),
-        t('confirm_delete_chat'),
-        t('delete')
-      );
+      if (agent.chats.length <= 1) { showToast("至少保留一个对话", "error"); return; }
+      const confirmed = await showConfirm('确认删除', '确定删除此对话吗？此操作不可恢复。', '删除');
       if (confirmed) {
         agent.chats = agent.chats.filter(c => c.id !== chat.id); currentChatId = agent.chats[0].id;
         saveAgents(); renderChatList(); renderMessages(); applyChatBackground();
@@ -3101,9 +2998,24 @@ function renderMessages() {
   if (!chat) return;
   chat.messages.forEach(msg => {
     const div = document.createElement("div");
-    div.className = `msg ${msg.role === "assistant" ? "ai" : "user"}`;
+    div.className = 'msg ' + (msg.role === "assistant" ? "ai" : "user");
     div.innerHTML = renderMessageContent(msg.content);
     box.appendChild(div);
+  });
+  box.querySelectorAll('.code-copy-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const codeId = this.dataset.codeId;
+      const codeEl = document.getElementById(codeId);
+      if (codeEl) {
+        const text = codeEl.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('代码已复制', 'success', 1500);
+        }).catch(() => {
+          showToast('代码已复制', 'success', 1500);
+        });
+      }
+    });
   });
   box.scrollTop = box.scrollHeight;
 }
@@ -3116,47 +3028,142 @@ function updateThemeSwitch() { document.getElementById("themeSwitch").classList.
 
 function updateFontSizeDisplay() { document.getElementById('fontSizeValue').textContent = config.fontSize; }
 
-function updateVersionDisplay() { const el = document.getElementById('versionDisplay'); if (el) el.textContent = t('version'); }
+function updateTokenDisplay() { document.getElementById('tokenValue').textContent = config.maxTokens; }
+
+function updateVersionDisplay() { const el = document.getElementById('versionDisplay'); if (el) el.textContent = '当前版本 ' + APP_VERSION; }
 
 function isMinor() { return config.isAdult === false; }
 
-function showLangSelectModal() {
-  const modal = document.getElementById('langSelectModal');
-  const list = document.getElementById('langOptionsList');
-  const langs = [
-    { code: 'zh-CN', name: '简体中文' },
-    { code: 'zh-HK', name: '繁體中文（香港）' },
-    { code: 'zh-TW', name: '繁體中文（台灣）' },
-    { code: 'en', name: 'English' }
-  ];
-  list.innerHTML = '';
-  langs.forEach(lang => {
-    const div = document.createElement('div');
-    div.className = 'lang-option';
-    if (lang.code === currentLang) div.classList.add('active');
-    div.innerHTML = `<span>${lang.name}</span><span class="check-mark">✓</span>`;
-    div.onclick = () => {
-      if (lang.code !== currentLang) {
-        applyLanguage(lang.code);
-        updateLangSelectDisplay();
-        updateApiSelectDisplay();
-      }
-      hideModal(modal);
-    };
-    list.appendChild(div);
+function insertHelpButtons() {
+  const modalBody = document.querySelector('#modal .modal-body');
+  if (!modalBody) return;
+  modalBody.querySelectorAll('.help-btn').forEach(b => b.remove());
+
+  // API线路
+  const apiLabel = modalBody.querySelector('.api-select-wrap label');
+  if (apiLabel && !apiLabel.querySelector('.help-btn')) {
+    const btn = document.createElement('span');
+    btn.className = 'help-btn'; btn.textContent = '?';
+    btn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); showHelpTooltip('api_source'); };
+    apiLabel.appendChild(btn);
+  }
+
+  // 字体大小（第一个font-size-setting）
+  const fontSetting = modalBody.querySelector('.font-size-setting:first-of-type');
+  if (fontSetting) {
+    const fontLabel = fontSetting.querySelector('span:first-child');
+    if (fontLabel && !fontLabel.querySelector('.help-btn')) {
+      const btn = document.createElement('span');
+      btn.className = 'help-btn'; btn.textContent = '?';
+      btn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); showHelpTooltip('font_size'); };
+      fontLabel.appendChild(btn);
+    }
+  }
+
+  // 最大使用token
+  const allSettings = modalBody.querySelectorAll('.font-size-setting');
+  allSettings.forEach(setting => {
+    const firstSpan = setting.querySelector('span:first-child');
+    if (firstSpan && firstSpan.textContent.includes('token') && !firstSpan.querySelector('.help-btn')) {
+      const btn = document.createElement('span');
+      btn.className = 'help-btn'; btn.textContent = '?';
+      btn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); showHelpTooltip('max_tokens'); };
+      firstSpan.appendChild(btn);
+    }
   });
-  showModal(modal);
+
+  // 浅色模式、创造者模式、回车键发送消息
+  const switchBoxes = modalBody.querySelectorAll('.switch-box');
+  const switchKeys = ['light_mode', 'creator_mode', 'enter_to_send'];
+  switchBoxes.forEach((box, index) => {
+    if (index < switchKeys.length) {
+      const span = box.querySelector('span:first-child');
+      if (span && !span.querySelector('.help-btn')) {
+        const btn = document.createElement('span');
+        btn.className = 'help-btn'; btn.textContent = '?';
+        btn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); showHelpTooltip(switchKeys[index]); };
+        span.appendChild(btn);
+      }
+    }
+  });
+
+  // 主菜单背景
+  const bgLabel = modalBody.querySelector('label[style*="margin-top:16px"]');
+  if (bgLabel && bgLabel.textContent.includes('背景') && !bgLabel.querySelector('.help-btn')) {
+    const btn = document.createElement('span');
+    btn.className = 'help-btn'; btn.textContent = '?';
+    btn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); showHelpTooltip('home_bg'); };
+    bgLabel.appendChild(btn);
+  }
 }
 
-document.getElementById('langSelectBtn').onclick = () => showLangSelectModal();
-document.getElementById('langSelectModal').onclick = (e) => { if (e.target === document.getElementById('langSelectModal')) hideModal(document.getElementById('langSelectModal')); };
+function showHelpTooltip(key) {
+  const modal = document.getElementById('helpTooltipModal');
+  const titleMap = {
+    'api_source': 'API 线路',
+    'font_size': '字体大小',
+    'light_mode': '浅色模式',
+    'creator_mode': '创造者模式',
+    'enter_to_send': '回车键发送消息',
+    'home_bg': '主菜单背景',
+    'max_tokens': '最大使用token'
+  };
+  document.getElementById('helpTooltipTitle').textContent = titleMap[key] || key;
+  document.getElementById('helpTooltipDesc').textContent = helpTexts[key] || '暂无说明';
+  modal.classList.add('show');
+}
 
-document.getElementById('apiSelectBtn').onclick = () => {
-  // 使用内联选择器方式
-  const labels = API_LINE_LABELS[currentLang] || API_LINE_LABELS['zh-CN'];
+document.getElementById('helpTooltipClose').onclick = () => { document.getElementById('helpTooltipModal').classList.remove('show'); };
+document.getElementById('helpTooltipModal').onclick = (e) => { if (e.target === document.getElementById('helpTooltipModal')) { document.getElementById('helpTooltipModal').classList.remove('show'); } };
+
+document.getElementById('openShortcutBtn').onclick = () => {
+  document.getElementById('shortcutModal').classList.add('show');
+  hideModal(document.getElementById('modal'));
+};
+document.getElementById('shortcutClose').onclick = () => { document.getElementById('shortcutModal').classList.remove('show'); };
+document.getElementById('shortcutModal').onclick = (e) => { if (e.target === document.getElementById('shortcutModal')) { document.getElementById('shortcutModal').classList.remove('show'); } };
+
+document.getElementById('emailRow').addEventListener('click', () => {
+  navigator.clipboard.writeText('dchatstudio@outlook.com').then(() => {
+    showToast('邮箱已复制', 'success');
+  }).catch(() => {
+    showToast('邮箱已复制', 'success');
+  });
+});
+
+document.getElementById('bracketBtn').addEventListener('click', () => {
+  const input = document.getElementById('input');
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  const text = input.value;
+  const before = text.substring(0, start);
+  const selected = text.substring(start, end);
+  const after = text.substring(end);
+
+  if (selected) {
+    input.value = before + '（' + selected + '）' + after;
+    input.selectionStart = start + 1 + selected.length + 1;
+    input.selectionEnd = start + 1 + selected.length + 1;
+  } else {
+    input.value = before + '（）' + after;
+    input.selectionStart = start + 1;
+    input.selectionEnd = start + 1;
+  }
+  input.focus();
+});
+
+document.getElementById('apiSelectBtn').onclick = (e) => {
+  e.stopPropagation();
   const values = ['default', 'line1', 'line2', 'custom'];
+
+  const existing = document.querySelector('.api-line-popup');
+  if (existing) {
+    existing.remove();
+    return;
+  }
+
   const container = document.createElement('div');
-  container.className = 'inline-select-options show';
+  container.className = 'api-line-popup inline-select-options show';
   container.style.position = 'fixed';
   container.style.width = document.getElementById('apiSelectBtn').offsetWidth + 'px';
   container.style.left = document.getElementById('apiSelectBtn').getBoundingClientRect().left + 'px';
@@ -3166,27 +3173,35 @@ document.getElementById('apiSelectBtn').onclick = () => {
   values.forEach((val, idx) => {
     const div = document.createElement('div');
     div.className = 'inline-select-option';
-    div.textContent = labels[idx];
+    div.textContent = API_LINE_LABELS[idx];
     div.dataset.value = val;
-    div.onclick = () => {
+    div.onclick = (ev) => {
+      ev.stopPropagation();
+      const prevLine = config.apiLine;
       config.apiLine = val;
       if (val === 'custom') {
         document.getElementById('customApiInput').classList.add('show');
+        document.getElementById('customModelWrap').classList.add('show');
       } else {
         document.getElementById('customApiInput').classList.remove('show');
+        document.getElementById('customModelWrap').classList.remove('show');
       }
       saveData();
       updateApiSelectDisplay();
+      updateCustomModelDisplay();
       container.remove();
-      document.removeEventListener('click', closeHandler);
+
+      if (val === 'custom' && prevLine !== 'custom' && !config.customModel) {
+        setTimeout(() => showModelSelectModal(), 300);
+      }
     };
     container.appendChild(div);
   });
 
   document.body.appendChild(container);
 
-  const closeHandler = (e) => {
-    if (!container.contains(e.target) && e.target !== document.getElementById('apiSelectBtn')) {
+  const closeHandler = (ev) => {
+    if (!container.contains(ev.target) && ev.target !== document.getElementById('apiSelectBtn')) {
       container.remove();
       document.removeEventListener('click', closeHandler);
     }
@@ -3197,6 +3212,10 @@ document.getElementById('apiSelectBtn').onclick = () => {
 document.getElementById('customApiInput').addEventListener('input', function() {
   config.customApi = this.value.trim();
   saveData();
+
+  if (config.customApi && !config.customModel) {
+    setTimeout(() => showModelSelectModal(), 300);
+  }
 });
 
 let lastGeneratedImageUrl = null;
@@ -3239,7 +3258,6 @@ async function sendMsg() {
   if (activeStreamAbort) {
     activeStreamAbort.abort();
     activeStreamAbort = null;
-    stopLoadingDots();
     stopThinkingTimer();
     const loadingEl = document.querySelector("#messages .loading");
     if (loadingEl) loadingEl.remove();
@@ -3257,6 +3275,12 @@ async function sendMsg() {
 
   const text = document.getElementById("input").value.trim();
   if (!text) return;
+
+  if (config.apiLine === 'custom' && !config.customModel) {
+    showToast('使用自定义API时，请先选择模型', 'error');
+    return;
+  }
+
   const agentId = currentAgentId, chatId = currentChatId,
         agent = agents.find(a => a.id === agentId),
         chat = agent.chats.find(c => c.id === chatId);
@@ -3267,7 +3291,7 @@ async function sendMsg() {
   if (currentAgentId === agentId && currentChatId === chatId) {
     renderMessages();
     const loading = document.createElement("div"); loading.className = "loading";
-    const baseText = t('thinking');
+    const baseText = '让我想想';
     loading.textContent = baseText;
     loading.dataset.thinkDotCount = "0";
     document.getElementById("messages").appendChild(loading);
@@ -3281,13 +3305,14 @@ async function sendMsg() {
       if (currentAgentId === agentId && currentChatId === chatId) {
         const le = document.querySelector("#messages .loading"); if (le) le.remove();
         stopThinkingTimer();
-        const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = t("toast_change_content");
+        const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = "换个内容试试吧";
         document.getElementById("messages").appendChild(tip);
       }
       return;
     }
     try {
-      const key = getEffectiveApiKey(); if (!key) throw new Error(t("toast_no_api"));
+      const key = getEffectiveApiKey(); if (!key) throw new Error("请先在设置中配置API密钥");
+      const model = getEffectiveModel();
       const aiConfig = chat.chatConfig && chat.chatConfig.type ? chat.chatConfig : agent.aiConfig;
 
       const placeholderMsg = { role: "assistant", content: "", _streaming: true };
@@ -3297,9 +3322,26 @@ async function sendMsg() {
       const abortController = new AbortController();
       activeStreamAbort = abortController;
 
+      // 构建请求体
+      const requestBody = {
+        model: model,
+        messages: [
+          { role: "system", content: buildSystemPrompt(aiConfig) },
+          ...chat.messages.filter(m => !m._streaming).map(m => ({ role: m.role, content: m.content }))
+        ],
+        temperature: aiConfig.temperature || DEFAULT_TEMPERATURE.emotion,
+        top_p: 0.9,
+        stream: true
+      };
+      // maxTokens为0时不传max_tokens（表示不限制）
+      if (config.maxTokens && config.maxTokens > 0) {
+        requestBody.max_tokens = config.maxTokens;
+      }
+
       const res = await fetch(DEEPSEEK_CONFIG.apiUrl, {
-        method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
-        body: JSON.stringify({ model: DEEPSEEK_CONFIG.model, messages: [{ role: "system", content: buildSystemPrompt(aiConfig) }, ...chat.messages.filter(m => !m._streaming).map(m => ({ role: m.role, content: m.content }))], temperature: aiConfig.temperature || DEFAULT_TEMPERATURE.emotion, top_p: 0.9, max_tokens: 1000, stream: true }),
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+        body: JSON.stringify(requestBody),
         signal: abortController.signal
       });
 
@@ -3350,7 +3392,7 @@ async function sendMsg() {
 
       if (!reply) {
         chat.messages.pop();
-        reply = agent.aiConfig.type === "emotion" ? "咋了啊" : "暂无解答";
+        reply = agent.aiConfig.type === "emotion" ? "出了差错，请检查网络和API~" : "有点问题，请检查网络和API哦~";
         placeholderMsg.content = reply;
         chat.messages.push({ role: "assistant", content: reply });
       } else {
@@ -3366,7 +3408,7 @@ async function sendMsg() {
         saveAgents();
         if (currentAgentId === agentId && currentChatId === chatId) {
           renderMessages();
-          const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = t("toast_change_content");
+          const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = "换个内容试试吧";
           document.getElementById("messages").appendChild(tip);
         }
       }
@@ -3377,69 +3419,12 @@ async function sendMsg() {
       const le = document.querySelector("#messages .loading"); if (le) le.remove();
       if (currentAgentId === agentId && currentChatId === chatId) {
         const err = document.createElement("div"); err.className = "msg ai";
-        err.textContent = agent.aiConfig.type === "emotion" ? t("error_network") : t("toast_req_failed") + e.message;
+        err.textContent = agent.aiConfig.type === "emotion" ? "网断了吧 连不上了" : "请求失败：" + e.message;
         document.getElementById("messages").appendChild(err);
       }
     }
   });
 }
-
-function createHelpBtn(key) {
-  const btn = document.createElement('span');
-  btn.className = 'help-btn'; btn.textContent = '?';
-  btn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); showHelpTooltip(key); };
-  return btn;
-}
-
-function showHelpTooltip(key) {
-  const modal = document.getElementById('helpTooltipModal');
-  document.getElementById('helpTooltipTitle').textContent = t(key);
-  document.getElementById('helpTooltipDesc').textContent = (helpTexts[key] && helpTexts[key][currentLang]) || helpTexts[key]?.['zh-CN'] || '暂无说明';
-  modal.classList.add('show');
-}
-
-document.getElementById('helpTooltipClose').onclick = () => { document.getElementById('helpTooltipModal').classList.remove('show'); };
-document.getElementById('helpTooltipModal').onclick = (e) => { if (e.target === document.getElementById('helpTooltipModal')) { document.getElementById('helpTooltipModal').classList.remove('show'); } };
-
-document.getElementById('openShortcutBtn').onclick = () => {
-  document.getElementById('shortcutDesc').textContent = t('shortcut_content');
-  document.getElementById('shortcutModal').classList.add('show');
-  hideModal(document.getElementById('modal'));
-};
-document.getElementById('shortcutClose').onclick = () => { document.getElementById('shortcutModal').classList.remove('show'); };
-document.getElementById('shortcutModal').onclick = (e) => { if (e.target === document.getElementById('shortcutModal')) { document.getElementById('shortcutModal').classList.remove('show'); } };
-
-document.getElementById('emailRow').addEventListener('click', () => {
-  navigator.clipboard.writeText('dchatstudio@outlook.com').then(() => {
-    showToast(t('email_copied'), 'success');
-  }).catch(() => {
-    showToast(t('email_copied'), 'success');
-  });
-});
-
-// ========== 括号按钮 ==========
-document.getElementById('bracketBtn').addEventListener('click', () => {
-  const input = document.getElementById('input');
-  const start = input.selectionStart;
-  const end = input.selectionEnd;
-  const text = input.value;
-  const before = text.substring(0, start);
-  const selected = text.substring(start, end);
-  const after = text.substring(end);
-
-  if (selected) {
-    // 有选中文字则包裹
-    input.value = before + '（' + selected + '）' + after;
-    input.selectionStart = start + 1 + selected.length + 1;
-    input.selectionEnd = start + 1 + selected.length + 1;
-  } else {
-    // 无选中则插入空括号，光标定位在中间
-    input.value = before + '（）' + after;
-    input.selectionStart = start + 1;
-    input.selectionEnd = start + 1;
-  }
-  input.focus();
-});
 
 async function initAll() {
   await migrateOldData();
@@ -3451,11 +3436,12 @@ async function initAll() {
   if (config.homeBackground === undefined) config.homeBackground = null;
   if (config.apiLine === undefined) config.apiLine = 'default';
   if (config.customApi === undefined) config.customApi = '';
+  if (config.customModel === undefined) config.customModel = '';
+  if (config.maxTokens === undefined) config.maxTokens = 1000;
 
   applyTheme(); applyHomeBackground(); renderAgentList();
-  applyLanguage(currentLang); startUsageTimer();
+  startUsageTimer();
 
-  // 初始化内联选择器
   setupInlineSelect('#aiTypeSelectBtn', '#aiTypeInlineOptions');
   setupInlineSelect('#aiGenderSelectBtn', '#aiGenderInlineOptions');
   setupInlineSelect('#editAiTypeSelectBtn', '#editAiTypeInlineOptions');
@@ -3468,9 +3454,9 @@ async function initAll() {
   document.getElementById('openAgreementBtn').onclick = () => { hideModal(document.getElementById('modal')); openAgreement(false); };
 
   document.getElementById("apiTag").onclick = async () => {
-    const input = await showPrompt(t("please_input"), "验证码");
-    if (input === AUTH_CODE) { config.specialMode = true; saveData(); showToast(t("toast_activated"), "success"); }
-    else if (input !== null) showToast(t("toast_verify_failed"), "error");
+    const input = await showPrompt("请输入", "验证码");
+    if (input === AUTH_CODE) { config.specialMode = true; saveData(); showToast("已激活", "success"); }
+    else if (input !== null) showToast("验证失败", "error");
   };
 
   document.getElementById("toggleSidebar").onclick = () => { document.getElementById("sidebar").classList.add("open"); document.getElementById("overlay").classList.add("show"); };
@@ -3480,11 +3466,26 @@ async function initAll() {
   document.getElementById("fontMinus").onclick = () => { if (config.fontSize > 8) setFontSize(config.fontSize - 1); };
   document.getElementById("fontPlus").onclick = () => setFontSize(config.fontSize + 1);
 
-  function setFontSize(size) { config.fontSize = size; document.documentElement.style.setProperty('--font-size', `${size}px`); document.getElementById('fontSizeValue').textContent = size; saveData(); }
+  // 点击token数字直接输入
+  document.getElementById("tokenValue").onclick = async () => {
+    const input = await showPrompt("最大使用token", "输入token数量（0表示不限制）");
+    if (input !== null) {
+      const num = parseInt(input);
+      if (!isNaN(num) && num >= 0) {
+        config.maxTokens = num;
+        updateTokenDisplay();
+        saveData();
+      } else {
+        showToast('请输入有效的数字（0或正整数）', 'error');
+      }
+    }
+  };
+
+  function setFontSize(size) { config.fontSize = size; document.documentElement.style.setProperty('--font-size', size + 'px'); document.getElementById('fontSizeValue').textContent = size; saveData(); }
 
   document.getElementById("newChat").onclick = () => {
     const agent = getCurrentAgent();
-    const nc = { id: 'chat_' + Date.now(), title: t('new_chat'), messages: [], pinned: false };
+    const nc = { id: 'chat_' + Date.now(), title: '新对话', messages: [], pinned: false };
     agent.chats.unshift(nc); currentChatId = nc.id; saveAgents();
     renderChatList(); renderMessages(); applyChatBackground();
     document.getElementById("chatTitle").innerText = nc.title; closeSidebar();
@@ -3514,19 +3515,19 @@ async function initAll() {
 
   document.getElementById('genImgBtn').onclick = async () => {
     const prompt = document.getElementById('imgPrompt').value.trim();
-    if (!prompt) { showToast(t('please_input'), 'error'); return; }
+    if (!prompt) { showToast('请输入', 'error'); return; }
     const loading = document.getElementById('imgLoading'), img = document.getElementById('resultImg'), downloadBtn = document.getElementById('downloadImgBtn');
     loading.style.display = 'block'; img.classList.remove('show'); downloadBtn.style.display = 'none';
     try {
       const res = await fetch('https://api.siliconflow.cn/v1/images/generations', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getEffectiveApiKey() }, body: JSON.stringify({ model: 'Kwai-Kolors/Kolors', prompt, image_size: '1024x1024', num_inference_steps: 28 }) });
       const data = await res.json(); const url = data.images?.[0]?.url;
       if (url) { lastGeneratedImageUrl = url; img.src = url; requestAnimationFrame(() => requestAnimationFrame(() => { img.classList.add('show'); downloadBtn.style.display = 'block'; })); }
-      else { showToast(t('toast_gen_failed'), 'error'); }
-    } catch (e) { showToast(t('toast_req_failed') + e.message, 'error'); }
+      else { showToast('生成失败', 'error'); }
+    } catch (e) { showToast('请求失败：' + e.message, 'error'); }
     finally { loading.style.display = 'none'; }
   };
 
-  document.getElementById('downloadImgBtn').onclick = () => { if (!lastGeneratedImageUrl) { showToast(t('toast_no_download'), 'error'); return; } window.open(lastGeneratedImageUrl, '_blank'); showToast(t('toast_download_tip'), 'success'); };
+  document.getElementById('downloadImgBtn').onclick = () => { if (!lastGeneratedImageUrl) { showToast('没有可下载的图片', 'error'); return; } window.open(lastGeneratedImageUrl, '_blank'); showToast('已跳转浏览器，长按图片即可保存', 'success'); };
 
   document.getElementById("openRewardBtn").onclick = () => { showModal(document.getElementById("rewardModal")); hideModal(document.getElementById("modal")); };
   document.getElementById("closeReward").onclick = () => hideModal(document.getElementById("rewardModal"));
@@ -3537,7 +3538,7 @@ async function initAll() {
 
   document.getElementById("themeSwitch").onclick = () => { config.lightMode = !config.lightMode; document.getElementById("themeSwitch").classList.toggle("checked", config.lightMode); applyTheme(); saveData(); };
 
-  document.getElementById('changeAgeBtn').onclick = () => { hideModal(document.getElementById('modal')); showAgeConfirmModal(() => showToast(t('toast_status_updated'), 'success')); };
+  document.getElementById('changeAgeBtn').onclick = () => { hideModal(document.getElementById('modal')); showAgeConfirmModal(() => showToast('状态已更新', 'success')); };
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -3554,8 +3555,8 @@ async function initAll() {
         document.getElementById('restReminderModal'),
         document.getElementById('helpTooltipModal'),
         document.getElementById('shortcutModal'),
-        document.getElementById('langSelectModal'),
         document.getElementById('confirmModal'),
+        document.getElementById('modelSelectModal'),
       ];
       for (let i = visibleModals.length - 1; i >= 0; i--) {
         if (visibleModals[i].classList.contains('show')) { hideModal(visibleModals[i]); return; }
@@ -3567,8 +3568,8 @@ async function initAll() {
         document.getElementById('chatPage').classList.remove('show'); closeSidebar(); renderAgentList(); return;
       }
     }
-    if (e.ctrlKey && (e.key === '=' || e.key === '+')) { e.preventDefault(); if (config.fontSize < 32) { config.fontSize++; document.documentElement.style.setProperty('--font-size', `${config.fontSize}px`); document.getElementById('fontSizeValue').textContent = config.fontSize; saveData(); } }
-    if (e.ctrlKey && e.key === '-') { e.preventDefault(); if (config.fontSize > 8) { config.fontSize--; document.documentElement.style.setProperty('--font-size', `${config.fontSize}px`); document.getElementById('fontSizeValue').textContent = config.fontSize; saveData(); } }
+    if (e.ctrlKey && (e.key === '=' || e.key === '+')) { e.preventDefault(); if (config.fontSize < 32) { config.fontSize++; document.documentElement.style.setProperty('--font-size', config.fontSize + 'px'); document.getElementById('fontSizeValue').textContent = config.fontSize; saveData(); } }
+    if (e.ctrlKey && e.key === '-') { e.preventDefault(); if (config.fontSize > 8) { config.fontSize--; document.documentElement.style.setProperty('--font-size', config.fontSize + 'px'); document.getElementById('fontSizeValue').textContent = config.fontSize; saveData(); } }
   });
 }
 
@@ -3589,9 +3590,11 @@ window.onload = async () => {
   const now = new Date(), month = now.getMonth() + 1, day = now.getDate();
   const mourningDays = [{ month: 4, day: 4, subtitle: '新冠肺炎疫情逝者' }, { month: 5, day: 12, subtitle: '汶川大地震遇难同胞' }, { month: 7, day: 27, subtitle: '唐山大地震遇难同胞' }];
   const today = mourningDays.find(d => d.month === month && d.day === day);
-  if (today) { document.body.innerHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:48px;margin-bottom:20px;">🕯️</div><div style="font-size:20px;font-weight:600;color:#e0e0e0;margin-bottom:8px;">沉痛缅怀</div><div style="font-size:15px;color:#a0a0a0;">${today.subtitle}</div><div style="font-size:14px;color:#a0a0a0;">灾难纪念日，软件暂停使用一天</div></div>`; return; }
+  if (today) { document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:48px;margin-bottom:20px;">🕯️</div><div style="font-size:20px;font-weight:600;color:#e0e0e0;margin-bottom:8px;">沉痛缅怀</div><div style="font-size:15px;color:#a0a0a0;">' + today.subtitle + '</div><div style="font-size:14px;color:#a0a0a0;">灾难纪念日，软件暂停使用一天</div></div>'; return; }
   document.getElementById("app").style.display = "block";
   config = JSON.parse(localStorage.getItem("config")) || config;
+  if (config.customModel === undefined) config.customModel = '';
+  if (config.maxTokens === undefined) config.maxTokens = 1000;
   const needAgeConfirm = (config.isAdult === undefined || config.isAdult === null);
   if (needAgeConfirm) { showAgeConfirmModal(() => { initAll(); setTimeout(() => showNotice(true), 500); }); }
   else { initAll(); setTimeout(() => showNotice(true), 500); }
