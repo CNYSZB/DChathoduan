@@ -818,6 +818,7 @@
     transform: scale(0.95);
     transition: opacity 0.3s ease, transform 0.3s ease;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
   }
   body.light-mode #resultImg { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
   #resultImg.show { opacity: 1; transform: scale(1); }
@@ -927,7 +928,6 @@
   .chat-item-actions { display: flex; gap: 8px; flex-shrink: 0; }
   .chat-item .del { color: var(--danger); font-size: var(--font-size); cursor: pointer; }
   .chat-item .rename { color: var(--primary); font-size: var(--font-size); cursor: pointer; }
-  .chat-item .chat-config-btn { color: #FFD700; font-size: var(--font-size); cursor: pointer; }
   .side-bottom { padding: 16px 12px; border-top: 1px solid var(--border); }
   .side-btn {
     padding: 12px;
@@ -1006,6 +1006,7 @@
     flex-direction: column;
     gap: 16px;
     -webkit-overflow-scrolling: touch;
+    transition: padding-bottom 0.2s ease;
   }
 
   .msg {
@@ -1769,6 +1770,305 @@
     .agent-actions span:hover { background: #242830; }
     #closeNotice.cooldown:hover { filter: none; }
   }
+
+  /* ===== 搜索框样式 ===== */
+  #searchModal .modal-box {
+    max-width: 500px;
+    max-height: 85vh;
+  }
+  .search-input-wrap {
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .search-input-wrap::before {
+    content: '🔍';
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .search-input-wrap input {
+    width: 100%;
+    padding: 14px 14px 14px 42px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    outline: none;
+    font-size: var(--font-size);
+    transition: border-color 0.2s ease;
+  }
+  .search-input-wrap input:focus {
+    border-color: var(--primary);
+  }
+  .search-input-wrap input::placeholder {
+    color: #5a5c64;
+  }
+  body.light-mode .search-input-wrap input::placeholder {
+    color: #8e8e93;
+  }
+
+  /* 测试功能标签 */
+  .search-beta-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #FF8C00;
+    background: rgba(255, 140, 0, 0.15);
+    border: 1px solid rgba(255, 140, 0, 0.3);
+    border-radius: 20px;
+    padding: 2px 10px;
+    margin-left: 8px;
+    vertical-align: middle;
+    letter-spacing: 0.5px;
+  }
+  body.light-mode .search-beta-badge {
+    color: #D47300;
+    background: rgba(212, 115, 0, 0.1);
+    border-color: rgba(212, 115, 0, 0.25);
+  }
+
+  /* 搜索范围：2×2 网格自适应 */
+  .search-scope {
+    margin-bottom: 16px;
+    padding: 14px;
+    background: var(--surface-light);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+  }
+  .search-scope-label {
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    margin-bottom: 10px;
+    display: block;
+    font-weight: 500;
+  }
+  .search-scope-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  @media (max-width: 400px) {
+    .search-scope-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .search-scope-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: calc(var(--font-size) - 1px);
+    color: var(--text);
+    transition: background 0.15s, border-color 0.15s;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .search-scope-option:active {
+    background: var(--primary-bg);
+    border-color: var(--primary);
+  }
+  .search-scope-option.checked {
+    background: var(--primary-bg);
+    border-color: var(--primary);
+  }
+  .search-scope-option .check-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+    color: transparent;
+    transition: all 0.15s;
+  }
+  .search-scope-option.checked .check-icon {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+  .search-scope-option .scope-label {
+    flex: 1;
+  }
+
+  /* 使用引导 */
+  .search-guide {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: rgba(62, 154, 226, 0.08);
+    border: 1px solid rgba(62, 154, 226, 0.2);
+    border-radius: 14px;
+    line-height: 1.5;
+  }
+  body.light-mode .search-guide {
+    background: rgba(0, 113, 227, 0.06);
+    border-color: rgba(0, 113, 227, 0.15);
+  }
+  .search-guide-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .search-guide-text {
+    font-size: calc(var(--font-size) - 3px);
+    color: var(--subtext);
+    flex: 1;
+  }
+
+  /* 搜索结果 */
+  .search-results {
+    max-height: 45vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .search-empty {
+    text-align: center;
+    color: var(--subtext);
+    padding: 30px 0;
+    font-size: calc(var(--font-size) - 1px);
+  }
+  .search-result-group {
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .search-result-agent {
+    padding: 12px 16px;
+    background: var(--surface-light);
+    font-weight: 600;
+    font-size: var(--font-size);
+    color: var(--primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .search-result-agent:active {
+    background: var(--primary-bg);
+  }
+  .search-result-agent .count {
+    font-weight: 400;
+    font-size: calc(var(--font-size) - 3px);
+    color: var(--subtext);
+    margin-left: auto;
+  }
+  .search-result-chat {
+    padding: 10px 16px;
+    background: var(--surface);
+    cursor: pointer;
+    font-size: calc(var(--font-size) - 1px);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .search-result-chat:last-child {
+    border-bottom: none;
+  }
+  .search-result-chat:active {
+    background: var(--surface-light);
+  }
+  .search-result-message {
+    padding: 8px 16px 8px 32px;
+    background: var(--surface);
+    cursor: pointer;
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    border-bottom: 1px solid var(--border);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-all;
+    transition: background 0.15s;
+  }
+  .search-result-message:last-child {
+    border-bottom: none;
+  }
+  .search-result-message:active {
+    background: var(--surface-light);
+  }
+  .search-result-message .role-tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-right: 6px;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+  .search-result-message .role-tag.user {
+    background: var(--primary-bg);
+    color: var(--primary);
+  }
+  .search-result-message .role-tag.ai {
+    background: #2a2a2a;
+    color: var(--subtext);
+  }
+  body.light-mode .search-result-message .role-tag.user {
+    background: #e8f2fd;
+    color: #0071e3;
+  }
+  body.light-mode .search-result-message .role-tag.ai {
+    background: #e9e9eb;
+    color: #6e6e73;
+  }
+  .search-highlight {
+    background: #FFD70033;
+    padding: 0 2px;
+    border-radius: 4px;
+  }
+  body.light-mode .search-highlight {
+    background: #FFD70055;
+  }
+  .msg.highlight {
+    animation: highlightPulse 1.5s ease;
+    border-color: #FFD700 !important;
+  }
+  @keyframes highlightPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+    50% { box-shadow: 0 0 20px 4px rgba(255, 215, 0, 0.3); }
+  }
+
+  /* ===== 图片预览 ===== */
+  #previewModal .modal-box {
+    max-width: 90vw;
+    max-height: 90vh;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    align-items: center;
+    justify-content: center;
+  }
+  #previewModal .modal-box img {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  }
+
 </style>
 </head>
 <body>
@@ -1789,6 +2089,7 @@
       <div class="homeHeader">
         <div class="homeTitle">智能体</div>
         <div class="homeActions">
+          <button class="homeActionBtn" id="homeSearchBtn">🔍</button>
           <button class="homeActionBtn" id="multiSelectBtn">删除</button>
           <button class="homeActionBtn" id="cancelMultiBtn">取消</button>
           <button class="homeActionBtn" id="homeSettingsBtn">设置</button>
@@ -2223,8 +2524,60 @@ Ctrl + 减号 — 缩小字体</div>
 <div id="titleLoading">创建中...</div>
 <div id="toast" class="toast"></div>
 
+<!-- ===== 搜索弹窗（含测试标识和使用引导） ===== -->
+<div id="searchModal" class="base-modal" style="z-index:100005;">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span>搜索 <span class="search-beta-badge">🧪 测试功能</span></span>
+    </div>
+    <div class="modal-body">
+      <div class="search-input-wrap">
+        <input type="text" id="searchInput" placeholder="输入关键词搜索..." autocomplete="off">
+      </div>
+      <div class="search-scope">
+        <span class="search-scope-label">搜索范围：</span>
+        <div class="search-scope-grid" id="scopeGrid">
+          <div class="search-scope-option checked" data-scope="agentName">
+            <span class="check-icon">✓</span>
+            <span class="scope-label">智能体名称</span>
+          </div>
+          <div class="search-scope-option checked" data-scope="agentDesc">
+            <span class="check-icon">✓</span>
+            <span class="scope-label">智能体描述</span>
+          </div>
+          <div class="search-scope-option checked" data-scope="chatTitle">
+            <span class="check-icon">✓</span>
+            <span class="scope-label">对话标题</span>
+          </div>
+          <div class="search-scope-option checked" data-scope="message">
+            <span class="check-icon">✓</span>
+            <span class="scope-label">消息内容</span>
+          </div>
+        </div>
+        <div class="search-guide">
+          <span class="search-guide-icon">💡</span>
+          <span class="search-guide-text">输入关键词 → 勾选搜索范围 → 点击结果可直接跳转<br>支持搜索智能体名称、描述、对话标题和消息内容</span>
+        </div>
+      </div>
+      <div id="searchResults" class="search-results">
+        <div class="search-empty">输入关键词开始搜索</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button id="searchClose">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 图片预览 ===== -->
+<div id="previewModal" class="base-modal" style="z-index:100006;">
+  <div class="modal-box" style="background:transparent;border:none;box-shadow:none;padding:12px;align-items:center;justify-content:center;">
+    <img id="previewImg" src="" alt="预览" style="width:100%;height:auto;max-height:80vh;object-fit:contain;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.8);">
+  </div>
+</div>
+
 <script>
-const APP_VERSION = '2.5.0';
+const APP_VERSION = '2.5.2';
 
 const PRESET_API_KEYS = {
   default: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd",
@@ -2954,15 +3307,15 @@ function renderChatList() {
   [...agent.chats].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)).forEach(chat => {
     const item = document.createElement("div");
     item.className = 'chat-item ' + (chat.pinned ? 'pinned' : '') + ' ' + (chat.id === currentChatId ? 'active' : '');
+    // 已移除 ⚙ 按钮
     let ah = '<span class="rename" data-id="' + chat.id + '">✏️</span>';
-    if (config.specialMode) ah += '<span class="chat-config-btn" data-id="' + chat.id + '">⚙</span>';
     ah += '<span class="del" data-id="' + chat.id + '">✕</span>';
     item.innerHTML = '<div class="chat-item-left"><span class="pin-icon ' + (chat.pinned ? 'pinned' : '') + '" data-id="' + chat.id + '">📌</span><span class="chat-title-text">' + chat.title + '</span></div><div class="chat-item-actions">' + ah + '</div>';
 
     item.querySelector('.pin-icon').onclick = (e) => { e.stopPropagation(); chat.pinned = !chat.pinned; saveAgents(); renderChatList(); };
 
     item.addEventListener("click", (e) => {
-      if (e.target.closest('.del') || e.target.closest('.rename') || e.target.closest('.pin-icon') || e.target.closest('.chat-config-btn')) return;
+      if (e.target.closest('.del') || e.target.closest('.rename') || e.target.closest('.pin-icon')) return;
       currentChatId = chat.id; renderChatList(); renderMessages(); applyChatBackground();
       document.getElementById("chatTitle").innerText = chat.title; closeSidebar();
     });
@@ -2974,9 +3327,6 @@ function renderChatList() {
       document.getElementById('renameConfirm').onclick = cf;
       document.getElementById('renameCancel').onclick = () => hideModal(document.getElementById('renameModal'));
     };
-
-    const cbtn = item.querySelector(".chat-config-btn");
-    if (cbtn) cbtn.onclick = (e) => { e.stopPropagation(); };
 
     item.querySelector(".del").onclick = async (e) => {
       e.stopPropagation();
@@ -3039,7 +3389,6 @@ function insertHelpButtons() {
   if (!modalBody) return;
   modalBody.querySelectorAll('.help-btn').forEach(b => b.remove());
 
-  // API线路
   const apiLabel = modalBody.querySelector('.api-select-wrap label');
   if (apiLabel && !apiLabel.querySelector('.help-btn')) {
     const btn = document.createElement('span');
@@ -3048,7 +3397,6 @@ function insertHelpButtons() {
     apiLabel.appendChild(btn);
   }
 
-  // 字体大小（第一个font-size-setting）
   const fontSetting = modalBody.querySelector('.font-size-setting:first-of-type');
   if (fontSetting) {
     const fontLabel = fontSetting.querySelector('span:first-child');
@@ -3060,7 +3408,6 @@ function insertHelpButtons() {
     }
   }
 
-  // 最大使用token
   const allSettings = modalBody.querySelectorAll('.font-size-setting');
   allSettings.forEach(setting => {
     const firstSpan = setting.querySelector('span:first-child');
@@ -3072,7 +3419,6 @@ function insertHelpButtons() {
     }
   });
 
-  // 浅色模式、创造者模式、回车键发送消息
   const switchBoxes = modalBody.querySelectorAll('.switch-box');
   const switchKeys = ['light_mode', 'creator_mode', 'enter_to_send'];
   switchBoxes.forEach((box, index) => {
@@ -3087,7 +3433,6 @@ function insertHelpButtons() {
     }
   });
 
-  // 主菜单背景
   const bgLabel = modalBody.querySelector('label[style*="margin-top:16px"]');
   if (bgLabel && bgLabel.textContent.includes('背景') && !bgLabel.querySelector('.help-btn')) {
     const btn = document.createElement('span');
@@ -3254,13 +3599,12 @@ function stopThinkingTimer() {
   if (thinkingTimer) { clearInterval(thinkingTimer); thinkingTimer = null; }
 }
 
+// 流式加载直接复用 AI 气泡
 async function sendMsg() {
   if (activeStreamAbort) {
     activeStreamAbort.abort();
     activeStreamAbort = null;
     stopThinkingTimer();
-    const loadingEl = document.querySelector("#messages .loading");
-    if (loadingEl) loadingEl.remove();
     const chat = getCurrentChat();
     if (chat && chat.messages.length > 0) {
       const lastMsg = chat.messages[chat.messages.length - 1];
@@ -3271,6 +3615,8 @@ async function sendMsg() {
         renderMessages();
       }
     }
+    const loadingEl = document.querySelector("#messages .loading");
+    if (loadingEl) loadingEl.remove();
   }
 
   const text = document.getElementById("input").value.trim();
@@ -3288,14 +3634,20 @@ async function sendMsg() {
   document.getElementById("input").value = ""; saveAgents();
   hasReceivedContent = false;
 
+  // 直接创建 AI 气泡
   if (currentAgentId === agentId && currentChatId === chatId) {
     renderMessages();
-    const loading = document.createElement("div"); loading.className = "loading";
+    const aiMsg = document.createElement("div");
+    aiMsg.className = "msg ai";
+    aiMsg.style.animation = 'none';
+    aiMsg.style.opacity = '1';
+    aiMsg.style.transform = 'none';
     const baseText = '让我想想';
-    loading.textContent = baseText;
-    loading.dataset.thinkDotCount = "0";
-    document.getElementById("messages").appendChild(loading);
-    startThinkingTimer(loading, baseText);
+    aiMsg.textContent = baseText;
+    aiMsg.dataset.thinkDotCount = "0";
+    aiMsg.id = 'streamingMsg';
+    document.getElementById("messages").appendChild(aiMsg);
+    startThinkingTimer(aiMsg, baseText);
     document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
   }
 
@@ -3303,7 +3655,8 @@ async function sendMsg() {
     if (!ok) {
       chat.messages.pop(); saveAgents();
       if (currentAgentId === agentId && currentChatId === chatId) {
-        const le = document.querySelector("#messages .loading"); if (le) le.remove();
+        const aiEl = document.querySelector("#messages #streamingMsg");
+        if (aiEl) aiEl.remove();
         stopThinkingTimer();
         const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = "换个内容试试吧";
         document.getElementById("messages").appendChild(tip);
@@ -3322,7 +3675,6 @@ async function sendMsg() {
       const abortController = new AbortController();
       activeStreamAbort = abortController;
 
-      // 构建请求体
       const requestBody = {
         model: model,
         messages: [
@@ -3333,7 +3685,6 @@ async function sendMsg() {
         top_p: 0.9,
         stream: true
       };
-      // maxTokens为0时不传max_tokens（表示不限制）
       if (config.maxTokens && config.maxTokens > 0) {
         requestBody.max_tokens = config.maxTokens;
       }
@@ -3346,7 +3697,6 @@ async function sendMsg() {
       });
 
       const reader = res.body.getReader(); const decoder = new TextDecoder(); let reply = '';
-      let loadingRemoved = false;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -3359,23 +3709,19 @@ async function sendMsg() {
               const delta = JSON.parse(js).choices?.[0]?.delta || {};
               const content = delta.content || '';
               if (content) {
-                if (!loadingRemoved) {
+                if (!hasReceivedContent) {
                   stopThinkingTimer();
                   hasReceivedContent = true;
-                  const le = document.querySelector("#messages .loading"); if (le) le.remove();
-                  loadingRemoved = true;
                 }
                 reply += content;
                 placeholderMsg.content = reply.replace(/^\n+/, '');
                 if (currentAgentId === agentId && currentChatId === chatId) {
-                  const aiMsgEl = document.getElementById("messages").querySelector(".msg.ai:last-of-type");
-                  if (!aiMsgEl) {
-                    const newAiMsg = document.createElement("div"); newAiMsg.className = "msg ai";
-                    newAiMsg.innerHTML = renderMessageContent(placeholderMsg.content);
-                    newAiMsg.style.animation = 'none'; newAiMsg.style.opacity = '1'; newAiMsg.style.transform = 'none';
-                    document.getElementById("messages").appendChild(newAiMsg);
-                  } else {
+                  const aiMsgEl = document.getElementById("streamingMsg");
+                  if (aiMsgEl) {
                     aiMsgEl.innerHTML = renderMessageContent(placeholderMsg.content);
+                    aiMsgEl.style.animation = 'none';
+                    aiMsgEl.style.opacity = '1';
+                    aiMsgEl.style.transform = 'none';
                   }
                   document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
                 }
@@ -3386,7 +3732,6 @@ async function sendMsg() {
       }
 
       stopThinkingTimer();
-      const le = document.querySelector("#messages .loading"); if (le) le.remove();
       activeStreamAbort = null;
       delete placeholderMsg._streaming;
 
@@ -3402,11 +3747,17 @@ async function sendMsg() {
 
       if (await checkText(reply)) {
         saveAgents();
-        if (currentAgentId === agentId && currentChatId === chatId) renderMessages();
+        if (currentAgentId === agentId && currentChatId === chatId) {
+          const streamingEl = document.getElementById("streamingMsg");
+          if (streamingEl) streamingEl.removeAttribute('id');
+          renderMessages();
+        }
       } else {
         chat.messages = chat.messages.filter(m => m !== placeholderMsg);
         saveAgents();
         if (currentAgentId === agentId && currentChatId === chatId) {
+          const streamingEl = document.getElementById("streamingMsg");
+          if (streamingEl) streamingEl.remove();
           renderMessages();
           const tip = document.createElement("div"); tip.className = "msg ai"; tip.textContent = "换个内容试试吧";
           document.getElementById("messages").appendChild(tip);
@@ -3416,8 +3767,9 @@ async function sendMsg() {
       if (e.name === 'AbortError') return;
       stopThinkingTimer();
       activeStreamAbort = null;
-      const le = document.querySelector("#messages .loading"); if (le) le.remove();
       if (currentAgentId === agentId && currentChatId === chatId) {
+        const streamingEl = document.getElementById("streamingMsg");
+        if (streamingEl) streamingEl.remove();
         const err = document.createElement("div"); err.className = "msg ai";
         err.textContent = agent.aiConfig.type === "emotion" ? "网断了吧 连不上了" : "请求失败：" + e.message;
         document.getElementById("messages").appendChild(err);
@@ -3426,9 +3778,154 @@ async function sendMsg() {
   });
 }
 
+// ===== 搜索功能 =====
+let searchTimer = null;
+let searchScopeState = {
+  agentName: true,
+  agentDesc: true,
+  chatTitle: true,
+  message: true
+};
+
+function initSearchScopeToggle() {
+  const grid = document.getElementById('scopeGrid');
+  grid.querySelectorAll('.search-scope-option').forEach(opt => {
+    opt.addEventListener('click', function() {
+      const scope = this.dataset.scope;
+      searchScopeState[scope] = !searchScopeState[scope];
+      this.classList.toggle('checked', searchScopeState[scope]);
+      const keyword = document.getElementById('searchInput').value;
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        const results = performSearch(keyword);
+        renderSearchResults(results, keyword);
+      }, 300);
+    });
+  });
+}
+
+function performSearch(keyword) {
+  const lowerKeyword = keyword.toLowerCase().trim();
+  const results = [];
+  if (!lowerKeyword) return results;
+
+  agents.forEach(agent => {
+    const agentMatches = [];
+    if (searchScopeState.agentName && agent.name.toLowerCase().includes(lowerKeyword)) {
+      agentMatches.push({ type: 'agent_field', field: '名称', text: agent.name });
+    }
+    if (searchScopeState.agentDesc && agent.description && agent.description.toLowerCase().includes(lowerKeyword)) {
+      agentMatches.push({ type: 'agent_field', field: '描述', text: agent.description });
+    }
+    agent.chats.forEach(chat => {
+      const chatMatches = [];
+      if (searchScopeState.chatTitle && chat.title.toLowerCase().includes(lowerKeyword)) {
+        chatMatches.push({ type: 'chat_field', field: '标题', text: chat.title });
+      }
+      if (searchScopeState.message) {
+        chat.messages.forEach((msg, idx) => {
+          if (msg.content.toLowerCase().includes(lowerKeyword)) {
+            chatMatches.push({ type: 'message', role: msg.role, text: msg.content, msgIndex: idx, preview: msg.content.length > 80 ? msg.content.substring(0, 80) + '...' : msg.content });
+          }
+        });
+      }
+      if (chatMatches.length > 0) {
+        agentMatches.push({ type: 'chat', chatId: chat.id, chatTitle: chat.title, matches: chatMatches });
+      }
+    });
+    if (agentMatches.length > 0) {
+      results.push({ agentId: agent.id, agentName: agent.name, matches: agentMatches });
+    }
+  });
+  return results;
+}
+
+function highlightKeyword(text, keyword) {
+  if (!keyword.trim()) return text;
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`(${escaped})`, 'gi');
+  return text.replace(regex, '<span class="search-highlight">$1</span>');
+}
+
+function renderSearchResults(results, keyword) {
+  const container = document.getElementById('searchResults');
+  if (!keyword.trim()) { container.innerHTML = '<div class="search-empty">输入关键词开始搜索</div>'; return; }
+  if (results.length === 0) { container.innerHTML = '<div class="search-empty">未找到匹配结果</div>'; return; }
+
+  let totalCount = 0;
+  results.forEach(r => { totalCount += r.matches.length; });
+  let html = `<div style="font-size:calc(var(--font-size) - 2px);color:var(--subtext);margin-bottom:12px;padding:0 4px;">共找到 ${totalCount} 条匹配</div>`;
+
+  results.forEach(result => {
+    html += '<div class="search-result-group">';
+    html += `<div class="search-result-agent" data-agent-id="${result.agentId}">🔍 ${highlightKeyword(result.agentName, keyword)} <span class="count">${result.matches.length} 条</span></div>`;
+    result.matches.forEach(match => {
+      if (match.type === 'agent_field') {
+        html += `<div class="search-result-chat" data-agent-id="${result.agentId}" data-action="enter">${match.field}：${highlightKeyword(match.text, keyword)}</div>`;
+      } else if (match.type === 'chat') {
+        html += `<div class="search-result-chat" data-agent-id="${result.agentId}" data-chat-id="${match.chatId}" data-action="chat">💬 ${highlightKeyword(match.chatTitle, keyword)}</div>`;
+        match.matches.forEach(msgMatch => {
+          if (msgMatch.type === 'chat_field') {
+            html += `<div class="search-result-message" data-agent-id="${result.agentId}" data-chat-id="${match.chatId}" data-action="chat">${msgMatch.field}：${highlightKeyword(msgMatch.text, keyword)}</div>`;
+          } else if (msgMatch.type === 'message') {
+            const roleTag = msgMatch.role === 'user' ? '你' : 'AI';
+            const roleClass = msgMatch.role === 'user' ? 'user' : 'ai';
+            html += `<div class="search-result-message" data-agent-id="${result.agentId}" data-chat-id="${match.chatId}" data-msg-index="${msgMatch.msgIndex}" data-action="message"><span class="role-tag ${roleClass}">${roleTag}</span> ${highlightKeyword(msgMatch.preview, keyword)}</div>`;
+          }
+        });
+      }
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+
+  container.querySelectorAll('[data-action="enter"]').forEach(el => {
+    el.addEventListener('click', () => { const agentId = el.dataset.agentId; hideModal(document.getElementById('searchModal')); enterChat(agentId); });
+  });
+  container.querySelectorAll('[data-action="chat"]').forEach(el => {
+    el.addEventListener('click', () => { const agentId = el.dataset.agentId, chatId = el.dataset.chatId; hideModal(document.getElementById('searchModal')); const agent = agents.find(a => a.id === agentId); if (agent) { currentAgentId = agentId; currentChatId = chatId; document.getElementById('chatTitle').innerText = getCurrentChat().title; renderChatList(); renderMessages(); applyChatBackground(); document.getElementById('chatPage').classList.add('show'); } });
+  });
+  container.querySelectorAll('[data-action="message"]').forEach(el => {
+    el.addEventListener('click', () => { const agentId = el.dataset.agentId, chatId = el.dataset.chatId, msgIndex = parseInt(el.dataset.msgIndex); hideModal(document.getElementById('searchModal')); const agent = agents.find(a => a.id === agentId); if (agent) { currentAgentId = agentId; currentChatId = chatId; document.getElementById('chatTitle').innerText = getCurrentChat().title; renderChatList(); renderMessages(); applyChatBackground(); document.getElementById('chatPage').classList.add('show'); setTimeout(() => { const msgEls = document.querySelectorAll('#messages .msg'); if (msgEls[msgIndex]) { msgEls[msgIndex].classList.add('highlight'); msgEls[msgIndex].scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => msgEls[msgIndex].classList.remove('highlight'), 3000); } }, 100); } });
+  });
+}
+
+function initSearch() {
+  const searchInput = document.getElementById('searchInput');
+  function doSearch() { const keyword = searchInput.value; const results = performSearch(keyword); renderSearchResults(results, keyword); }
+  searchInput.addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(doSearch, 300); });
+  searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); clearTimeout(searchTimer); doSearch(); } });
+  document.getElementById('homeSearchBtn').onclick = () => { showModal(document.getElementById('searchModal')); setTimeout(() => searchInput.focus(), 300); };
+  document.getElementById('searchClose').onclick = () => { hideModal(document.getElementById('searchModal')); };
+  document.getElementById('searchModal').onclick = (e) => { if (e.target === document.getElementById('searchModal')) { hideModal(document.getElementById('searchModal')); } };
+  initSearchScopeToggle();
+}
+
+// ===== 输入框聚焦滚动 =====
+function initInputFocusScroll() {
+  const input = document.getElementById('input');
+  const messages = document.getElementById('messages');
+  input.addEventListener('focus', function() {
+    setTimeout(() => {
+      messages.scrollTop = messages.scrollHeight;
+      if (!messages.dataset.origPadding) { messages.dataset.origPadding = messages.style.paddingBottom || '20px'; }
+      messages.style.paddingBottom = '180px';
+    }, 350);
+  });
+  input.addEventListener('blur', function() { messages.style.paddingBottom = messages.dataset.origPadding || '20px'; });
+}
+
+// ===== 图片预览 =====
+function initImagePreview() {
+  const resultImg = document.getElementById('resultImg');
+  const previewModal = document.getElementById('previewModal');
+  const previewImg = document.getElementById('previewImg');
+  resultImg.addEventListener('click', function() { if (this.src && this.classList.contains('show')) { previewImg.src = this.src; showModal(previewModal); } });
+  previewModal.onclick = function(e) { if (e.target === previewModal) { hideModal(previewModal); } };
+}
+
 async function initAll() {
   await migrateOldData();
-
   config = JSON.parse(localStorage.getItem("config")) || config;
   if (config.specialMode === undefined) config.specialMode = false;
   if (config.enterToSend === undefined) config.enterToSend = true;
@@ -3441,7 +3938,6 @@ async function initAll() {
 
   applyTheme(); applyHomeBackground(); renderAgentList();
   startUsageTimer();
-
   setupInlineSelect('#aiTypeSelectBtn', '#aiTypeInlineOptions');
   setupInlineSelect('#aiGenderSelectBtn', '#aiGenderInlineOptions');
   setupInlineSelect('#editAiTypeSelectBtn', '#editAiTypeInlineOptions');
@@ -3452,137 +3948,48 @@ async function initAll() {
   startAgreementCheck();
 
   document.getElementById('openAgreementBtn').onclick = () => { hideModal(document.getElementById('modal')); openAgreement(false); };
-
-  document.getElementById("apiTag").onclick = async () => {
-    const input = await showPrompt("请输入", "验证码");
-    if (input === AUTH_CODE) { config.specialMode = true; saveData(); showToast("已激活", "success"); }
-    else if (input !== null) showToast("验证失败", "error");
-  };
-
+  document.getElementById("apiTag").onclick = async () => { const input = await showPrompt("请输入", "验证码"); if (input === AUTH_CODE) { config.specialMode = true; saveData(); showToast("已激活", "success"); } else if (input !== null) showToast("验证失败", "error"); };
   document.getElementById("toggleSidebar").onclick = () => { document.getElementById("sidebar").classList.add("open"); document.getElementById("overlay").classList.add("show"); };
   document.getElementById("collapseBtn").onclick = closeSidebar;
   document.getElementById("overlay").onclick = closeSidebar;
-
   document.getElementById("fontMinus").onclick = () => { if (config.fontSize > 8) setFontSize(config.fontSize - 1); };
   document.getElementById("fontPlus").onclick = () => setFontSize(config.fontSize + 1);
-
-  // 点击token数字直接输入
-  document.getElementById("tokenValue").onclick = async () => {
-    const input = await showPrompt("最大使用token", "输入token数量（0表示不限制）");
-    if (input !== null) {
-      const num = parseInt(input);
-      if (!isNaN(num) && num >= 0) {
-        config.maxTokens = num;
-        updateTokenDisplay();
-        saveData();
-      } else {
-        showToast('请输入有效的数字（0或正整数）', 'error');
-      }
-    }
-  };
-
+  document.getElementById("tokenValue").onclick = async () => { const input = await showPrompt("最大使用token", "输入token数量（0表示不限制）"); if (input !== null) { const num = parseInt(input); if (!isNaN(num) && num >= 0) { config.maxTokens = num; updateTokenDisplay(); saveData(); } else { showToast('请输入有效的数字（0或正整数）', 'error'); } } };
   function setFontSize(size) { config.fontSize = size; document.documentElement.style.setProperty('--font-size', size + 'px'); document.getElementById('fontSizeValue').textContent = size; saveData(); }
-
-  document.getElementById("newChat").onclick = () => {
-    const agent = getCurrentAgent();
-    const nc = { id: 'chat_' + Date.now(), title: '新对话', messages: [], pinned: false };
-    agent.chats.unshift(nc); currentChatId = nc.id; saveAgents();
-    renderChatList(); renderMessages(); applyChatBackground();
-    document.getElementById("chatTitle").innerText = nc.title; closeSidebar();
-  };
-
-  document.getElementById("openSettings").onclick = () => {
-    document.getElementById('devSwitch').onclick = () => { config.specialMode = !config.specialMode; document.getElementById('devSwitch').classList.toggle('checked', config.specialMode); document.getElementById('devControlBox').style.display = config.specialMode ? 'flex' : 'none'; saveData(); };
-    openSettingsPanel();
-  };
-
-  document.getElementById("modalSave").onclick = () => {
-    config.customApi = document.getElementById("customApiInput").value.trim();
-    saveData(); hideModal(document.getElementById("modal"));
-  };
+  document.getElementById("newChat").onclick = () => { const agent = getCurrentAgent(); const nc = { id: 'chat_' + Date.now(), title: '新对话', messages: [], pinned: false }; agent.chats.unshift(nc); currentChatId = nc.id; saveAgents(); renderChatList(); renderMessages(); applyChatBackground(); document.getElementById("chatTitle").innerText = nc.title; closeSidebar(); };
+  document.getElementById("openSettings").onclick = () => { document.getElementById('devSwitch').onclick = () => { config.specialMode = !config.specialMode; document.getElementById('devSwitch').classList.toggle('checked', config.specialMode); document.getElementById('devControlBox').style.display = config.specialMode ? 'flex' : 'none'; saveData(); }; openSettingsPanel(); };
+  document.getElementById("modalSave").onclick = () => { config.customApi = document.getElementById("customApiInput").value.trim(); saveData(); hideModal(document.getElementById("modal")); };
   document.getElementById("modalCancel").onclick = () => hideModal(document.getElementById("modal"));
-
   document.getElementById("send").onclick = sendMsg;
-
-  document.getElementById("input").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      if (config.enterToSend && !e.shiftKey) { e.preventDefault(); sendMsg(); }
-      else if (!config.enterToSend && e.shiftKey) { e.preventDefault(); sendMsg(); }
-    }
-  });
-
+  document.getElementById("input").addEventListener("keydown", (e) => { if (e.key === "Enter") { if (config.enterToSend && !e.shiftKey) { e.preventDefault(); sendMsg(); } else if (!config.enterToSend && e.shiftKey) { e.preventDefault(); sendMsg(); } } });
   document.getElementById('enterSendSwitch').onclick = () => { config.enterToSend = !config.enterToSend; document.getElementById('enterSendSwitch').classList.toggle('checked', config.enterToSend); saveData(); };
-
-  document.getElementById('genImgBtn').onclick = async () => {
-    const prompt = document.getElementById('imgPrompt').value.trim();
-    if (!prompt) { showToast('请输入', 'error'); return; }
-    const loading = document.getElementById('imgLoading'), img = document.getElementById('resultImg'), downloadBtn = document.getElementById('downloadImgBtn');
-    loading.style.display = 'block'; img.classList.remove('show'); downloadBtn.style.display = 'none';
-    try {
-      const res = await fetch('https://api.siliconflow.cn/v1/images/generations', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getEffectiveApiKey() }, body: JSON.stringify({ model: 'Kwai-Kolors/Kolors', prompt, image_size: '1024x1024', num_inference_steps: 28 }) });
-      const data = await res.json(); const url = data.images?.[0]?.url;
-      if (url) { lastGeneratedImageUrl = url; img.src = url; requestAnimationFrame(() => requestAnimationFrame(() => { img.classList.add('show'); downloadBtn.style.display = 'block'; })); }
-      else { showToast('生成失败', 'error'); }
-    } catch (e) { showToast('请求失败：' + e.message, 'error'); }
-    finally { loading.style.display = 'none'; }
-  };
-
+  document.getElementById('genImgBtn').onclick = async () => { const prompt = document.getElementById('imgPrompt').value.trim(); if (!prompt) { showToast('请输入', 'error'); return; } const loading = document.getElementById('imgLoading'), img = document.getElementById('resultImg'), downloadBtn = document.getElementById('downloadImgBtn'); loading.style.display = 'block'; img.classList.remove('show'); downloadBtn.style.display = 'none'; try { const res = await fetch('https://api.siliconflow.cn/v1/images/generations', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getEffectiveApiKey() }, body: JSON.stringify({ model: 'Kwai-Kolors/Kolors', prompt, image_size: '1024x1024', num_inference_steps: 28 }) }); const data = await res.json(); const url = data.images?.[0]?.url; if (url) { lastGeneratedImageUrl = url; img.src = url; requestAnimationFrame(() => requestAnimationFrame(() => { img.classList.add('show'); downloadBtn.style.display = 'block'; })); } else { showToast('生成失败', 'error'); } } catch (e) { showToast('请求失败：' + e.message, 'error'); } finally { loading.style.display = 'none'; } };
   document.getElementById('downloadImgBtn').onclick = () => { if (!lastGeneratedImageUrl) { showToast('没有可下载的图片', 'error'); return; } window.open(lastGeneratedImageUrl, '_blank'); showToast('已跳转浏览器，长按图片即可保存', 'success'); };
-
   document.getElementById("openRewardBtn").onclick = () => { showModal(document.getElementById("rewardModal")); hideModal(document.getElementById("modal")); };
   document.getElementById("closeReward").onclick = () => hideModal(document.getElementById("rewardModal"));
   document.getElementById("rewardModal").onclick = (e) => { if (e.target === document.getElementById("rewardModal")) hideModal(document.getElementById("rewardModal")); };
-
   document.getElementById("openNoticeBtn").onclick = () => { showNotice(false); closeSidebar(); };
   document.getElementById('closeConfigDetailBtn').onclick = () => hideModal(document.getElementById('chatConfigMask'));
-
   document.getElementById("themeSwitch").onclick = () => { config.lightMode = !config.lightMode; document.getElementById("themeSwitch").classList.toggle("checked", config.lightMode); applyTheme(); saveData(); };
-
   document.getElementById('changeAgeBtn').onclick = () => { hideModal(document.getElementById('modal')); showAgeConfirmModal(() => showToast('状态已更新', 'success')); };
-
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      const visibleModals = [
-        document.getElementById('modal'),
-        document.getElementById('agentModal'),
-        document.getElementById('editAgentModal'),
-        document.getElementById('promptModal'),
-        document.getElementById('chatConfigMask'),
-        document.getElementById('chatConfigModal'),
-        document.getElementById('rewardModal'),
-        document.getElementById('noticeModal'),
-        document.getElementById('renameModal'),
-        document.getElementById('restReminderModal'),
-        document.getElementById('helpTooltipModal'),
-        document.getElementById('shortcutModal'),
-        document.getElementById('confirmModal'),
-        document.getElementById('modelSelectModal'),
-      ];
-      for (let i = visibleModals.length - 1; i >= 0; i--) {
-        if (visibleModals[i].classList.contains('show')) { hideModal(visibleModals[i]); return; }
-      }
-      if (document.getElementById('imagePage').classList.contains('show')) {
-        document.getElementById('imagePage').classList.remove('show'); return;
-      }
-      if (document.getElementById('chatPage').classList.contains('show')) {
-        document.getElementById('chatPage').classList.remove('show'); closeSidebar(); renderAgentList(); return;
-      }
+      const visibleModals = [document.getElementById('modal'), document.getElementById('agentModal'), document.getElementById('editAgentModal'), document.getElementById('promptModal'), document.getElementById('chatConfigMask'), document.getElementById('chatConfigModal'), document.getElementById('rewardModal'), document.getElementById('noticeModal'), document.getElementById('renameModal'), document.getElementById('restReminderModal'), document.getElementById('helpTooltipModal'), document.getElementById('shortcutModal'), document.getElementById('confirmModal'), document.getElementById('modelSelectModal'), document.getElementById('searchModal'), document.getElementById('previewModal')];
+      for (let i = visibleModals.length - 1; i >= 0; i--) { if (visibleModals[i].classList.contains('show')) { hideModal(visibleModals[i]); return; } }
+      if (document.getElementById('imagePage').classList.contains('show')) { document.getElementById('imagePage').classList.remove('show'); return; }
+      if (document.getElementById('chatPage').classList.contains('show')) { document.getElementById('chatPage').classList.remove('show'); closeSidebar(); renderAgentList(); return; }
     }
     if (e.ctrlKey && (e.key === '=' || e.key === '+')) { e.preventDefault(); if (config.fontSize < 32) { config.fontSize++; document.documentElement.style.setProperty('--font-size', config.fontSize + 'px'); document.getElementById('fontSizeValue').textContent = config.fontSize; saveData(); } }
     if (e.ctrlKey && e.key === '-') { e.preventDefault(); if (config.fontSize > 8) { config.fontSize--; document.documentElement.style.setProperty('--font-size', config.fontSize + 'px'); document.getElementById('fontSizeValue').textContent = config.fontSize; saveData(); } }
   });
+  initSearch();
+  initInputFocusScroll();
+  initImagePreview();
 }
 
 let ageConfirmCallback = null;
-
 function showAgeConfirmModal(callback) { ageConfirmCallback = callback; showModal(document.getElementById('confirmAgeModal')); }
-
-function handleAgeChoice(isAdult) {
-  config.isAdult = isAdult; saveData(); hideModal(document.getElementById('confirmAgeModal'));
-  if (!isAdult && getCurrentAgent()?.aiConfig?.type === 'emotion') document.getElementById('chatPage').classList.remove('show');
-  if (ageConfirmCallback) { ageConfirmCallback(); ageConfirmCallback = null; }
-}
-
+function handleAgeChoice(isAdult) { config.isAdult = isAdult; saveData(); hideModal(document.getElementById('confirmAgeModal')); if (!isAdult && getCurrentAgent()?.aiConfig?.type === 'emotion') document.getElementById('chatPage').classList.remove('show'); if (ageConfirmCallback) { ageConfirmCallback(); ageConfirmCallback = null; } }
 document.getElementById('confirmAgeBtnAdult').onclick = () => handleAgeChoice(true);
 document.getElementById('confirmAgeBtnMinor').onclick = () => handleAgeChoice(false);
 
