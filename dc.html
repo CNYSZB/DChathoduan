@@ -2577,7 +2577,7 @@ Ctrl + 减号 — 缩小字体</div>
 </div>
 
 <script>
-const APP_VERSION = '2.5.2';
+const APP_VERSION = '2.5.0';
 
 const PRESET_API_KEYS = {
   default: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd",
@@ -2722,17 +2722,98 @@ const DEFAULT_STYLE = {
 const DEFAULT_TEMPERATURE = { emotion: 1.1, tool: 0.4 };
 const AUTH_CODE = "258456";
 
-let config = JSON.parse(localStorage.getItem("config")) || {
-  apiLine: 'default',
-  customApi: '',
-  customModel: '',
-  fontSize: 16,
-  specialMode: false,
-  lightMode: false,
-  homeBackground: null,
-  enterToSend: true,
-  maxTokens: 1000
-};
+// ===== [FIX] config 默认值统一在这里，不再分散 =====
+function getDefaultConfig() {
+  return {
+    apiLine: 'default',
+    customApi: '',
+    customModel: '',
+    fontSize: 16,
+    specialMode: false,
+    lightMode: false,
+    homeBackground: null,
+    enterToSend: true,
+    maxTokens: 1000,
+    isAdult: undefined
+  };
+}
+
+let config = {};
+
+// ===== [FIX] 修复数据：补全所有缺失字段，统一入口 =====
+function repairConfigData() {
+  const defaultCfg = getDefaultConfig();
+  const stored = JSON.parse(localStorage.getItem("config"));
+  if (!stored || typeof stored !== 'object') {
+    config = { ...defaultCfg };
+  } else {
+    config = { ...defaultCfg, ...stored };
+    // 确保所有字段存在（防止旧数据缺字段）
+    for (const key of Object.keys(defaultCfg)) {
+      if (config[key] === undefined) {
+        config[key] = defaultCfg[key];
+      }
+    }
+  }
+  saveData();
+}
+
+function repairAgentsData() {
+  if (!Array.isArray(agents)) {
+    agents = [];
+    saveAgents();
+    return;
+  }
+  agents.forEach(agent => {
+    if (!agent.avatar || agent.avatar === 'dx.png' || agent.avatar === 'tx.png') {
+      agent.avatar = defaultAvatarData;
+    }
+    if (agent.chatBackground === undefined) {
+      agent.chatBackground = null;
+    }
+    if (agent.pinned === undefined) {
+      agent.pinned = false;
+    }
+    if (!agent.aiConfig) {
+      agent.aiConfig = { type: 'emotion', gender: 'neutral', style: DEFAULT_STYLE.emotion, temperature: DEFAULT_TEMPERATURE.emotion };
+    }
+    if (!agent.aiConfig.style) {
+      agent.aiConfig.style = DEFAULT_STYLE[agent.aiConfig.type] || DEFAULT_STYLE.emotion;
+    }
+    if (agent.aiConfig.temperature === undefined) {
+      agent.aiConfig.temperature = agent.aiConfig.type === 'tool' ? DEFAULT_TEMPERATURE.tool : DEFAULT_TEMPERATURE.emotion;
+    }
+    if (!Array.isArray(agent.chats)) {
+      agent.chats = [];
+    }
+    agent.chats.forEach(chat => {
+      if (chat.pinned === undefined) chat.pinned = false;
+      if (!Array.isArray(chat.messages)) chat.messages = [];
+    });
+    // 确保至少有一个对话
+    if (agent.chats.length === 0) {
+      agent.chats.push({ id: 'chat_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6), title: '新对话', messages: [], pinned: false });
+    }
+  });
+  saveAgents();
+}
+
+// ===== [FIX] searchScopeState 持久化 =====
+function loadSearchScopeState() {
+  const stored = localStorage.getItem('searchScopeState');
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch(e) {}
+  }
+  return { agentName: true, agentDesc: true, chatTitle: true, message: true };
+}
+
+function saveSearchScopeState() {
+  localStorage.setItem('searchScopeState', JSON.stringify(searchScopeState));
+}
+
+let searchScopeState = loadSearchScopeState();
 
 function getEffectiveApiKey() {
   if (config.apiLine === 'custom' && config.customApi) {
@@ -2915,38 +2996,51 @@ function loadDefaultAvatar() {
 
 async function migrateOldData() {
   await loadDefaultAvatar();
+
+  // 修复 config
+  repairConfigData();
+
+  // 迁移旧版 chats 数据
   const oldChats = JSON.parse(localStorage.getItem("chats"));
   if (oldChats && !localStorage.getItem("agents")) {
     agents = oldChats.map((chat, index) => ({
-      id: 'agent_' + Date.now() + index, name: chat.title + '（旧版）', avatar: defaultAvatarData,
+      id: 'agent_' + Date.now() + index,
+      name: chat.title + '（旧版）',
+      avatar: defaultAvatarData,
       description: '从旧版对话迁移',
       aiConfig: chat.aiConfig || { type: 'emotion', gender: 'neutral', style: DEFAULT_STYLE.emotion, temperature: DEFAULT_TEMPERATURE.emotion },
       chats: [{ id: 'chat_' + Date.now() + index, title: chat.title, messages: chat.messages || [], pinned: chat.pinned || false }],
-      pinned: false, createdAt: Date.now(), chatBackground: null
+      pinned: false,
+      createdAt: Date.now(),
+      chatBackground: null
     }));
-    saveAgents(); localStorage.removeItem("chats");
+    saveAgents();
+    localStorage.removeItem("chats");
   } else {
     agents = JSON.parse(localStorage.getItem("agents")) || [];
-    agents.forEach(agent => {
-      if (!agent.avatar || agent.avatar === 'dx.png' || agent.avatar === 'tx.png') agent.avatar = defaultAvatarData;
-      if (agent.chatBackground === undefined) agent.chatBackground = null;
-    });
   }
+
+  // 修复 agents 数据
+  repairAgentsData();
+
+  // 确保至少有一个智能体
   if (agents.length === 0) {
     agents.push({
-      id: 'agent_default', name: '情感陪伴助手', avatar: defaultAvatarData,
+      id: 'agent_default',
+      name: '情感陪伴助手',
+      avatar: defaultAvatarData,
       description: '一个善解人意的聊天伙伴',
       aiConfig: { type: 'emotion', gender: 'neutral', style: DEFAULT_STYLE.emotion, temperature: DEFAULT_TEMPERATURE.emotion },
       chats: [{ id: 'chat_default', title: '新对话', messages: [], pinned: false }],
-      pinned: false, createdAt: Date.now(), chatBackground: null
+      pinned: false,
+      createdAt: Date.now(),
+      chatBackground: null
     });
     saveAgents();
   }
-  if (config.homeBackground === undefined) config.homeBackground = null;
-  if (config.apiLine === undefined) config.apiLine = 'default';
-  if (config.customApi === undefined) config.customApi = '';
-  if (config.customModel === undefined) config.customModel = '';
-  if (config.maxTokens === undefined) config.maxTokens = 1000;
+
+  // 修复 searchScopeState
+  searchScopeState = loadSearchScopeState();
 }
 
 function saveAgents() { localStorage.setItem("agents", JSON.stringify(agents)); }
@@ -3307,7 +3401,6 @@ function renderChatList() {
   [...agent.chats].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)).forEach(chat => {
     const item = document.createElement("div");
     item.className = 'chat-item ' + (chat.pinned ? 'pinned' : '') + ' ' + (chat.id === currentChatId ? 'active' : '');
-    // 已移除 ⚙ 按钮
     let ah = '<span class="rename" data-id="' + chat.id + '">✏️</span>';
     ah += '<span class="del" data-id="' + chat.id + '">✕</span>';
     item.innerHTML = '<div class="chat-item-left"><span class="pin-icon ' + (chat.pinned ? 'pinned' : '') + '" data-id="' + chat.id + '">📌</span><span class="chat-title-text">' + chat.title + '</span></div><div class="chat-item-actions">' + ah + '</div>';
@@ -3599,7 +3692,6 @@ function stopThinkingTimer() {
   if (thinkingTimer) { clearInterval(thinkingTimer); thinkingTimer = null; }
 }
 
-// 流式加载直接复用 AI 气泡
 async function sendMsg() {
   if (activeStreamAbort) {
     activeStreamAbort.abort();
@@ -3634,7 +3726,6 @@ async function sendMsg() {
   document.getElementById("input").value = ""; saveAgents();
   hasReceivedContent = false;
 
-  // 直接创建 AI 气泡
   if (currentAgentId === agentId && currentChatId === chatId) {
     renderMessages();
     const aiMsg = document.createElement("div");
@@ -3780,12 +3871,6 @@ async function sendMsg() {
 
 // ===== 搜索功能 =====
 let searchTimer = null;
-let searchScopeState = {
-  agentName: true,
-  agentDesc: true,
-  chatTitle: true,
-  message: true
-};
 
 function initSearchScopeToggle() {
   const grid = document.getElementById('scopeGrid');
@@ -3794,6 +3879,7 @@ function initSearchScopeToggle() {
       const scope = this.dataset.scope;
       searchScopeState[scope] = !searchScopeState[scope];
       this.classList.toggle('checked', searchScopeState[scope]);
+      saveSearchScopeState();
       const keyword = document.getElementById('searchInput').value;
       clearTimeout(searchTimer);
       searchTimer = setTimeout(() => {
@@ -3901,7 +3987,6 @@ function initSearch() {
   initSearchScopeToggle();
 }
 
-// ===== 输入框聚焦滚动 =====
 function initInputFocusScroll() {
   const input = document.getElementById('input');
   const messages = document.getElementById('messages');
@@ -3915,7 +4000,6 @@ function initInputFocusScroll() {
   input.addEventListener('blur', function() { messages.style.paddingBottom = messages.dataset.origPadding || '20px'; });
 }
 
-// ===== 图片预览 =====
 function initImagePreview() {
   const resultImg = document.getElementById('resultImg');
   const previewModal = document.getElementById('previewModal');
@@ -3926,16 +4010,8 @@ function initImagePreview() {
 
 async function initAll() {
   await migrateOldData();
-  config = JSON.parse(localStorage.getItem("config")) || config;
-  if (config.specialMode === undefined) config.specialMode = false;
-  if (config.enterToSend === undefined) config.enterToSend = true;
-  if (config.lightMode === undefined) config.lightMode = false;
-  if (config.homeBackground === undefined) config.homeBackground = null;
-  if (config.apiLine === undefined) config.apiLine = 'default';
-  if (config.customApi === undefined) config.customApi = '';
-  if (config.customModel === undefined) config.customModel = '';
-  if (config.maxTokens === undefined) config.maxTokens = 1000;
 
+  // 数据已在 migrateOldData 中修复，这里不再重复兜底
   applyTheme(); applyHomeBackground(); renderAgentList();
   startUsageTimer();
   setupInlineSelect('#aiTypeSelectBtn', '#aiTypeInlineOptions');
@@ -3999,9 +4075,7 @@ window.onload = async () => {
   const today = mourningDays.find(d => d.month === month && d.day === day);
   if (today) { document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:48px;margin-bottom:20px;">🕯️</div><div style="font-size:20px;font-weight:600;color:#e0e0e0;margin-bottom:8px;">沉痛缅怀</div><div style="font-size:15px;color:#a0a0a0;">' + today.subtitle + '</div><div style="font-size:14px;color:#a0a0a0;">灾难纪念日，软件暂停使用一天</div></div>'; return; }
   document.getElementById("app").style.display = "block";
-  config = JSON.parse(localStorage.getItem("config")) || config;
-  if (config.customModel === undefined) config.customModel = '';
-  if (config.maxTokens === undefined) config.maxTokens = 1000;
+  // 不再重复解析 config，migrateOldData 里已经修复
   const needAgeConfirm = (config.isAdult === undefined || config.isAdult === null);
   if (needAgeConfirm) { showAgeConfirmModal(() => { initAll(); setTimeout(() => showNotice(true), 500); }); }
   else { initAll(); setTimeout(() => showNotice(true), 500); }
