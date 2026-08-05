@@ -5,16 +5,2592 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>dct</title>
 <style>
-  /* ===== 完整 CSS 同上一次，为了节省字数此处省略，你直接用上一次的 CSS 即可 ===== */
-  /* 请保留上一次完整代码里的所有 CSS 样式 */
+  @font-face {
+    font-family: 'aacuhei';
+    src: url('aacuhei.ttf') format('truetype');
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .bracket-content {
+    font-style: italic;
+    color: #888;
+  }
+  body.light-mode .bracket-content {
+    color: #999;
+  }
+
+  .api-select-wrap {
+    margin-top: 16px;
+  }
+  .api-select-wrap label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    font-weight: 500;
+  }
+  .api-select-btn {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    font-size: var(--font-size);
+    outline: none;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .api-select-btn::after {
+    content: '▼';
+    font-size: 12px;
+    color: var(--subtext);
+  }
+  .custom-api-input {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: #fff;
+    outline: none;
+    font-size: var(--font-size);
+    margin-top: 8px;
+    display: none;
+  }
+  .custom-api-input.show {
+    display: block;
+  }
+
+  .custom-model-wrap {
+    margin-top: 8px;
+    display: none;
+  }
+  .custom-model-wrap.show {
+    display: block;
+  }
+  .custom-model-wrap label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    font-weight: 500;
+  }
+  .custom-model-display {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    font-size: var(--font-size);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 48px;
+  }
+  .custom-model-display::after {
+    content: '✎';
+    font-size: 14px;
+    color: var(--subtext);
+  }
+  .custom-model-display.placeholder {
+    color: #5a5c64;
+  }
+
+  #modelSelectModal .modal-box {
+    max-width: 380px;
+  }
+  .model-select-title {
+    font-size: calc(var(--font-size) + 4px);
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .model-select-subtitle {
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .model-option-btn {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    color: var(--text);
+    font-size: var(--font-size);
+    cursor: pointer;
+    text-align: left;
+    margin-bottom: 10px;
+    transition: background 0.15s ease;
+    line-height: 1.4;
+  }
+  .model-option-btn:active {
+    background: var(--primary-bg);
+    border-color: var(--primary);
+  }
+  .model-option-btn .model-name {
+    font-weight: 600;
+    display: block;
+  }
+  .model-option-btn .model-desc {
+    font-size: calc(var(--font-size) - 3px);
+    color: var(--subtext);
+    display: block;
+    margin-top: 2px;
+  }
+  .model-option-btn.custom-model-btn {
+    text-align: center;
+    font-weight: 500;
+  }
+
+  /* 代码块样式 */
+  .code-block-wrap {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  body.light-mode .code-block-wrap {
+    background: #f6f8fa;
+    border-color: #d0d7de;
+  }
+  .code-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 14px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+  }
+  body.light-mode .code-block-header {
+    background: #eaeef2;
+    border-color: #d0d7de;
+  }
+  .code-lang-tag {
+    font-size: 11px;
+    color: #8b949e;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .code-copy-btn {
+    font-size: 11px;
+    padding: 4px 10px;
+    background: #21262d;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  body.light-mode .code-copy-btn {
+    background: #ffffff;
+    color: #24292f;
+    border-color: #d0d7de;
+  }
+  .code-copy-btn:active {
+    background: #30363d;
+  }
+  .code-block-body {
+    padding: 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .code-block-body pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .code-block-body code {
+    font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+    font-size: 13px;
+    color: #c9d1d9;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  body.light-mode .code-block-body code {
+    color: #24292f;
+  }
+
+  .email-row {
+    margin-top: 12px;
+    cursor: pointer;
+    color: var(--subtext);
+    transition: opacity 0.15s ease;
+    line-height: 1.5;
+  }
+  .email-row:active {
+    opacity: 0.7;
+  }
+  .email-row-line1 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-size);
+  }
+  .email-row-line1 svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+  .email-row-line2 {
+    font-size: calc(var(--font-size) - 2px);
+    margin-top: 2px;
+    opacity: 0.8;
+    word-break: break-all;
+  }
+
+  .page, .modal-box, .msg, .toast, .chat-item, button, .agent-card {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  :root {
+    --bg: #0a0a0c;
+    --surface: #14161a;
+    --surface-light: #1a1c22;
+    --border: #2a2c33;
+    --text: #f0f0f5;
+    --subtext: #9898a0;
+    --primary: #3E9AE2;
+    --primary-bg: #1a3a5c;
+    --danger: #ff4444;
+    --bubble-user: #1a4a6e;
+    --bubble-ai: #1e2026;
+    --font-size: 16px;
+  }
+
+  body.light-mode {
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --surface-light: #f0f0f2;
+    --border: #d1d1d6;
+    --text: #1c1c1e;
+    --subtext: #6e6e73;
+    --primary: #0071e3;
+    --primary-bg: #e8f2fd;
+    --danger: #ff3b30;
+    --bubble-user: #0071e3;
+    --bubble-ai: #e9e9eb;
+  }
+
+  body.light-mode .homeActionBtn { color: var(--text); }
+  body.light-mode .fab { color: var(--text); }
+  body.light-mode #imgPrompt { color: var(--text); }
+  body.light-mode #imgPrompt::placeholder { color: #8e8e93; }
+  body.light-mode #input { color: var(--text); }
+  body.light-mode #input::placeholder { color: #8e8e93; }
+  body.light-mode .modal-body input,
+  body.light-mode .modal-body textarea,
+  body.light-mode #promptInput,
+  body.light-mode #agentNameInput,
+  body.light-mode #agentDescInput,
+  body.light-mode #agentAiStyleInput,
+  body.light-mode #editAgentNameInput,
+  body.light-mode #editAgentDescInput,
+  body.light-mode #editAgentAiStyleInput,
+  body.light-mode #renameInput,
+  body.light-mode #chatConfigAiStyleInput { color: var(--text); }
+  body.light-mode .modal-body input::placeholder,
+  body.light-mode .modal-body textarea::placeholder,
+  body.light-mode #promptInput::placeholder,
+  body.light-mode #agentNameInput::placeholder,
+  body.light-mode #agentDescInput::placeholder,
+  body.light-mode #agentAiStyleInput::placeholder,
+  body.light-mode #editAgentNameInput::placeholder,
+  body.light-mode #editAgentDescInput::placeholder,
+  body.light-mode #editAgentAiStyleInput::placeholder,
+  body.light-mode #renameInput::placeholder,
+  body.light-mode #chatConfigAiStyleInput::placeholder { color: #8e8e93; }
+  body.light-mode .select-btn { color: var(--text); }
+  body.light-mode .inline-select-option { color: var(--text); border-color: var(--border); }
+  body.light-mode .switch-box span { color: var(--text); }
+  body.light-mode .prompt-value { color: var(--text); }
+  body.light-mode .config-item-value { color: var(--text); }
+  body.light-mode .chat-item .del,
+  body.light-mode .chat-item .rename { color: var(--primary); }
+  body.light-mode .chat-item .del { color: var(--danger); }
+  body.light-mode .agent-actions span { color: var(--text); }
+  body.light-mode .toast { color: #fff; }
+  body.light-mode .side-btn,
+  body.light-mode .new-chat,
+  body.light-mode .notice-btn { color: var(--text); }
+  body.light-mode #toggleSidebar,
+  body.light-mode #homeBtn,
+  body.light-mode #collapseBtn { color: var(--text); }
+  body.light-mode #genImgBtn { color: #fff; }
+  body.light-mode .api-tag { color: var(--primary); }
+  body.light-mode #closeReward { color: #fff; }
+  body.light-mode .api-select-btn { color: var(--text); }
+  body.light-mode .custom-api-input { color: var(--text); }
+  body.light-mode .custom-api-input::placeholder { color: #8e8e93; }
+  body.light-mode .custom-model-display { color: var(--text); }
+  body.light-mode .custom-model-display.placeholder { color: #8e8e93; }
+  body.light-mode .model-option-btn { color: var(--text); }
+  body.light-mode .email-row { color: var(--subtext); }
+
+  body {
+    font-family: 'aacuhei', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    font-size: var(--font-size);
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(62, 154, 226, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  body.light-mode::before {
+    background:
+      radial-gradient(circle at 20% 30%, rgba(0, 113, 227, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(0, 113, 227, 0.04) 0%, transparent 50%);
+  }
+
+  #splash {
+    position: fixed;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: #000;
+    z-index: 9999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+  #splashIcon {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  #splash.show #splashIcon {
+    opacity: 1;
+    transform: scale(1);
+  }
+  #splash.fade {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #pageContainer {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    background: transparent;
+  }
+  #homePage {
+    transform: translateX(0);
+    z-index: 1;
+    background-color: #0a0a0c;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  body.light-mode #homePage { background-color: var(--bg); }
+  #chatPage {
+    transform: translateX(100%);
+    z-index: 2;
+    background-color: #0a0a0c;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  body.light-mode #chatPage { background-color: var(--bg); }
+  #imagePage {
+    transform: translateX(100%);
+    z-index: 3;
+    background: #0a0a0c;
+  }
+  body.light-mode #imagePage { background: var(--bg); }
+  #chatPage.show, #imagePage.show { transform: translateX(0); }
+
+  body.has-home-bg .homeActionBtn,
+  body.has-home-bg .fab,
+  body.has-home-bg .agent-actions span,
+  body.has-home-bg .bottom-delete-bar,
+  body.has-home-bg #bottomDeleteBar {
+    background: rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  }
+  body.has-home-bg.light-mode .homeActionBtn,
+  body.has-home-bg.light-mode .fab,
+  body.has-home-bg.light-mode .agent-actions span,
+  body.has-home-bg.light-mode .bottom-delete-bar,
+  body.has-home-bg.light-mode #bottomDeleteBar {
+    background: rgba(0, 0, 0, 0.08) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  }
+
+  body.has-chat-bg .chat-header,
+  body.has-chat-bg .input-bar,
+  body.has-chat-bg #toggleSidebar,
+  body.has-chat-bg .api-tag,
+  body.has-chat-bg #send {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+  }
+  body.has-chat-bg .msg {
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  }
+  body.has-chat-bg .msg.user {
+    background: rgba(26, 74, 110, 0.5) !important;
+  }
+  body.has-chat-bg .msg.ai {
+    background: rgba(20, 22, 26, 0.5) !important;
+  }
+  body.has-chat-bg .loading {
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  }
+  body.has-chat-bg.light-mode .chat-header,
+  body.has-chat-bg.light-mode .input-bar,
+  body.has-chat-bg.light-mode #toggleSidebar,
+  body.has-chat-bg.light-mode .api-tag,
+  body.has-chat-bg.light-mode #send {
+    background: rgba(0, 0, 0, 0.06) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+  }
+  body.has-chat-bg.light-mode .msg {
+    background: rgba(0, 0, 0, 0.04) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  }
+  body.has-chat-bg.light-mode .msg.user {
+    background: rgba(0, 113, 227, 0.4) !important;
+  }
+  body.has-chat-bg.light-mode .msg.ai {
+    background: rgba(233, 233, 235, 0.5) !important;
+  }
+  body.has-chat-bg.light-mode .loading {
+    background: rgba(0, 0, 0, 0.04) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  }
+
+  .homeWrap {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .homeHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .homeTitle { font-size: 22px; font-weight: 700; }
+  .homeActions { display: flex; gap: 12px; }
+  .homeActionBtn {
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: calc(var(--font-size) - 2px);
+    font-weight: 500;
+    transition: transform 0.15s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  body.light-mode .homeActionBtn { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+  .homeActionBtn:active { transform: scale(0.96); }
+  #multiSelectBtn.active { background: #3a2a1a; }
+  #cancelMultiBtn { display: none; }
+  #cancelMultiBtn.show { display: block; }
+
+  #agentList {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 100px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .agent-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    position: relative;
+  }
+  body.light-mode .agent-card { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); }
+  .agent-card.pinned { border-left: 4px solid #FFD700; }
+  .agent-card.selected {
+    background: #1a2a3a;
+    border: 1px solid var(--primary);
+  }
+  body.light-mode .agent-card.selected { background: #e8f2fd; }
+  .agent-checkbox {
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    border: 2px solid #3a3c44;
+    background: #1a1c22;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .multi-select-mode .agent-checkbox { display: flex; }
+  .agent-checkbox.checked { background: var(--primary); border-color: var(--primary); }
+  .agent-checkbox.checked::after { content: '✓'; }
+  .agent-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+  }
+  .agent-info { flex: 1; overflow: hidden; }
+  .agent-name { font-size: calc(var(--font-size) + 0px); font-weight: 600; margin-bottom: 4px; }
+  .agent-desc {
+    font-size: calc(var(--font-size) - 4px);
+    color: var(--subtext);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .agent-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .multi-select-mode .agent-actions { display: none; }
+  .agent-actions span {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-light);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    border: 1px solid var(--border);
+  }
+  .agent-actions span:active { transform: scale(0.9); }
+
+  .fab-container {
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 100;
+  }
+  .fab {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    background: var(--primary-bg);
+    border: 1px solid var(--border);
+    color: #fff;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.15s ease;
+  }
+  body.light-mode .fab { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+  .fab:active { transform: scale(0.92); }
+  .fab.gen-img { background: #2a1a4a; color: #fff; }
+  body.light-mode .fab.gen-img { background: #e8e0f7; color: var(--text); }
+
+  .bottom-delete-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 16px 20px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 101;
+  }
+  .bottom-delete-bar.show { display: flex; }
+  #selectedCount { color: var(--primary); }
+  #confirmDeleteBtn {
+    background: var(--danger);
+    padding: 12px 24px;
+    border-radius: 30px;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  #agreementOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  #agreementOverlay.hidden { display: none; }
+  #agreementBox {
+    background: #14161a;
+    border: 1px solid #2a2c33;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 420px;
+    height: 80vh;
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  }
+  body.light-mode #agreementBox { box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+  #agreementIframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+  }
+
+  .creator-only { display: none; }
+  .creator-mode .creator-only { display: block; }
+  .creator-mode .creator-only-flex { display: flex; }
+
+  #downloadImgBtn {
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    padding: 14px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-bottom: 16px;
+    font-size: var(--font-size);
+    font-weight: 600;
+    display: none;
+    text-align: center;
+  }
+  #downloadImgBtn:active { transform: scale(0.97); }
+
+  .imgPageWrap {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .imgHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  #backBtnFromImg {
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    padding: 12px 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: var(--font-size);
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  body.light-mode #backBtnFromImg { color: var(--text); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+  #backBtnFromImg:active { transform: scale(0.96); }
+  .imgTitle { font-size: 22px; font-weight: 700; }
+  #imgPrompt {
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: #fff;
+    outline: none;
+    resize: none;
+    height: 120px;
+    margin-bottom: 16px;
+    font-size: var(--font-size);
+    box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  #imgPrompt::placeholder { color: #5a5c64; }
+  #genImgBtn {
+    background: #2a1a4a;
+    color: #fff;
+    border: 1px solid var(--border);
+    padding: 14px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-bottom: 16px;
+    font-size: var(--font-size);
+    font-weight: 600;
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
+  }
+  #genImgBtn:active { transform: scale(0.97); }
+  #imgLoading {
+    color: var(--subtext);
+    text-align: center;
+    padding: 10px;
+    display: none;
+  }
+  #imgResult {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--surface);
+    border-radius: 24px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  body.light-mode #imgResult { box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.06); }
+  #resultImg {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 16px;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+  body.light-mode #resultImg { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+  #resultImg.show { opacity: 1; transform: scale(1); }
+
+  #app {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+  }
+
+  #sidebar {
+    width: 280px;
+    height: 100vh;
+    background: var(--surface);
+    position: fixed;
+    left: 0; top: 0;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.35s ease;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    box-shadow: 20px 0 40px rgba(0, 0, 0, 0.5);
+    will-change: auto;
+  }
+  body.light-mode #sidebar { box-shadow: 10px 0 20px rgba(0, 0, 0, 0.08); }
+  #sidebar.open { transform: translateX(0); }
+  .side-header {
+    padding: 20px 16px;
+    font-size: calc(var(--font-size) + 4px);
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #collapseBtn, #homeBtn {
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: var(--font-size);
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backface-visibility: visible;
+    will-change: auto;
+    transform: none;
+  }
+  .side-header-actions { display: flex; gap: 8px; }
+  #collapseBtn:active, #homeBtn:active { transform: scale(0.92); }
+  .notice-btn {
+    margin: 12px;
+    padding: 12px;
+    background: #3a2a1a;
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: var(--font-size);
+    font-weight: 500;
+    cursor: pointer;
+  }
+  body.light-mode .notice-btn { background: #fef3e4; color: var(--text); }
+  .notice-btn:active { transform: scale(0.97); }
+  .new-chat {
+    margin: 12px;
+    padding: 12px;
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: var(--font-size);
+    font-weight: 500;
+    cursor: pointer;
+  }
+  body.light-mode .new-chat { color: var(--text); }
+  .new-chat:active { transform: scale(0.97); }
+  .chat-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px 0;
+    -webkit-overflow-scrolling: touch;
+  }
+  .chat-item {
+    padding: 14px 16px;
+    margin: 4px 8px;
+    border-radius: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: var(--font-size);
+    border: 1px solid transparent;
+  }
+  .chat-item.pinned { background: #2a2a1a; border-left: 3px solid #FFD700; }
+  body.light-mode .chat-item.pinned { background: #fefce8; }
+  .chat-item.active { background: #1a2a3a; border: 1px solid var(--primary); }
+  body.light-mode .chat-item.active { background: #e8f2fd; }
+  .chat-item-left { display: flex; align-items: center; gap: 8px; flex: 1; overflow: hidden; }
+  .pin-icon { color: #FFD700; font-size: 14px; cursor: pointer; opacity: 0.4; flex-shrink: 0; }
+  .pin-icon.pinned { opacity: 1; }
+  .chat-title-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chat-item-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .chat-item .del { color: var(--danger); font-size: var(--font-size); cursor: pointer; }
+  .chat-item .rename { color: var(--primary); font-size: var(--font-size); cursor: pointer; }
+  .side-bottom { padding: 16px 12px; border-top: 1px solid var(--border); }
+  .side-btn {
+    padding: 12px;
+    background: var(--surface-light);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    width: 100%;
+    margin-bottom: 8px;
+    font-size: var(--font-size);
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .side-btn:active { transform: scale(0.97); }
+
+  #overlay {
+    position: fixed;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s;
+    z-index: 999;
+  }
+  #overlay.show { opacity: 1; visibility: visible; }
+
+  #chat-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  .chat-header {
+    background: var(--surface);
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+  }
+  #toggleSidebar {
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 22px;
+    margin-right: 16px;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #toggleSidebar:active { transform: scale(0.94); }
+  .chat-title { flex: 1; text-align: center; font-size: calc(var(--font-size) + 4px); font-weight: 700; }
+  .api-tag {
+    font-size: calc(var(--font-size) - 4px);
+    color: var(--primary);
+    margin-left: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    cursor: pointer;
+    background: var(--primary-bg);
+  }
+
+  #messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    -webkit-overflow-scrolling: touch;
+    transition: padding-bottom 0.2s ease;
+  }
+
+  .msg {
+    max-width: 85%;
+    padding: 14px 18px;
+    border-radius: 24px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
+    font-size: var(--font-size);
+    line-height: 1.5;
+    border: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.25s ease forwards;
+  }
+  .msg.user { background: var(--bubble-user); color: #fff; align-self: flex-end; border-bottom-right-radius: 8px; }
+  .msg.ai { background: var(--bubble-ai); color: var(--text); align-self: flex-start; border-bottom-left-radius: 8px; }
+  .loading {
+    max-width: 85%;
+    background: var(--bubble-ai);
+    padding: 14px 18px;
+    border-radius: 24px;
+    border-bottom-left-radius: 8px;
+    color: var(--subtext);
+    align-self: flex-start;
+    font-size: var(--font-size);
+    border: 1px solid var(--border);
+  }
+
+  .input-bar { padding: 16px 20px; background: var(--surface); border-top: 1px solid var(--border); }
+  .input-wrapper { display: flex; gap: 12px; align-items: flex-end; }
+  #bracketBtn {
+    width: 48px;
+    height: 48px;
+    border-radius: 30px;
+    background: var(--surface-light);
+    color: var(--text);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    letter-spacing: 2px;
+  }
+  #bracketBtn:active { transform: scale(0.92); background: var(--primary-bg); }
+  #input {
+    flex: 1;
+    min-height: 48px;
+    max-height: 120px;
+    padding: 14px 18px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    color: #fff;
+    outline: none;
+    resize: none;
+    font-size: var(--font-size);
+    line-height: 1.5;
+  }
+  #input::placeholder { color: #5a5c64; }
+  #send {
+    width: 52px;
+    height: 52px;
+    border-radius: 30px;
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 22px;
+    font-weight: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  #send:active { transform: scale(0.92); }
+
+  .base-modal, #chatConfigModal, #promptModal, #agentModal, #editAgentModal, #selectModal, #chatConfigEditModal, #confirmAgeModal, #restReminderModal, #confirmModal, #modelSelectModal {
+    position: fixed;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  .base-modal.show, #chatConfigModal.show, #promptModal.show, #agentModal.show, #editAgentModal.show, #selectModal.show, #chatConfigEditModal.show, #confirmAgeModal.show, #restReminderModal.show, #confirmModal.show, #modelSelectModal.show { opacity: 1; visibility: visible; }
+
+  .modal-box, .config-modal-box, #chatConfigDetail, #confirmBox {
+    background: var(--surface);
+    width: 90%;
+    max-width: 360px;
+    max-height: 85vh;
+    padding: 24px;
+    border-radius: 32px;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+  body.light-mode .modal-box,
+  body.light-mode .config-modal-box,
+  body.light-mode #chatConfigDetail,
+  body.light-mode #confirmBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
+  .base-modal.show .modal-box,
+  .base-modal.show .config-modal-box,
+  #chatConfigModal.show .config-modal-box,
+  #promptModal.show .modal-box,
+  #agentModal.show .modal-box,
+  #editAgentModal.show .modal-box,
+  #selectModal.show .modal-box,
+  #chatConfigEditModal.show .modal-box,
+  #confirmAgeModal.show .modal-box,
+  #restReminderModal.show .modal-box,
+  #confirmModal.show #confirmBox,
+  #modelSelectModal.show .modal-box { transform: scale(1); }
+
+  #confirmBox {
+    max-width: 340px;
+    text-align: center;
+    padding: 28px;
+  }
+  #confirmTitle {
+    font-size: calc(var(--font-size) + 4px);
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  #confirmMsg {
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  #confirmBtnGroup {
+    display: flex;
+    gap: 12px;
+  }
+  #confirmBtnGroup button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: var(--font-size);
+    font-weight: 500;
+    background: var(--surface-light);
+    color: var(--text);
+  }
+  #confirmBtnGroup button.primary {
+    background: var(--danger);
+    color: #fff;
+    border-color: var(--danger);
+  }
+  #confirmBtnGroup button:active { transform: scale(0.96); }
+
+  .modal-head, .config-detail-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .modal-head span, .config-detail-title span { font-size: calc(var(--font-size) + 4px); font-weight: 700; }
+  .modal-close, .config-detail-close { display: none; }
+
+  .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-right: 4px;
+  }
+  .modal-body label, .config-item label {
+    display: block;
+    margin-top: 14px;
+    font-size: calc(var(--font-size) - 2px);
+    margin-bottom: 6px;
+    color: var(--subtext);
+    font-weight: 500;
+  }
+  .modal-body label:first-child { margin-top: 0; }
+  .modal-body input, .modal-body textarea, .config-item select, .config-item textarea, #promptInput {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: #fff;
+    outline: none;
+    font-size: var(--font-size);
+  }
+  .modal-body textarea { min-height: 80px; resize: none; }
+
+  .bg-btn {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    font-size: var(--font-size);
+    cursor: pointer;
+    text-align: center;
+    margin-top: 8px;
+  }
+  .bg-btn:active { transform: scale(0.97); }
+  .bg-btn.reset { border-color: var(--danger); color: var(--danger); }
+  .bg-preview {
+    width: 100%;
+    height: 80px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background-size: cover;
+    background-position: center;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--subtext);
+    font-size: 13px;
+  }
+
+  .select-btn {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: #fff;
+    font-size: var(--font-size);
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .select-btn::after { content: '▼'; font-size: 12px; color: var(--subtext); }
+
+  .inline-select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-top: 4px;
+    z-index: 100;
+    overflow: hidden;
+    display: none;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  }
+  .inline-select-options.show { display: block; }
+  .inline-select-option {
+    padding: 14px 16px;
+    font-size: var(--font-size);
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    transition: background 0.1s ease;
+  }
+  .inline-select-option:last-child { border-bottom: none; }
+  .inline-select-option:active { background: var(--surface-light); }
+
+  .switch-box { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; }
+  .switch {
+    position: relative;
+    width: 50px;
+    height: 28px;
+    background: #3a3c44;
+    border-radius: 30px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+  }
+  body.light-mode .switch { background: #d1d1d6; }
+  .switch::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+  }
+  .switch.checked { background: var(--primary); }
+  .switch.checked::after { transform: translateX(22px); }
+  .modal-foot, .config-btn-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-shrink: 0;
+  }
+  .modal-foot button, .config-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: var(--font-size);
+    font-weight: 500;
+    background: var(--surface-light);
+    color: var(--text);
+  }
+  .modal-foot .primary, .config-confirm { background: var(--primary-bg); color: #fff; border: 1px solid var(--border); }
+  body.light-mode .modal-foot .primary,
+  body.light-mode .config-confirm { color: var(--text); }
+  .modal-foot button:active, .config-btn:active { transform: scale(0.96); }
+
+  .font-size-setting { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding: 8px 0; }
+  .font-size-setting span:first-child { font-size: calc(var(--font-size) - 2px); color: var(--subtext); }
+  .font-size-control { display: flex; align-items: center; gap: 16px; }
+  .font-size-control button {
+    width: 36px; height: 36px;
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    background: var(--surface-light);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  body.light-mode .font-size-control button { color: var(--text); }
+  .font-size-control span { min-width: 40px; text-align: center; font-size: var(--font-size); }
+
+  /* 可点击的token数字 */
+  .token-clickable {
+    cursor: pointer;
+    border-bottom: 1px dashed var(--subtext);
+    padding: 2px 4px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .token-clickable:hover {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+  }
+
+  .avatar-selector { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
+  #avatarPreview, #editAvatarPreview { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
+  .avatar-btn {
+    flex: 1;
+    padding: 12px 16px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    font-size: var(--font-size);
+    cursor: pointer;
+    text-align: center;
+  }
+  .avatar-btn:active { background: var(--surface); }
+  #avatarFile, #editAvatarFile, #homeBgFile { display: none; }
+
+  #chatConfigMask {
+    z-index: 99999;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  #chatConfigMask.show { opacity: 1; visibility: visible; }
+
+  .config-item-row { margin-bottom: 16px; }
+  .config-item-label { font-size: calc(var(--font-size) - 2px); color: var(--subtext); margin-bottom: 6px; }
+  .config-item-value {
+    font-size: var(--font-size);
+    color: var(--text);
+    padding: 10px 14px;
+    background: var(--surface-light);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+  }
+  .prompt-wrap { position: relative; }
+  .prompt-value {
+    width: 100%;
+    height: 80px;
+    font-size: var(--font-size);
+    color: var(--text);
+    padding: 10px 14px;
+    background: var(--surface-light);
+    border-radius: 16px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    border: 1px solid var(--border);
+  }
+  .copy-btn {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    padding: 6px 12px;
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .copy-btn:active { transform: scale(0.92); }
+  .copy-tip { font-size: 12px; color: var(--primary); margin-top: 4px; display: none; text-align: right; }
+
+  #rewardModal {
+    position: fixed;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 99999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  #rewardModal.show { opacity: 1; visibility: visible; }
+  #rewardBox {
+    background: var(--surface);
+    border-radius: 32px;
+    padding: 28px;
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+  body.light-mode #rewardBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
+  #rewardModal.show #rewardBox { transform: scale(1); }
+  #rewardTitle { font-size: 18px; color: var(--primary); margin-bottom: 20px; font-weight: 700; }
+  #rewardImg { width: 100%; max-width: 260px; border-radius: 20px; border: 1px solid var(--border); }
+  #closeReward {
+    margin-top: 24px;
+    padding: 12px 28px;
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #closeReward:active { transform: scale(0.96); }
+
+  #noticeModal {
+    position: fixed;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  #noticeModal.show { opacity: 1; visibility: visible; }
+  #noticeBox {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 36px;
+    width: 100%;
+    max-width: 640px;
+    height: 80vh;
+    max-height: 560px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+  body.light-mode #noticeBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
+  #noticeModal.show #noticeBox { transform: scale(1); }
+
+  #closeNotice {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: opacity 0.3s ease, background 0.3s ease;
+  }
+  body.light-mode #closeNotice { color: var(--text); }
+  #closeNotice:active { transform: scale(0.9); }
+  #closeNotice.cooldown {
+    background: #2a2a2a;
+    color: #888;
+    cursor: not-allowed;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  body.light-mode #closeNotice.cooldown { background: #e0e0e0; color: #999; }
+  #closeNotice.cooldown:active { transform: none; }
+
+  #noticeIframe { width: 100%; height: 100%; border: none; background: transparent; border-radius: 36px; }
+
+  #titleLoading {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    color: #fff;
+    font-size: var(--font-size);
+  }
+  #titleLoading.show { opacity: 1; visibility: visible; }
+
+  #renameModal .modal-box { max-width: 360px; }
+
+  #confirmAgeBox {
+    background: var(--surface);
+    border-radius: 32px;
+    padding: 28px;
+    width: 90%;
+    max-width: 340px;
+    text-align: center;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+  body.light-mode #confirmAgeBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
+  #confirmAgeModal.show #confirmAgeBox { transform: scale(1); }
+  #confirmAgeTitle {
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  #confirmAgeDesc {
+    font-size: 14px;
+    color: var(--subtext);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  #confirmAgeBtnAdult {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 12px;
+  }
+  #confirmAgeBtnMinor {
+    width: 100%;
+    padding: 14px;
+    background: var(--surface-light);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  #confirmAgeBtnAdult:active, #confirmAgeBtnMinor:active { transform: scale(0.97); }
+
+  #restReminderBox {
+    background: var(--surface);
+    border-radius: 32px;
+    padding: 28px;
+    width: 90%;
+    max-width: 340px;
+    text-align: center;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+  body.light-mode #restReminderBox { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
+  #restReminderModal.show #restReminderBox { transform: scale(1); }
+  #restReminderTitle {
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  #restReminderDesc {
+    font-size: 14px;
+    color: var(--subtext);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  #restReminderCloseBtn {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #restReminderCloseBtn:active { transform: scale(0.97); }
+
+  .help-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    color: var(--subtext);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 6px;
+    flex-shrink: 0;
+  }
+  .help-btn:active { transform: scale(0.9); }
+
+  .help-tooltip-modal {
+    position: fixed;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 16px;
+  }
+  .help-tooltip-modal.show { opacity: 1; visibility: visible; }
+  .help-tooltip-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 24px;
+    width: 90%;
+    max-width: 340px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+  .help-tooltip-modal.show .help-tooltip-box { transform: scale(1); }
+  .help-tooltip-title {
+    font-size: calc(var(--font-size) + 2px);
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .help-tooltip-desc {
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .help-tooltip-close {
+    padding: 10px 28px;
+    background: var(--primary-bg);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: var(--font-size);
+    font-weight: 500;
+    cursor: pointer;
+  }
+  body.light-mode .help-tooltip-close { color: var(--text); }
+  .help-tooltip-close:active { transform: scale(0.96); }
+
+  .toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    padding: 14px 24px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+    min-width: 120px;
+    max-width: 280px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    z-index: 9999999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s, transform 0.25s ease;
+    pointer-events: none;
+  }
+  body.light-mode .toast { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); }
+  .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+  .toast.error { background: #441111; border-color: #662222; }
+  .toast.success { background: #114444; border-color: #226666; }
+
+  .hide { display: none !important; }
+
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #4a4c55; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #5a5c66; }
+  body.light-mode ::-webkit-scrollbar-thumb { background: #c1c1c6; }
+  body.light-mode ::-webkit-scrollbar-thumb:hover { background: #a1a1a6; }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    button:hover, .fab:hover, .homeActionBtn:hover, .side-btn:hover, .new-chat:hover,
+    .notice-btn:hover, #send:hover, #toggleSidebar:hover, #backBtnFromImg:hover,
+    #genImgBtn:hover, #closeReward:hover,
+    #confirmDeleteBtn:hover, .chat-item:hover, .agent-card:hover, .select-btn:hover,
+    .inline-select-option:hover, .avatar-btn:hover, .copy-btn:hover, .api-tag:hover,
+    .bg-btn:hover, .custom-model-display:hover, .model-option-btn:hover { filter: brightness(1.15); }
+    .chat-item .del:hover, .chat-item .rename:hover { transform: scale(1.15); }
+    .agent-actions span:hover { background: #242830; }
+    #closeNotice.cooldown:hover { filter: none; }
+  }
+
+  /* ===== 搜索框样式 ===== */
+  #searchModal .modal-box {
+    max-width: 500px;
+    max-height: 85vh;
+  }
+  .search-input-wrap {
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .search-input-wrap::before {
+    content: '🔍';
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .search-input-wrap input {
+    width: 100%;
+    padding: 14px 14px 14px 42px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    outline: none;
+    font-size: var(--font-size);
+    transition: border-color 0.2s ease;
+  }
+  .search-input-wrap input:focus {
+    border-color: var(--primary);
+  }
+  .search-input-wrap input::placeholder {
+    color: #5a5c64;
+  }
+  body.light-mode .search-input-wrap input::placeholder {
+    color: #8e8e93;
+  }
+
+  /* 测试功能标签 */
+  .search-beta-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #FF8C00;
+    background: rgba(255, 140, 0, 0.15);
+    border: 1px solid rgba(255, 140, 0, 0.3);
+    border-radius: 20px;
+    padding: 2px 10px;
+    margin-left: 8px;
+    vertical-align: middle;
+    letter-spacing: 0.5px;
+  }
+  body.light-mode .search-beta-badge {
+    color: #D47300;
+    background: rgba(212, 115, 0, 0.1);
+    border-color: rgba(212, 115, 0, 0.25);
+  }
+
+  /* 搜索范围：2×2 网格自适应 */
+  .search-scope {
+    margin-bottom: 16px;
+    padding: 14px;
+    background: var(--surface-light);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+  }
+  .search-scope-label {
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    margin-bottom: 10px;
+    display: block;
+    font-weight: 500;
+  }
+  .search-scope-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  @media (max-width: 400px) {
+    .search-scope-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .search-scope-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: calc(var(--font-size) - 1px);
+    color: var(--text);
+    transition: background 0.15s, border-color 0.15s;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .search-scope-option:active {
+    background: var(--primary-bg);
+    border-color: var(--primary);
+  }
+  .search-scope-option.checked {
+    background: var(--primary-bg);
+    border-color: var(--primary);
+  }
+  .search-scope-option .check-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+    color: transparent;
+    transition: all 0.15s;
+  }
+  .search-scope-option.checked .check-icon {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+  .search-scope-option .scope-label {
+    flex: 1;
+  }
+
+  /* 使用引导 */
+  .search-guide {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: rgba(62, 154, 226, 0.08);
+    border: 1px solid rgba(62, 154, 226, 0.2);
+    border-radius: 14px;
+    line-height: 1.5;
+  }
+  body.light-mode .search-guide {
+    background: rgba(0, 113, 227, 0.06);
+    border-color: rgba(0, 113, 227, 0.15);
+  }
+  .search-guide-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .search-guide-text {
+    font-size: calc(var(--font-size) - 3px);
+    color: var(--subtext);
+    flex: 1;
+  }
+
+  /* 搜索结果 */
+  .search-results {
+    max-height: 45vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .search-empty {
+    text-align: center;
+    color: var(--subtext);
+    padding: 30px 0;
+    font-size: calc(var(--font-size) - 1px);
+  }
+  .search-result-group {
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .search-result-agent {
+    padding: 12px 16px;
+    background: var(--surface-light);
+    font-weight: 600;
+    font-size: var(--font-size);
+    color: var(--primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .search-result-agent:active {
+    background: var(--primary-bg);
+  }
+  .search-result-agent .count {
+    font-weight: 400;
+    font-size: calc(var(--font-size) - 3px);
+    color: var(--subtext);
+    margin-left: auto;
+  }
+  .search-result-chat {
+    padding: 10px 16px;
+    background: var(--surface);
+    cursor: pointer;
+    font-size: calc(var(--font-size) - 1px);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .search-result-chat:last-child {
+    border-bottom: none;
+  }
+  .search-result-chat:active {
+    background: var(--surface-light);
+  }
+  .search-result-message {
+    padding: 8px 16px 8px 32px;
+    background: var(--surface);
+    cursor: pointer;
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    border-bottom: 1px solid var(--border);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-all;
+    transition: background 0.15s;
+  }
+  .search-result-message:last-child {
+    border-bottom: none;
+  }
+  .search-result-message:active {
+    background: var(--surface-light);
+  }
+  .search-result-message .role-tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-right: 6px;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+  .search-result-message .role-tag.user {
+    background: var(--primary-bg);
+    color: var(--primary);
+  }
+  .search-result-message .role-tag.ai {
+    background: #2a2a2a;
+    color: var(--subtext);
+  }
+  body.light-mode .search-result-message .role-tag.user {
+    background: #e8f2fd;
+    color: #0071e3;
+  }
+  body.light-mode .search-result-message .role-tag.ai {
+    background: #e9e9eb;
+    color: #6e6e73;
+  }
+  .search-highlight {
+    background: #FFD70033;
+    padding: 0 2px;
+    border-radius: 4px;
+  }
+  body.light-mode .search-highlight {
+    background: #FFD70055;
+  }
+  .msg.highlight {
+    animation: highlightPulse 1.5s ease;
+    border-color: #FFD700 !important;
+  }
+  @keyframes highlightPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+    50% { box-shadow: 0 0 20px 4px rgba(255, 215, 0, 0.3); }
+  }
+
+  /* ===== 图片预览 ===== */
+  #previewModal .modal-box {
+    max-width: 90vw;
+    max-height: 90vh;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    align-items: center;
+    justify-content: center;
+  }
+  #previewModal .modal-box img {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  }
+
 </style>
 </head>
 <body>
-<!-- ===== 完整 HTML 同上一次，为了节省字数此处省略，你直接用上一次的 HTML 即可 ===== -->
-<!-- 请保留上一次完整代码里的所有 HTML 结构 -->
+
+<!-- ===== 启动画面 ===== -->
+<div id="splash">
+  <img id="splashIcon" src="appIcon.png" alt="APP图标">
+</div>
+
+<!-- ===== 用户协议 ===== -->
+<div id="agreementOverlay" class="hidden">
+  <div id="agreementBox">
+    <iframe id="agreementIframe" src=""></iframe>
+  </div>
+</div>
+
+<!-- ===== 页面容器 ===== -->
+<div id="pageContainer">
+
+  <!-- 首页 -->
+  <div class="page" id="homePage">
+    <div class="homeWrap">
+      <div class="homeHeader">
+        <div class="homeTitle">智能体</div>
+        <div class="homeActions">
+          <button class="homeActionBtn" id="homeSearchBtn">🔍</button>
+          <button class="homeActionBtn" id="multiSelectBtn">删除</button>
+          <button class="homeActionBtn" id="cancelMultiBtn">取消</button>
+          <button class="homeActionBtn" id="homeSettingsBtn">设置</button>
+        </div>
+      </div>
+      <div id="agentList"></div>
+    </div>
+    <div class="fab-container">
+      <button class="fab" id="newAgentFab">+</button>
+      <button class="fab gen-img" id="goToImageFab">🎨</button>
+    </div>
+    <div class="bottom-delete-bar" id="bottomDeleteBar">
+      <span>已选择 <span id="selectedCount">0</span> 个智能体</span>
+      <button id="confirmDeleteBtn">删除</button>
+    </div>
+  </div>
+
+  <!-- 聊天页 -->
+  <div class="page" id="chatPage">
+    <div id="app">
+      <div id="chat-container">
+        <div class="chat-header">
+          <button id="toggleSidebar">☰</button>
+          <div class="chat-title" id="chatTitle">新对话</div>
+          <span class="api-tag" id="apiTag">内容由 ai 生成，仅供参考</span>
+        </div>
+        <div id="messages"></div>
+        <div class="input-bar">
+          <div class="input-wrapper">
+            <button id="bracketBtn">( )</button>
+            <textarea id="input" placeholder="想说点什么就跟我说吧..."></textarea>
+            <button id="send">↑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 生图页 -->
+  <div class="page" id="imagePage">
+    <div class="imgPageWrap">
+      <div class="imgHeader">
+        <button id="backBtnFromImg">← 返回</button>
+        <div class="imgTitle">AI生图</div>
+      </div>
+      <textarea id="imgPrompt" placeholder="输入画面描述..."></textarea>
+      <button id="genImgBtn">开始生成</button>
+      <button id="downloadImgBtn">下载图片</button>
+      <div id="imgLoading">生成中...</div>
+      <div id="imgResult">
+        <img id="resultImg" alt="生成结果">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 侧边栏 ===== -->
+<div id="sidebar">
+  <div class="side-header">
+    <span>对话列表</span>
+    <div class="side-header-actions">
+      <button id="homeBtn">⌂</button>
+      <button id="collapseBtn">←</button>
+    </div>
+  </div>
+  <button class="notice-btn" id="openNoticeBtn">📢 公告</button>
+  <button class="new-chat" id="newChat">+ 新建对话</button>
+  <div id="chatList" class="chat-list"></div>
+  <div class="side-bottom">
+    <button class="side-btn" id="openSettings">设置</button>
+  </div>
+</div>
+
+<!-- ===== 遮罩层 ===== -->
+<div id="overlay"></div>
+
+<!-- ===== 确认弹窗 ===== -->
+<div id="confirmModal" class="base-modal" style="z-index:100003;">
+  <div id="confirmBox">
+    <div id="confirmTitle"></div>
+    <div id="confirmMsg"></div>
+    <div id="confirmBtnGroup">
+      <button id="confirmCancelBtn">取消</button>
+      <button class="primary" id="confirmOkBtn">删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 模型选择弹窗 ===== -->
+<div id="modelSelectModal" class="base-modal" style="z-index:100004;">
+  <div class="modal-box">
+    <div class="model-select-title">选择自定义模型</div>
+    <div class="model-select-subtitle">请选择你要使用的模型</div>
+    <button class="model-option-btn" id="modelOptV4Flash">
+      <span class="model-name">DeepSeek-V4-Flash</span>
+      <span class="model-desc">deepseek-ai/DeepSeek-V4-Flash</span>
+    </button>
+    <button class="model-option-btn" id="modelOptR1Qwen">
+      <span class="model-name">DeepSeek-R1-0528-Qwen3-8B</span>
+      <span class="model-desc">deepseek-ai/DeepSeek-R1-0528-Qwen3-8B，免费</span>
+    </button>
+    <button class="model-option-btn custom-model-btn" id="modelOptCustom">
+      不用上面两个，我自己填
+    </button>
+  </div>
+</div>
+
+<!-- ===== 年龄确认弹窗 ===== -->
+<div id="confirmAgeModal" class="base-modal" style="z-index:100000;">
+  <div id="confirmAgeBox">
+    <div id="confirmAgeTitle">请问您是否已成年？</div>
+    <div id="confirmAgeDesc">未成年用户将无法使用情感陪伴功能</div>
+    <button id="confirmAgeBtnAdult">我已成年</button>
+    <button id="confirmAgeBtnMinor">我未成年</button>
+  </div>
+</div>
+
+<!-- ===== 休息提醒弹窗 ===== -->
+<div id="restReminderModal" class="base-modal" style="z-index:100001;">
+  <div id="restReminderBox">
+    <div id="restReminderTitle">⏰ 休息提醒</div>
+    <div id="restReminderDesc">您已使用两个小时，建议休息一会。</div>
+    <button id="restReminderCloseBtn">关闭</button>
+  </div>
+</div>
+
+<!-- ===== 设置弹窗 ===== -->
+<div id="modal" class="base-modal">
+  <div class="modal-box">
+    <div class="modal-head"><span>设置</span></div>
+    <div class="modal-body">
+      <div class="api-select-wrap">
+        <label>API 线路</label>
+        <button class="api-select-btn" id="apiSelectBtn">默认线路</button>
+        <input type="password" class="custom-api-input" id="customApiInput" placeholder="输入你的自定义 API Key">
+      </div>
+      <div class="custom-model-wrap" id="customModelWrap">
+        <label>自定义模型</label>
+        <div class="custom-model-display placeholder" id="customModelDisplay">点击选择模型</div>
+      </div>
+      <div class="font-size-setting">
+        <span>字体大小</span>
+        <div class="font-size-control">
+          <button id="fontMinus">−</button>
+          <span id="fontSizeValue">16</span>
+          <button id="fontPlus">+</button>
+        </div>
+      </div>
+      <div class="font-size-setting" style="margin-top:8px;">
+        <span>最大使用token</span>
+        <div class="font-size-control">
+          <span id="tokenValue" class="token-clickable">1000</span>
+        </div>
+      </div>
+      <div class="switch-box">
+        <span style="font-size:14px;">浅色模式</span>
+        <div class="switch" id="themeSwitch"></div>
+      </div>
+      <div class="switch-box" id="devControlBox" style="margin-top:12px;display:none;">
+        <span style="font-size:14px">创造者模式</span>
+        <div class="switch" id="devSwitch"></div>
+      </div>
+      <div class="switch-box">
+        <span style="font-size:14px;">回车键发送消息</span>
+        <div class="switch checked" id="enterSendSwitch"></div>
+      </div>
+      <label style="margin-top:16px;">主菜单背景</label>
+      <div class="bg-preview" id="homeBgPreview" style="background-image: none;">未设置背景</div>
+      <button class="bg-btn" id="changeHomeBgBtn">更换主菜单背景</button>
+      <button class="bg-btn reset" id="resetHomeBgBtn">重置为默认背景</button>
+      <input type="file" id="homeBgFile" accept="image/*">
+      <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn">查看用户协议</button>
+      <button class="side-btn" style="margin-top:8px;width:100%;" id="changeAgeBtn">再次验证年龄</button>
+      <button class="side-btn" style="margin-top:8px;width:100%;" id="openShortcutBtn">电脑端快捷键指南</button>
+      <button class="side-btn" style="margin-top:8px;width:100%;" id="openRewardBtn">打赏作者</button>
+      <div class="email-row" id="emailRow">
+        <div class="email-row-line1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+            <path d="M22 4L12 13L2 4"></path>
+          </svg>
+          <span>官方邮箱</span>
+        </div>
+        <div class="email-row-line2">dchatstudio@outlook.com</div>
+      </div>
+      <div style="text-align:center;font-size:12px;color:var(--subtext);margin-top:8px;opacity:0.7;" id="versionDisplay"></div>
+    </div>
+    <div class="modal-foot">
+      <button id="modalCancel">取消</button>
+      <button class="primary" id="modalSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 公告弹窗 ===== -->
+<div id="noticeModal">
+  <div id="noticeBox">
+    <div id="closeNotice">×</div>
+    <iframe id="noticeIframe" src=""></iframe>
+  </div>
+</div>
+
+<!-- ===== 打赏弹窗 ===== -->
+<div id="rewardModal">
+  <div id="rewardBox">
+    <div id="rewardTitle">自愿打赏 支持作者继续更新😋</div>
+    <img src="1.png" alt="打赏码" id="rewardImg">
+    <button id="closeReward">关闭</button>
+  </div>
+</div>
+
+<!-- ===== 输入弹窗 ===== -->
+<div id="promptModal" class="base-modal">
+  <div class="modal-box">
+    <div class="modal-head"><span id="promptTitle">请输入</span></div>
+    <div class="modal-body">
+      <input type="text" id="promptInput" placeholder="" autocomplete="off">
+    </div>
+    <div class="modal-foot">
+      <button id="promptCancel">取消</button>
+      <button class="primary" id="promptConfirm">确认</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 新建智能体弹窗 ===== -->
+<div id="agentModal" class="base-modal">
+  <div class="modal-box" style="max-width: 400px;">
+    <div class="modal-head"><span>新建智能体</span></div>
+    <div class="modal-body">
+      <label>头像</label>
+      <div class="avatar-selector">
+        <img id="avatarPreview" src="tx.png" alt="头像预览">
+        <button class="avatar-btn" id="avatarSelectBtn">选择图片</button>
+        <input type="file" id="avatarFile" accept="image/*">
+      </div>
+      <label>名称</label>
+      <input type="text" id="agentNameInput" placeholder="例如：情感陪伴助手">
+      <label>描述</label>
+      <input type="text" id="agentDescInput" placeholder="简短描述智能体的特点">
+      <label>AI类型</label>
+      <div style="position:relative;">
+        <button class="select-btn" id="aiTypeSelectBtn" data-value="emotion">情感陪伴</button>
+        <div class="inline-select-options" id="aiTypeInlineOptions">
+          <div class="inline-select-option" data-value="emotion">情感陪伴</div>
+          <div class="inline-select-option" data-value="tool">工具</div>
+        </div>
+      </div>
+      <div id="agentGenderBox">
+        <label>AI性别</label>
+        <div style="position:relative;">
+          <button class="select-btn" id="aiGenderSelectBtn" data-value="neutral">中性</button>
+          <div class="inline-select-options" id="aiGenderInlineOptions">
+            <div class="inline-select-option" data-value="male">男性</div>
+            <div class="inline-select-option" data-value="female">女性</div>
+            <div class="inline-select-option" data-value="neutral">中性</div>
+          </div>
+        </div>
+      </div>
+      <label>回复风格</label>
+      <textarea id="agentAiStyleInput" placeholder="描述AI的回复风格..."></textarea>
+      <label style="margin-top:16px;">默认对话背景</label>
+      <div class="bg-preview" id="agentChatBgPreview" style="background-image: none;">未设置</div>
+      <button class="bg-btn" id="changeAgentChatBgBtn">更换默认对话背景</button>
+      <button class="bg-btn reset" id="resetAgentChatBgBtn">重置</button>
+    </div>
+    <div class="modal-foot">
+      <button id="agentCancel">取消</button>
+      <button class="primary" id="agentConfirm">创建</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 编辑智能体弹窗 ===== -->
+<div id="editAgentModal" class="base-modal">
+  <div class="modal-box" style="max-width: 400px;">
+    <div class="modal-head"><span>编辑智能体</span></div>
+    <div class="modal-body">
+      <label>头像</label>
+      <div class="avatar-selector">
+        <img id="editAvatarPreview" src="tx.png" alt="头像预览">
+        <button class="avatar-btn" id="editAvatarSelectBtn">选择图片</button>
+        <input type="file" id="editAvatarFile" accept="image/*">
+      </div>
+      <label>名称</label>
+      <input type="text" id="editAgentNameInput" placeholder="智能体名称">
+      <div class="switch-box">
+        <span>置顶</span>
+        <div class="switch" id="editPinnedSwitch"></div>
+      </div>
+      <div class="creator-only">
+        <label>描述</label>
+        <input type="text" id="editAgentDescInput" placeholder="简短描述智能体的特点">
+        <label>AI类型</label>
+        <div style="position:relative;">
+          <button class="select-btn" id="editAiTypeSelectBtn" data-value="emotion">情感陪伴</button>
+          <div class="inline-select-options" id="editAiTypeInlineOptions">
+            <div class="inline-select-option" data-value="emotion">情感陪伴</div>
+            <div class="inline-select-option" data-value="tool">工具</div>
+          </div>
+        </div>
+        <div id="editAgentGenderBox">
+          <label>AI性别</label>
+          <div style="position:relative;">
+            <button class="select-btn" id="editAiGenderSelectBtn" data-value="neutral">中性</button>
+            <div class="inline-select-options" id="editAiGenderInlineOptions">
+              <div class="inline-select-option" data-value="male">男性</div>
+              <div class="inline-select-option" data-value="female">女性</div>
+              <div class="inline-select-option" data-value="neutral">中性</div>
+            </div>
+          </div>
+        </div>
+        <label>回复风格</label>
+        <textarea id="editAgentAiStyleInput" placeholder="描述AI的回复风格..."></textarea>
+      </div>
+      <label style="margin-top:16px;">默认对话背景</label>
+      <div class="bg-preview" id="editAgentChatBgPreview" style="background-image: none;">未设置</div>
+      <button class="bg-btn" id="changeEditAgentChatBgBtn">更换默认对话背景</button>
+      <button class="bg-btn reset" id="resetEditAgentChatBgBtn">重置</button>
+    </div>
+    <div class="modal-foot">
+      <button id="editAgentCancel">取消</button>
+      <button class="primary" id="editAgentConfirm">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 重命名弹窗 ===== -->
+<div id="renameModal" class="base-modal">
+  <div class="modal-box">
+    <div class="modal-head"><span>修改对话标题</span></div>
+    <div class="modal-body">
+      <label>对话标题</label>
+      <input type="text" id="renameInput" placeholder="输入自定义标题">
+    </div>
+    <div class="modal-foot">
+      <button id="renameCancel">取消</button>
+      <button class="primary" id="renameConfirm">确认</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 对话配置详情 ===== -->
+<div id="chatConfigMask">
+  <div id="chatConfigDetail">
+    <div class="config-detail-title"><span>对话配置</span></div>
+    <div class="modal-body">
+      <div class="config-item-row">
+        <div class="config-item-label">对话标题</div>
+        <div class="config-item-value" id="detailTitle">--</div>
+      </div>
+      <div class="config-item-row">
+        <div class="config-item-label">AI类型</div>
+        <div class="config-item-value" id="detailAiType">--</div>
+      </div>
+      <div class="config-item-row">
+        <div class="config-item-label">AI性别</div>
+        <div class="config-item-value" id="detailAiGender">--</div>
+      </div>
+      <div class="config-item-row">
+        <div class="config-item-label">自定义风格</div>
+        <div class="prompt-wrap">
+          <div class="prompt-value" id="detailAityle">--</div>
+          <button class="copy-btn" id="copyStyleBtn">复制</button>
+        </div>
+        <div class="copy-tip" id="copyStyleTip">已复制到剪贴板！</div>
+      </div>
+      <div class="config-item-row">
+        <div class="config-item-label">系统提示词</div>
+        <div class="prompt-wrap">
+          <div class="prompt-value" id="detailSystemPrompt">--</div>
+          <button class="copy-btn" id="copyPromptBtn">复制</button>
+        </div>
+        <div class="copy-tip" id="copyPromptTip">已复制到剪贴板！</div>
+      </div>
+    </div>
+    <div class="modal-foot" style="margin-top:20px;">
+      <button class="primary" id="closeConfigDetailBtn">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 聊天配置弹窗（暂未启用） ===== -->
+<div id="chatConfigModal" class="base-modal" style="display:none;">
+  <div class="config-modal-box">
+    <div class="modal-head"><span>配置对话</span></div>
+    <div class="modal-body">
+      <div class="config-item">
+        <label>AI类型</label>
+        <select id="aiTypeSelect">
+          <option value="emotion">情感陪伴</option>
+          <option value="tool">工具</option>
+        </select>
+      </div>
+      <div class="config-item" id="aiGenderBox">
+        <label>AI性别</label>
+        <select id="aiGenderSelect">
+          <option value="male">男性</option>
+          <option value="female">女性</option>
+          <option value="neutral">中性</option>
+        </select>
+      </div>
+      <div class="config-item">
+        <label>回复风格</label>
+        <textarea id="aiStyleInput" placeholder="请输入AI回复风格描述..."></textarea>
+      </div>
+    </div>
+    <div class="config-btn-group">
+      <button class="config-btn config-cancel" id="configCancel">取消</button>
+      <button class="config-btn config-confirm" id="configConfirm">确认创建</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 帮助提示弹窗 ===== -->
+<div id="helpTooltipModal" class="help-tooltip-modal">
+  <div class="help-tooltip-box">
+    <div class="help-tooltip-title" id="helpTooltipTitle"></div>
+    <div class="help-tooltip-desc" id="helpTooltipDesc"></div>
+    <button class="help-tooltip-close" id="helpTooltipClose">关闭</button>
+  </div>
+</div>
+
+<!-- ===== 快捷键弹窗 ===== -->
+<div id="shortcutModal" class="help-tooltip-modal">
+  <div class="help-tooltip-box" style="max-width: 380px;">
+    <div class="help-tooltip-title">电脑端快捷键指南</div>
+    <div class="help-tooltip-desc" id="shortcutDesc" style="text-align:left;white-space:pre-line;">Esc — 关闭当前弹窗 / 返回上一页面
+Enter — 发送消息（需开启回车发送）
+Shift + Enter — 换行
+Ctrl + 加号 — 放大字体
+Ctrl + 减号 — 缩小字体</div>
+    <button class="help-tooltip-close" id="shortcutClose">关闭</button>
+  </div>
+</div>
+
+<!-- ===== 加载提示 ===== -->
+<div id="titleLoading">创建中...</div>
+
+<!-- ===== Toast 提示 ===== -->
+<div id="toast" class="toast"></div>
+
+<!-- ===== 搜索弹窗 ===== -->
+<div id="searchModal" class="base-modal" style="z-index:100005;">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span>搜索 <span class="search-beta-badge">🧪 测试功能</span></span>
+    </div>
+    <div class="modal-body">
+      <div class="search-input-wrap">
+        <input type="text" id="searchInput" placeholder="输入关键词搜索..." autocomplete="off">
+      </div>
+      <div class="search-scope">
+        <span class="search-scope-label">搜索范围：</span>
+        <div class="search-scope-grid" id="scopeGrid">
+          <div class="search-scope-option checked" data-scope="agentName">
+            <span class="check-icon">✓</span>
+            <span class="scope-label">智能体名称</span>
+          </div>
+          <div class="search-scope-option checked" data-scope="agentDesc">
+            <span class="check-icon">✓</span>
+            <span class="scope-label">智能体描述</span>
+          </div>
+          <div class="search-scope-option checked" data-scope="chatTitle">
+            <span class="check-icon">✓</span>
+            <span class="scope-label">对话标题</span>
+          </div>
+          <div class="search-scope-option checked" data-scope="message">
+            <span class="check-icon">✓</span>
+            <span class="scope-label">消息内容</span>
+          </div>
+        </div>
+        <div class="search-guide">
+          <span class="search-guide-icon">💡</span>
+          <span class="search-guide-text">输入关键词 → 勾选搜索范围 → 点击结果可直接跳转<br>支持搜索智能体名称、描述、对话标题和消息内容</span>
+        </div>
+      </div>
+      <div id="searchResults" class="search-results">
+        <div class="search-empty">输入关键词开始搜索</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button id="searchClose">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 图片预览弹窗 ===== -->
+<div id="previewModal" class="base-modal" style="z-index:100006;">
+  <div class="modal-box" style="background:transparent;border:none;box-shadow:none;padding:12px;align-items:center;justify-content:center;">
+    <img id="previewImg" src="" alt="预览" style="width:100%;height:auto;max-height:80vh;object-fit:contain;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.8);">
+  </div>
+</div>
 
 <script>
-const APP_VERSION = '2.5.0';
+const APP_VERSION = '2.5.3';
 
 const PRESET_API_KEYS = {
   default: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd",
@@ -149,39 +2725,20 @@ const DEFAULT_STYLE = {
 const DEFAULT_TEMPERATURE = { emotion: 1.1, tool: 0.4 };
 const AUTH_CODE = "258456";
 
-// ===== [FIX] 保留原有初始化方式，直接读 localStorage + 默认值 =====
 let config = JSON.parse(localStorage.getItem("config")) || {
-  apiLine: 'default',
-  customApi: '',
-  customModel: '',
-  fontSize: 16,
-  specialMode: false,
-  lightMode: false,
-  homeBackground: null,
-  enterToSend: true,
-  maxTokens: 1000
+  apiLine: 'default', customApi: '', customModel: '', fontSize: 16,
+  specialMode: false, lightMode: false, homeBackground: null, enterToSend: true, maxTokens: 1000
 };
 
-// ===== [FIX] 补全 config 缺失字段 =====
 function patchConfig() {
-  const defaults = {
-    apiLine: 'default',
-    customApi: '',
-    customModel: '',
-    fontSize: 16,
-    specialMode: false,
-    lightMode: false,
-    homeBackground: null,
-    enterToSend: true,
-    maxTokens: 1000
-  };
+  const defaults = { apiLine: 'default', customApi: '', customModel: '', fontSize: 16,
+    specialMode: false, lightMode: false, homeBackground: null, enterToSend: true, maxTokens: 1000 };
   for (const key of Object.keys(defaults)) {
     if (config[key] === undefined) config[key] = defaults[key];
   }
   saveData();
 }
 
-// ===== [FIX] 补全 agents 缺失字段 =====
 function patchAgents() {
   if (!Array.isArray(agents)) return;
   agents.forEach(agent => {
@@ -255,10 +2812,7 @@ function showModelSelectModal() { showModal(document.getElementById('modelSelect
 function hideModelSelectModal() { hideModal(document.getElementById('modelSelectModal')); }
 
 function selectModel(modelName) {
-  config.customModel = modelName;
-  saveData();
-  updateCustomModelDisplay();
-  hideModelSelectModal();
+  config.customModel = modelName; saveData(); updateCustomModelDisplay(); hideModelSelectModal();
 }
 
 document.getElementById('modelOptV4Flash').onclick = () => selectModel(PRESET_MODEL_OPTIONS.v4flash);
@@ -306,7 +2860,7 @@ window.addEventListener('message', function(e) {
     closeAgreement(); showToast('欢迎使用 Dchat', 'success');
   } else if (e.data.type === 'agreementRejected') {
     setStoredAgreementVersion('0'); closeAgreement();
-    document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:18px;color:#e0e0e0;margin-bottom:8px;">您不同意协议</div><div style="font-size:14px;color:#888;">请退出软件</div></div>';
+    document.body.innerHTML = '...您不同意协议，请退出软件...';
   } else if (e.data.type === 'agreementClosed') closeAgreement();
 });
 
@@ -363,8 +2917,7 @@ function loadDefaultAvatar() {
     img.onload = () => {
       const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
       c.getContext('2d').drawImage(img, 0, 0);
-      defaultAvatarData = c.toDataURL('image/png');
-      resolve(defaultAvatarData);
+      defaultAvatarData = c.toDataURL('image/png'); resolve(defaultAvatarData);
     };
     img.onerror = () => { defaultAvatarData = 'tx.png'; resolve(defaultAvatarData); };
     img.src = 'tx.png';
@@ -373,46 +2926,30 @@ function loadDefaultAvatar() {
 
 async function migrateOldData() {
   await loadDefaultAvatar();
-
   const oldChats = JSON.parse(localStorage.getItem("chats"));
   if (oldChats && !localStorage.getItem("agents")) {
     agents = oldChats.map((chat, index) => ({
-      id: 'agent_' + Date.now() + index,
-      name: chat.title + '（旧版）',
-      avatar: defaultAvatarData,
+      id: 'agent_' + Date.now() + index, name: chat.title + '（旧版）', avatar: defaultAvatarData,
       description: '从旧版对话迁移',
       aiConfig: chat.aiConfig || { type: 'emotion', gender: 'neutral', style: DEFAULT_STYLE.emotion, temperature: DEFAULT_TEMPERATURE.emotion },
       chats: [{ id: 'chat_' + Date.now() + index, title: chat.title, messages: chat.messages || [], pinned: chat.pinned || false }],
-      pinned: false,
-      createdAt: Date.now(),
-      chatBackground: null
+      pinned: false, createdAt: Date.now(), chatBackground: null
     }));
-    saveAgents();
-    localStorage.removeItem("chats");
+    saveAgents(); localStorage.removeItem("chats");
   } else {
     agents = JSON.parse(localStorage.getItem("agents")) || [];
   }
-
-  // [FIX] 补全 agents 缺失字段
   patchAgents();
-
-  // 确保至少一个智能体
   if (agents.length === 0) {
     agents.push({
-      id: 'agent_default',
-      name: '情感陪伴助手',
-      avatar: defaultAvatarData,
+      id: 'agent_default', name: '情感陪伴助手', avatar: defaultAvatarData,
       description: '一个善解人意的聊天伙伴',
       aiConfig: { type: 'emotion', gender: 'neutral', style: DEFAULT_STYLE.emotion, temperature: DEFAULT_TEMPERATURE.emotion },
       chats: [{ id: 'chat_default', title: '新对话', messages: [], pinned: false }],
-      pinned: false,
-      createdAt: Date.now(),
-      chatBackground: null
+      pinned: false, createdAt: Date.now(), chatBackground: null
     });
     saveAgents();
   }
-
-  // [FIX] 补全 config 缺失字段
   patchConfig();
 }
 
@@ -465,27 +3002,19 @@ function processBracketContent(text) {
 
 function renderMessageContent(content) {
   const codeBlockRegex = /```(\w+)\s*\n([\s\S]*?)```/g;
-  const parts = [];
-  let lastIndex = 0, match;
+  const parts = []; let lastIndex = 0, match;
   while ((match = codeBlockRegex.exec(content)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push({ type: 'text', content: processBracketContent(content.substring(lastIndex, match.index)) });
-    }
-    const lang = match[1];
-    const code = match[2].replace(/\n$/, '');
+    if (match.index > lastIndex) { parts.push({ type: 'text', content: processBracketContent(content.substring(lastIndex, match.index)) }); }
+    const lang = match[1]; const code = match[2].replace(/\n$/, '');
     parts.push({ type: 'code', lang: lang, code: code });
     lastIndex = match.index + match[0].length;
   }
-  if (lastIndex < content.length) {
-    parts.push({ type: 'text', content: processBracketContent(content.substring(lastIndex)) });
-  }
+  if (lastIndex < content.length) { parts.push({ type: 'text', content: processBracketContent(content.substring(lastIndex)) }); }
   if (parts.length === 0) return processBracketContent(content);
-
   let html = '';
   parts.forEach(part => {
-    if (part.type === 'text') {
-      html += part.content;
-    } else if (part.type === 'code') {
+    if (part.type === 'text') { html += part.content; }
+    else if (part.type === 'code') {
       const escapedCode = part.code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
       const codeId = 'code_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
       html += '<div class="code-block-wrap"><div class="code-block-header"><span class="code-lang-tag">' + part.lang + '</span><button class="code-copy-btn" data-code-id="' + codeId + '">复制</button></div><div class="code-block-body"><pre><code id="' + codeId + '">' + escapedCode + '</code></pre></div></div>';
@@ -502,49 +3031,39 @@ function renderAgentList() {
     const card = document.createElement('div');
     card.className = 'agent-card ' + (agent.pinned ? 'pinned' : '') + ' ' + (selectedAgentIds.has(agent.id) ? 'selected' : '');
     card.dataset.id = agent.id;
-
     const checkbox = document.createElement('div');
     checkbox.className = 'agent-checkbox ' + (selectedAgentIds.has(agent.id) ? 'checked' : '');
     checkbox.onclick = (e) => { e.stopPropagation(); selectedAgentIds.has(agent.id) ? selectedAgentIds.delete(agent.id) : selectedAgentIds.add(agent.id); renderAgentList(); updateDeleteBar(); };
     card.appendChild(checkbox);
-
     const avatar = document.createElement('img');
     avatar.className = 'agent-avatar'; avatar.src = agent.avatar || defaultAvatarData;
     avatar.onerror = () => avatar.src = defaultAvatarData;
     card.appendChild(avatar);
-
     const info = document.createElement('div');
     info.className = 'agent-info';
     info.innerHTML = '<div class="agent-name">' + agent.name + '</div><div class="agent-desc">' + (agent.description || '') + '</div>';
     card.appendChild(info);
-
     const actions = document.createElement('div');
     actions.className = 'agent-actions';
     actions.innerHTML = '<span class="pin-agent">📌</span><span class="edit-agent">✏️</span><span class="delete-agent">✕</span>';
     card.appendChild(actions);
-
     card.addEventListener('click', (e) => {
       if (e.target.closest('.agent-actions') || e.target.closest('.agent-checkbox')) return;
       if (multiSelectMode) { selectedAgentIds.has(agent.id) ? selectedAgentIds.delete(agent.id) : selectedAgentIds.add(agent.id); renderAgentList(); updateDeleteBar(); }
       else enterChat(agent.id);
     });
-
     actions.querySelector('.pin-agent').addEventListener('click', (e) => {
-      e.stopPropagation();
-      const pc = agents.filter(a => a.pinned).length;
+      e.stopPropagation(); const pc = agents.filter(a => a.pinned).length;
       if (!agent.pinned && pc >= 3) { showToast('最多只能置顶3个智能体', 'error'); return; }
       agent.pinned = !agent.pinned; saveAgents(); renderAgentList();
     });
-
     actions.querySelector('.edit-agent').addEventListener('click', (e) => { e.stopPropagation(); openEditAgentModal(agent); });
-
     actions.querySelector('.delete-agent').addEventListener('click', async (e) => {
       e.stopPropagation();
       if (agents.length <= 1) { showToast('至少保留一个智能体', 'error'); return; }
       const confirmed = await showConfirm('确认删除', '确定删除智能体"' + agent.name + '"吗？此操作不可恢复。', '删除');
       if (confirmed) { agents = agents.filter(a => a.id !== agent.id); saveAgents(); renderAgentList(); }
     });
-
     list.appendChild(card);
   });
   document.body.classList.toggle('multi-select-mode', multiSelectMode);
@@ -564,14 +3083,10 @@ function enterChat(agentId) {
   currentChatId = agent.chats[0]?.id;
   if (!currentChatId) {
     const nc = { id: 'chat_' + Date.now(), title: '新对话', messages: [], pinned: false };
-    agent.chats.push(nc);
-    currentChatId = nc.id;
-    saveAgents();
+    agent.chats.push(nc); currentChatId = nc.id; saveAgents();
   }
   document.getElementById('chatTitle').innerText = getCurrentChat().title;
-  renderChatList();
-  renderMessages();
-  applyChatBackground();
+  renderChatList(); renderMessages(); applyChatBackground();
   document.getElementById('chatPage').classList.add('show');
 }
 
@@ -709,12 +3224,9 @@ document.getElementById('confirmDeleteBtn').onclick = () => {
 };
 
 function openSettingsPanel() {
-  updateApiSelectDisplay();
-  updateCustomModelDisplay();
+  updateApiSelectDisplay(); updateCustomModelDisplay();
   document.getElementById('customApiInput').value = config.customApi || '';
-  updateFontSizeDisplay();
-  updateTokenDisplay();
-  updateThemeSwitch(); updateHomeBgPreview();
+  updateFontSizeDisplay(); updateTokenDisplay(); updateThemeSwitch(); updateHomeBgPreview();
   document.getElementById('enterSendSwitch').classList.toggle('checked', config.enterToSend);
   document.body.classList.toggle('creator-mode', config.specialMode);
   document.getElementById('devControlBox').style.display = config.specialMode ? 'flex' : 'none';
@@ -752,7 +3264,6 @@ function renderChatList() {
     let ah = '<span class="rename" data-id="' + chat.id + '">✏️</span>';
     ah += '<span class="del" data-id="' + chat.id + '">✕</span>';
     item.innerHTML = '<div class="chat-item-left"><span class="pin-icon ' + (chat.pinned ? 'pinned' : '') + '" data-id="' + chat.id + '">📌</span><span class="chat-title-text">' + chat.title + '</span></div><div class="chat-item-actions">' + ah + '</div>';
-
     item.querySelector('.pin-icon').onclick = (e) => { e.stopPropagation(); chat.pinned = !chat.pinned; saveAgents(); renderChatList(); };
     item.addEventListener("click", (e) => {
       if (e.target.closest('.del') || e.target.closest('.rename') || e.target.closest('.pin-icon')) return;
@@ -814,14 +3325,12 @@ function insertHelpButtons() {
   const modalBody = document.querySelector('#modal .modal-body');
   if (!modalBody) return;
   modalBody.querySelectorAll('.help-btn').forEach(b => b.remove());
-
   const apiLabel = modalBody.querySelector('.api-select-wrap label');
   if (apiLabel && !apiLabel.querySelector('.help-btn')) {
     const btn = document.createElement('span'); btn.className = 'help-btn'; btn.textContent = '?';
     btn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); showHelpTooltip('api_source'); };
     apiLabel.appendChild(btn);
   }
-
   const fontSetting = modalBody.querySelector('.font-size-setting:first-of-type');
   if (fontSetting) {
     const fontLabel = fontSetting.querySelector('span:first-child');
@@ -831,7 +3340,6 @@ function insertHelpButtons() {
       fontLabel.appendChild(btn);
     }
   }
-
   const allSettings = modalBody.querySelectorAll('.font-size-setting');
   allSettings.forEach(setting => {
     const firstSpan = setting.querySelector('span:first-child');
@@ -841,7 +3349,6 @@ function insertHelpButtons() {
       firstSpan.appendChild(btn);
     }
   });
-
   const switchBoxes = modalBody.querySelectorAll('.switch-box');
   const switchKeys = ['light_mode', 'creator_mode', 'enter_to_send'];
   switchBoxes.forEach((box, index) => {
@@ -854,7 +3361,6 @@ function insertHelpButtons() {
       }
     }
   });
-
   const bgLabel = modalBody.querySelector('label[style*="margin-top:16px"]');
   if (bgLabel && bgLabel.textContent.includes('背景') && !bgLabel.querySelector('.help-btn')) {
     const btn = document.createElement('span'); btn.className = 'help-btn'; btn.textContent = '?';
@@ -926,9 +3432,7 @@ document.getElementById('apiSelectBtn').onclick = (e) => {
         document.getElementById('customApiInput').classList.remove('show');
         document.getElementById('customModelWrap').classList.remove('show');
       }
-      saveData();
-      updateApiSelectDisplay();
-      updateCustomModelDisplay();
+      saveData(); updateApiSelectDisplay(); updateCustomModelDisplay();
       container.remove();
       if (val === 'custom' && prevLine !== 'custom' && !config.customModel) {
         setTimeout(() => showModelSelectModal(), 300);
@@ -1016,7 +3520,11 @@ async function sendMsg() {
     aiMsg.id = 'streamingMsg';
     document.getElementById("messages").appendChild(aiMsg);
     startThinkingTimer(aiMsg, baseText);
-    document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+    // [FIX] 只在底部附近才自动滚动
+    const msgs = document.getElementById("messages");
+    if (msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight < 50) {
+      msgs.scrollTop = msgs.scrollHeight;
+    }
   }
 
   checkText(text).then(async (ok) => {
@@ -1084,7 +3592,11 @@ async function sendMsg() {
                     aiMsgEl.innerHTML = renderMessageContent(placeholderMsg.content);
                     aiMsgEl.style.animation = 'none'; aiMsgEl.style.opacity = '1'; aiMsgEl.style.transform = 'none';
                   }
-                  document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+                  // [FIX] 只在底部附近才自动滚动
+                  const msgs = document.getElementById("messages");
+                  if (msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight < 50) {
+                    msgs.scrollTop = msgs.scrollHeight;
+                  }
                 }
               }
             } catch(e) {}
@@ -1205,11 +3717,9 @@ function renderSearchResults(results, keyword) {
   const container = document.getElementById('searchResults');
   if (!keyword.trim()) { container.innerHTML = '<div class="search-empty">输入关键词开始搜索</div>'; return; }
   if (results.length === 0) { container.innerHTML = '<div class="search-empty">未找到匹配结果</div>'; return; }
-
   let totalCount = 0;
   results.forEach(r => { totalCount += r.matches.length; });
   let html = `<div style="font-size:calc(var(--font-size) - 2px);color:var(--subtext);margin-bottom:12px;padding:0 4px;">共找到 ${totalCount} 条匹配</div>`;
-
   results.forEach(result => {
     html += '<div class="search-result-group">';
     html += `<div class="search-result-agent" data-agent-id="${result.agentId}">🔍 ${highlightKeyword(result.agentName, keyword)} <span class="count">${result.matches.length} 条</span></div>`;
@@ -1232,7 +3742,6 @@ function renderSearchResults(results, keyword) {
     html += '</div>';
   });
   container.innerHTML = html;
-
   container.querySelectorAll('[data-action="enter"]').forEach(el => {
     el.addEventListener('click', () => { hideModal(document.getElementById('searchModal')); enterChat(el.dataset.agentId); });
   });
@@ -1296,8 +3805,8 @@ function initImagePreview() {
 
 async function initAll() {
   await migrateOldData();
-  patchConfig(); // 确保 config 字段完整
-  patchAgents(); // 确保 agents 字段完整
+  patchConfig();
+  patchAgents();
 
   applyTheme(); applyHomeBackground(); renderAgentList();
   startUsageTimer();
@@ -1366,9 +3875,9 @@ window.onload = async () => {
   const now = new Date(), month = now.getMonth() + 1, day = now.getDate();
   const mourningDays = [{ month: 4, day: 4, subtitle: '新冠肺炎疫情逝者' }, { month: 5, day: 12, subtitle: '汶川大地震遇难同胞' }, { month: 7, day: 27, subtitle: '唐山大地震遇难同胞' }];
   const today = mourningDays.find(d => d.month === month && d.day === day);
-  if (today) { document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:system-ui;"><div style="font-size:48px;margin-bottom:20px;">🕯️</div><div style="font-size:20px;font-weight:600;color:#e0e0e0;margin-bottom:8px;">沉痛缅怀</div><div style="font-size:15px;color:#a0a0a0;">' + today.subtitle + '</div><div style="font-size:14px;color:#a0a0a0;">灾难纪念日，软件暂停使用一天</div></div>'; return; }
+  if (today) { document.body.innerHTML = '...'; return; }
   document.getElementById("app").style.display = "block";
-  config = JSON.parse(localStorage.getItem("config")) || config; // [FIX] 保持原有读取方式
+  config = JSON.parse(localStorage.getItem("config")) || config;
   if (config.customModel === undefined) config.customModel = '';
   if (config.maxTokens === undefined) config.maxTokens = 1000;
   const needAgeConfirm = (config.isAdult === undefined || config.isAdult === null);
