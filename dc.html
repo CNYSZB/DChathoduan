@@ -3232,6 +3232,7 @@ function openSettingsPanel() {
   document.getElementById('devControlBox').style.display = config.specialMode ? 'flex' : 'none';
   document.getElementById('devSwitch').classList.toggle('checked', config.specialMode);
   insertHelpButtons();
+  updateVersionDisplay();
   showModal(document.getElementById('modal'));
 }
 
