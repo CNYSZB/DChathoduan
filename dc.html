@@ -204,8 +204,7 @@
   }
   .code-block-body {
     padding: 14px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;:    overscroll-behavior: contain;
   }
   .code-block-body pre {
     margin: 0;
@@ -558,7 +557,7 @@
     flex-direction: column;
     gap: 12px;
     padding-bottom: 100px;
-    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
   .agent-card {
     background: var(--surface);
@@ -904,7 +903,7 @@
     flex: 1;
     overflow-y: auto;
     padding: 4px 0;
-    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
   .chat-item {
     padding: 14px 16px;
@@ -1005,7 +1004,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     transition: padding-bottom 0.2s ease;
   }
 
@@ -1189,7 +1188,7 @@
   .modal-body {
     flex: 1;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     padding-right: 4px;
   }
   .modal-body label, .config-item label {
@@ -1747,13 +1746,22 @@
 
   .hide { display: none !important; }
 
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #4a4c55; border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: #5a5c66; }
-  body.light-mode ::-webkit-scrollbar-thumb { background: #c1c1c6; }
-  body.light-mode ::-webkit-scrollbar-thumb:hover { background: #a1a1a6; }
-
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: #4a4c55;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  min-height: 48px;
+}
+::-webkit-scrollbar-thumb:hover { background: #5a5c66; }
+body.light-mode ::-webkit-scrollbar-thumb {
+  background: #c1c1c6;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+body.light-mode ::-webkit-scrollbar-thumb:hover { background: #a1a1a6; }
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -1933,7 +1941,7 @@
   .search-results {
     max-height: 45vh;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
   .search-empty {
     text-align: center;
@@ -1987,20 +1995,20 @@
   .search-result-chat:active {
     background: var(--surface-light);
   }
-  .search-result-message {
-    padding: 8px 16px 8px 32px;
-    background: var(--surface);
-    cursor: pointer;
-    font-size: calc(var(--font-size) - 2px);
-    color: var(--subtext);
-    border-bottom: 1px solid var(--border);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    word-break: break-all;
-    transition: background 0.15s;
-  }
+.search-result-message {
+  padding: 10px 16px 10px 32px;
+  background: var(--surface);
+  cursor: pointer;
+  font-size: calc(var(--font-size) - 2px);
+  color: var(--subtext);
+  border-bottom: 1px solid var(--border);
+  word-break: break-word;
+  line-height: 1.5;
+  max-height: 160px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition: background 0.15s;
+}
   .search-result-message:last-child {
     border-bottom: none;
   }
@@ -2541,7 +2549,7 @@ Ctrl + 减号 — 缩小字体</div>
 <div id="searchModal" class="base-modal" style="z-index:100005;">
   <div class="modal-box">
     <div class="modal-head">
-      <span>搜索 <span class="search-beta-badge">🧪 测试功能</span></span>
+      <span>搜索</span>
     </div>
     <div class="modal-body">
       <div class="search-input-wrap">
@@ -2590,7 +2598,7 @@ Ctrl + 减号 — 缩小字体</div>
 </div>
 
 <script>
-const APP_VERSION = '2.5.3';
+const APP_VERSION = '2.5.5';
 
 const PRESET_API_KEYS = {
   default: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd",
