@@ -204,7 +204,8 @@
   }
   .code-block-body {
     padding: 14px;
-    overflow-x: auto;:    overscroll-behavior: contain;
+    overflow-x: auto;
+    overscroll-behavior: contain;
   }
   .code-block-body pre {
     margin: 0;
@@ -1021,6 +1022,7 @@
     opacity: 0;
     transform: translateY(10px);
     animation: fadeInUp 0.25s ease forwards;
+    position: relative;
   }
   .msg.user { background: var(--bubble-user); color: #fff; align-self: flex-end; border-bottom-right-radius: 8px; }
   .msg.ai { background: var(--bubble-ai); color: var(--text); align-self: flex-start; border-bottom-left-radius: 8px; }
@@ -1034,6 +1036,18 @@
     align-self: flex-start;
     font-size: var(--font-size);
     border: 1px solid var(--border);
+  }
+
+  /* ===== 时间戳样式 ===== */
+  .msg-time {
+    display: block;
+    font-size: 10px;
+    color: var(--subtext);
+    opacity: 0.6;
+    text-align: right;
+    margin-top: 6px;
+    line-height: 1;
+    user-select: none;
   }
 
   .input-bar { padding: 16px 20px; background: var(--surface); border-top: 1px solid var(--border); }
@@ -1534,7 +1548,6 @@
   }
   body.light-mode #closeNotice.cooldown { background: #e0e0e0; color: #999; }
   #closeNotice.cooldown:active { transform: none; }
-
   #noticeIframe { width: 100%; height: 100%; border: none; background: transparent; border-radius: 36px; }
 
   #titleLoading {
@@ -1746,22 +1759,22 @@
 
   .hide { display: none !important; }
 
-::-webkit-scrollbar { width: 12px; height: 12px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb {
-  background: #4a4c55;
-  border-radius: 8px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-  min-height: 48px;
-}
-::-webkit-scrollbar-thumb:hover { background: #5a5c66; }
-body.light-mode ::-webkit-scrollbar-thumb {
-  background: #c1c1c6;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-body.light-mode ::-webkit-scrollbar-thumb:hover { background: #a1a1a6; }
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: #4a4c55;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    min-height: 48px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: #5a5c66; }
+  body.light-mode ::-webkit-scrollbar-thumb {
+    background: #c1c1c6;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  body.light-mode ::-webkit-scrollbar-thumb:hover { background: #a1a1a6; }
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -1995,20 +2008,20 @@ body.light-mode ::-webkit-scrollbar-thumb:hover { background: #a1a1a6; }
   .search-result-chat:active {
     background: var(--surface-light);
   }
-.search-result-message {
-  padding: 10px 16px 10px 32px;
-  background: var(--surface);
-  cursor: pointer;
-  font-size: calc(var(--font-size) - 2px);
-  color: var(--subtext);
-  border-bottom: 1px solid var(--border);
-  word-break: break-word;
-  line-height: 1.5;
-  max-height: 160px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  transition: background 0.15s;
-}
+  .search-result-message {
+    padding: 10px 16px 10px 32px;
+    background: var(--surface);
+    cursor: pointer;
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    border-bottom: 1px solid var(--border);
+    word-break: break-word;
+    line-height: 1.5;
+    max-height: 160px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transition: background 0.15s;
+  }
   .search-result-message:last-child {
     border-bottom: none;
   }
@@ -2075,6 +2088,95 @@ body.light-mode ::-webkit-scrollbar-thumb:hover { background: #a1a1a6; }
     object-fit: contain;
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  }
+
+  /* ===== 标题生成设置区域 ===== */
+  .title-gen-section {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .title-gen-section .section-title {
+    font-size: calc(var(--font-size) + 2px);
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  .title-gen-section .switch-box {
+    margin-top: 0;
+  }
+  .title-gen-section .title-gen-sub {
+    display: none;
+    margin-top: 12px;
+  }
+  .title-gen-section .title-gen-sub.show {
+    display: block;
+  }
+
+  /* 标题生成 - API 来源下拉 */
+  .title-gen-api-select {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    font-size: var(--font-size);
+    outline: none;
+    cursor: pointer;
+    margin-top: 4px;
+    appearance: auto;
+    -webkit-appearance: auto;
+  }
+  .title-gen-api-select option {
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  /* 标题生成 - 同步按钮 */
+  .title-gen-sync-btn {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--primary-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    font-size: calc(var(--font-size) - 2px);
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 8px;
+    transition: transform 0.15s ease;
+  }
+  .title-gen-sync-btn:active {
+    transform: scale(0.97);
+  }
+
+  /* 标题生成 - 字数输入框 */
+  .title-gen-number-input {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    font-size: var(--font-size);
+    outline: none;
+    margin-top: 4px;
+  }
+  .title-gen-number-input:focus {
+    border-color: var(--primary);
+  }
+
+  .title-gen-extra-label {
+    display: block;
+    margin-top: 12px;
+    font-size: calc(var(--font-size) - 2px);
+    color: var(--subtext);
+    font-weight: 500;
+  }
+  .title-gen-extra-label:first-of-type {
+    margin-top: 0;
   }
 
 </style>
@@ -2274,6 +2376,35 @@ body.light-mode ::-webkit-scrollbar-thumb:hover { background: #a1a1a6; }
       <button class="bg-btn" id="changeHomeBgBtn">更换主菜单背景</button>
       <button class="bg-btn reset" id="resetHomeBgBtn">重置为默认背景</button>
       <input type="file" id="homeBgFile" accept="image/*">
+
+      <!-- ===== 自动标题生成设置 ===== -->
+      <div class="title-gen-section">
+        <div class="section-title">自动标题生成</div>
+        <div class="switch-box" style="margin-top:0;">
+          <span style="font-size:14px;">启用</span>
+          <div class="switch" id="titleGenSwitch"></div>
+        </div>
+        <div class="title-gen-sub" id="titleGenSub">
+          <div class="title-gen-extra-label">API 来源</div>
+          <select class="title-gen-api-select" id="titleGenApiSelect">
+            <option value="same">与对话使用同一API</option>
+            <option value="custom">自定义</option>
+          </select>
+          <div id="titleGenCustomFields" style="display:none;margin-top:8px;">
+            <input type="password" class="custom-api-input show" id="titleGenApiKeyInput" placeholder="输入标题生成 API Key" style="margin-top:0;">
+            <div class="custom-model-wrap show" style="margin-top:8px;" id="titleGenModelWrap">
+              <label>模型</label>
+              <div class="custom-model-display placeholder" id="titleGenModelDisplay">点击选择模型</div>
+            </div>
+            <button class="title-gen-sync-btn" id="titleGenSyncBtn">同步为对话的API配置</button>
+          </div>
+          <div class="title-gen-extra-label" style="margin-top:12px;">标题最大字数</div>
+          <input type="number" class="title-gen-number-input" id="titleGenMaxLengthInput" value="20" min="5" max="50">
+          <div class="title-gen-extra-label">首次回复超长跳过</div>
+          <input type="number" class="title-gen-number-input" id="titleGenSkipLengthInput" value="500" min="100" max="2000">
+        </div>
+      </div>
+
       <button class="side-btn" style="margin-top:16px;width:100%;" id="openAgreementBtn">查看用户协议</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="changeAgeBtn">再次验证年龄</button>
       <button class="side-btn" style="margin-top:8px;width:100%;" id="openShortcutBtn">电脑端快捷键指南</button>
@@ -2598,11 +2729,11 @@ Ctrl + 减号 — 缩小字体</div>
 </div>
 
 <script>
-const APP_VERSION = '2.5.5';
+const APP_VERSION = '2.5.8';
 
 const PRESET_API_KEYS = {
   default: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd",
-  line1: "sk-invecoktfzbtqalblrnytslakmfpzqemaclwszknrhpsuoxf",
+  line1: "sk-invecoktfbtzqalnytslakfpzqemaclwszknrhpsuoxf",
   line2: "sk-illhbbvslpisfkwfljgwukqapfebzbaecbjawqcznhcmkyct"
 };
 
@@ -2613,6 +2744,7 @@ const PRESET_MODEL_OPTIONS = {
 
 const DEFAULT_MODEL = "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B";
 const API_LINE_LABELS = ['默认线路', '分流线路一', '分流线路二', '自定义 API'];
+const TITLE_GEN_SYSTEM_PROMPT = "你是一个标题生成器，根据第一条消息和AI回复，用5-20字概括主题";
 
 const helpTexts = {
   'api_source': '选择 API 线路。支持三条预设线路（默认/分流一/分流二）以及自定义 API。选择自定义后可填写你自己的 API Key。',
@@ -2735,12 +2867,19 @@ const AUTH_CODE = "258456";
 
 let config = JSON.parse(localStorage.getItem("config")) || {
   apiLine: 'default', customApi: '', customModel: '', fontSize: 16,
-  specialMode: false, lightMode: false, homeBackground: null, enterToSend: true, maxTokens: 1000
+  specialMode: false, lightMode: false, homeBackground: null, enterToSend: true, maxTokens: 1000,
+  titleGenEnabled: false, titleGenUseSeparateApi: false, titleGenApiKey: '', titleGenModel: '',
+  titleGenMaxLength: 20, titleGenSkipLength: 500
 };
+
+// 标题生成相关 DOM 引用
+let titleGenModelTemp = '';
 
 function patchConfig() {
   const defaults = { apiLine: 'default', customApi: '', customModel: '', fontSize: 16,
-    specialMode: false, lightMode: false, homeBackground: null, enterToSend: true, maxTokens: 1000 };
+    specialMode: false, lightMode: false, homeBackground: null, enterToSend: true, maxTokens: 1000,
+    titleGenEnabled: false, titleGenUseSeparateApi: false, titleGenApiKey: '', titleGenModel: '',
+    titleGenMaxLength: 20, titleGenSkipLength: 500 };
   for (const key of Object.keys(defaults)) {
     if (config[key] === undefined) config[key] = defaults[key];
   }
@@ -3241,7 +3380,124 @@ function openSettingsPanel() {
   document.getElementById('devSwitch').classList.toggle('checked', config.specialMode);
   insertHelpButtons();
   updateVersionDisplay();
+
+  // 标题生成设置初始化
+  initTitleGenSettingsInPanel();
+
   showModal(document.getElementById('modal'));
+}
+
+function initTitleGenSettingsInPanel() {
+  const tgSwitch = document.getElementById('titleGenSwitch');
+  tgSwitch.classList.toggle('checked', !!config.titleGenEnabled);
+  tgSwitch.onclick = () => {
+    config.titleGenEnabled = !config.titleGenEnabled;
+    tgSwitch.classList.toggle('checked', config.titleGenEnabled);
+    document.getElementById('titleGenSub').classList.toggle('show', config.titleGenEnabled);
+    saveData();
+  };
+  document.getElementById('titleGenSub').classList.toggle('show', !!config.titleGenEnabled);
+
+  const apiSelect = document.getElementById('titleGenApiSelect');
+  apiSelect.value = config.titleGenUseSeparateApi ? 'custom' : 'same';
+  apiSelect.onchange = () => {
+    const isCustom = apiSelect.value === 'custom';
+    config.titleGenUseSeparateApi = isCustom;
+    document.getElementById('titleGenCustomFields').style.display = isCustom ? 'block' : 'none';
+    saveData();
+  };
+  document.getElementById('titleGenCustomFields').style.display = apiSelect.value === 'custom' ? 'block' : 'none';
+
+  document.getElementById('titleGenApiKeyInput').value = config.titleGenApiKey || '';
+  document.getElementById('titleGenApiKeyInput').oninput = function() {
+    config.titleGenApiKey = this.value.trim();
+    saveData();
+  };
+
+  // 标题生成模型展示
+  const tgModelDisplay = document.getElementById('titleGenModelDisplay');
+  function updateTitleGenModelDisplay() {
+    if (config.titleGenModel) {
+      tgModelDisplay.textContent = config.titleGenModel;
+      tgModelDisplay.classList.remove('placeholder');
+    } else {
+      tgModelDisplay.textContent = '点击选择模型';
+      tgModelDisplay.classList.add('placeholder');
+    }
+  }
+  updateTitleGenModelDisplay();
+  tgModelDisplay.onclick = () => {
+    if (config.titleGenUseSeparateApi) {
+      // 专门为标题生成打开模型选择弹窗，重写选择回调
+      const origV4 = document.getElementById('modelOptV4Flash').onclick;
+      const origR1 = document.getElementById('modelOptR1Qwen').onclick;
+      const origCustom = document.getElementById('modelOptCustom').onclick;
+      const origModelClick = document.getElementById('customModelDisplay').onclick;
+      const origModalClick = document.getElementById('modelSelectModal').onclick;
+
+      document.getElementById('modelOptV4Flash').onclick = () => {
+        config.titleGenModel = PRESET_MODEL_OPTIONS.v4flash;
+        saveData(); updateTitleGenModelDisplay(); hideModelSelectModal();
+        restoreModelSelectHandlers();
+      };
+      document.getElementById('modelOptR1Qwen').onclick = () => {
+        config.titleGenModel = PRESET_MODEL_OPTIONS.r1qwen;
+        saveData(); updateTitleGenModelDisplay(); hideModelSelectModal();
+        restoreModelSelectHandlers();
+      };
+      document.getElementById('modelOptCustom').onclick = () => {
+        config.titleGenModel = '';
+        saveData(); updateTitleGenModelDisplay(); hideModelSelectModal();
+        restoreModelSelectHandlers();
+      };
+      document.getElementById('modelSelectModal').onclick = (e) => {
+        if (e.target === document.getElementById('modelSelectModal')) {
+          hideModelSelectModal();
+          restoreModelSelectHandlers();
+        }
+      };
+
+      function restoreModelSelectHandlers() {
+        document.getElementById('modelOptV4Flash').onclick = origV4;
+        document.getElementById('modelOptR1Qwen').onclick = origR1;
+        document.getElementById('modelOptCustom').onclick = origCustom;
+        document.getElementById('customModelDisplay').onclick = origModelClick;
+        document.getElementById('modelSelectModal').onclick = origModalClick;
+      }
+
+      showModelSelectModal();
+    }
+  };
+
+  // 同步按钮
+  document.getElementById('titleGenSyncBtn').onclick = () => {
+    config.titleGenApiKey = config.customApi || '';
+    config.titleGenModel = config.customModel || '';
+    document.getElementById('titleGenApiKeyInput').value = config.titleGenApiKey;
+    updateTitleGenModelDisplay();
+    saveData();
+    showToast('已同步', 'success');
+  };
+
+  document.getElementById('titleGenMaxLengthInput').value = config.titleGenMaxLength || 20;
+  document.getElementById('titleGenMaxLengthInput').onchange = function() {
+    let val = parseInt(this.value);
+    if (isNaN(val) || val < 5) val = 5;
+    if (val > 50) val = 50;
+    this.value = val;
+    config.titleGenMaxLength = val;
+    saveData();
+  };
+
+  document.getElementById('titleGenSkipLengthInput').value = config.titleGenSkipLength || 500;
+  document.getElementById('titleGenSkipLengthInput').onchange = function() {
+    let val = parseInt(this.value);
+    if (isNaN(val) || val < 100) val = 100;
+    if (val > 2000) val = 2000;
+    this.value = val;
+    config.titleGenSkipLength = val;
+    saveData();
+  };
 }
 
 document.getElementById('homeSettingsBtn').onclick = openSettingsPanel;
@@ -3306,7 +3562,8 @@ function renderMessages() {
   chat.messages.forEach(msg => {
     const div = document.createElement("div");
     div.className = 'msg ' + (msg.role === "assistant" ? "ai" : "user");
-    div.innerHTML = renderMessageContent(msg.content);
+    const timeStr = msg.time ? formatTime(msg.time) : '';
+    div.innerHTML = renderMessageContent(msg.content) + (timeStr ? '<span class="msg-time">' + timeStr + '</span>' : '');
     box.appendChild(div);
   });
   box.querySelectorAll('.code-copy-btn').forEach(btn => {
@@ -3320,6 +3577,13 @@ function renderMessages() {
     });
   });
   box.scrollTop = box.scrollHeight;
+}
+
+function formatTime(timestamp) {
+  const d = new Date(timestamp);
+  const h = d.getHours().toString().padStart(2, '0');
+  const m = d.getMinutes().toString().padStart(2, '0');
+  return h + ':' + m;
 }
 
 function saveData() { localStorage.setItem("config", JSON.stringify(config)); }
@@ -3488,6 +3752,65 @@ function startThinkingTimer(loadingEl, baseText) {
 
 function stopThinkingTimer() { if (thinkingTimer) { clearInterval(thinkingTimer); thinkingTimer = null; } }
 
+// ===== 自动标题生成函数 =====
+async function tryGenerateTitle(chat, replyContent) {
+  if (!config.titleGenEnabled) return;
+  if (!chat || chat.title !== '新对话') return;
+
+  // 检查 API 可用性
+  let apiKey = '';
+  let model = '';
+  if (config.titleGenUseSeparateApi) {
+    if (!config.titleGenApiKey || !config.titleGenModel) return;
+    apiKey = config.titleGenApiKey;
+    model = config.titleGenModel;
+  } else {
+    // 使用对话API
+    apiKey = getEffectiveApiKey();
+    if (!apiKey) return;
+    model = getEffectiveModel();
+    if (!model) return;
+  }
+
+  // 检查回复长度
+  const skipLen = config.titleGenSkipLength || 500;
+  if (replyContent.length > skipLen) return;
+
+  try {
+    const userMsg = chat.messages.find(m => m.role === 'user');
+    if (!userMsg) return;
+    const res = await fetch(DEEPSEEK_CONFIG.apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + apiKey },
+      body: JSON.stringify({
+        model: model,
+        messages: [
+          { role: "system", content: TITLE_GEN_SYSTEM_PROMPT },
+          { role: "user", content: "第一条消息：" + userMsg.content + "\nAI回复：" + replyContent }
+        ],
+        temperature: 0.5,
+        max_tokens: 50
+      })
+    });
+    const data = await res.json();
+    let title = data.choices?.[0]?.message?.content?.trim() || '';
+    if (title) {
+      // 截取最大字数
+      const maxLen = config.titleGenMaxLength || 20;
+      if (title.length > maxLen) title = title.substring(0, maxLen);
+      chat.title = title;
+      saveAgents();
+      if (currentChatId === chat.id) {
+        document.getElementById('chatTitle').innerText = title;
+        renderChatList();
+      }
+    }
+  } catch (e) {
+    // 失败不影响主流程
+    console.warn('标题生成失败:', e);
+  }
+}
+
 async function sendMsg() {
   if (activeStreamAbort) {
     activeStreamAbort.abort();
@@ -3514,7 +3837,7 @@ async function sendMsg() {
   const agentId = currentAgentId, chatId = currentChatId,
         agent = agents.find(a => a.id === agentId),
         chat = agent.chats.find(c => c.id === chatId);
-  chat.messages.push({ role: "user", content: text });
+  chat.messages.push({ role: "user", content: text, time: Date.now() });
   document.getElementById("input").value = ""; saveAgents();
   hasReceivedContent = false;
 
@@ -3529,7 +3852,6 @@ async function sendMsg() {
     aiMsg.id = 'streamingMsg';
     document.getElementById("messages").appendChild(aiMsg);
     startThinkingTimer(aiMsg, baseText);
-    // [FIX] 只在底部附近才自动滚动
     const msgs = document.getElementById("messages");
     if (msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight < 50) {
       msgs.scrollTop = msgs.scrollHeight;
@@ -3553,7 +3875,7 @@ async function sendMsg() {
       const model = getEffectiveModel();
       const aiConfig = chat.chatConfig && chat.chatConfig.type ? chat.chatConfig : agent.aiConfig;
 
-      const placeholderMsg = { role: "assistant", content: "", _streaming: true };
+      const placeholderMsg = { role: "assistant", content: "", _streaming: true, time: Date.now() };
       chat.messages.push(placeholderMsg);
       saveAgents();
 
@@ -3601,7 +3923,6 @@ async function sendMsg() {
                     aiMsgEl.innerHTML = renderMessageContent(placeholderMsg.content);
                     aiMsgEl.style.animation = 'none'; aiMsgEl.style.opacity = '1'; aiMsgEl.style.transform = 'none';
                   }
-                  // [FIX] 只在底部附近才自动滚动
                   const msgs = document.getElementById("messages");
                   if (msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight < 50) {
                     msgs.scrollTop = msgs.scrollHeight;
@@ -3621,7 +3942,7 @@ async function sendMsg() {
         chat.messages.pop();
         reply = agent.aiConfig.type === "emotion" ? "出了差错，请检查网络和API~" : "有点问题，请检查网络和API哦~";
         placeholderMsg.content = reply;
-        chat.messages.push({ role: "assistant", content: reply });
+        chat.messages.push({ role: "assistant", content: reply, time: Date.now() });
       } else {
         reply = reply.replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, '').replace(/[。.]{2,}/g, '').trim();
         placeholderMsg.content = reply;
@@ -3629,6 +3950,8 @@ async function sendMsg() {
 
       if (await checkText(reply)) {
         saveAgents();
+        // 尝试自动生成标题
+        tryGenerateTitle(chat, reply);
         if (currentAgentId === agentId && currentChatId === chatId) {
           const streamingEl = document.getElementById("streamingMsg");
           if (streamingEl) streamingEl.removeAttribute('id');
