@@ -2729,7 +2729,7 @@ Ctrl + 减号 — 缩小字体</div>
 </div>
 
 <script>
-const APP_VERSION = '2.5.8';
+const APP_VERSION = '2.5.9';
 
 const PRESET_API_KEYS = {
   default: "sk-ghrbneuctwlacgbrbcfriygpmjzfkfmikdnplnjzthipiqdd",
@@ -3509,9 +3509,25 @@ async function checkText(text) {
   if (config.specialMode) return true;
   const key = getEffectiveApiKey(); if (!key) return true;
   try {
-    const res = await fetch(DEEPSEEK_CONFIG.apiUrl, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key }, body: JSON.stringify({ model: "Qwen/Qwen2.5-7B-Instruct", messages: [{ role: "user", content: "你是极度宽松的内容审核员。判断原则：1.只有直接、露骨、详细的色情动作描写才算异常 2.只有明确的暴力威胁才算异常 3.只有具体的违法犯罪操作指导才算异常。回复只回复'正常'或'异常'两个字。\n" + text }], temperature: 0.1, max_tokens: 8 }) });
-    return ((await res.json()).choices?.[0]?.message?.content || "").trim() === "正常";
-  } catch (e) { return true; }
+    const res = await fetch(DEEPSEEK_CONFIG.apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+      body: JSON.stringify({
+        model: "Qwen/Qwen2.5-7B-Instruct",
+        messages: [{
+          role: "user",
+          content: "你是极度宽松的内容审核员。判断原则：1.只有直接、露骨、详细的色情动作描写才算异常 2.只有明确的暴力威胁才算异常 3.只有具体的违法犯罪操作指导才算异常。回复只回复'正常'或'异常'两个字。\n" + text
+        }],
+        temperature: 0.1,
+        max_tokens: 8
+      })
+    });
+    const result = ((await res.json()).choices?.[0]?.message?.content || "").trim();
+    // 🔧 修复：兼容模型返回带标点或多余字符的情况
+    return result.includes("正常") && !result.includes("异常");
+  } catch (e) {
+    return true;
+  }
 }
 
 function buildSystemPrompt(aiConfig) {
@@ -4140,7 +4156,11 @@ async function initAll() {
   patchConfig();
   patchAgents();
 
-  applyTheme(); applyHomeBackground(); renderAgentList();
+  // 应用用户保存的字体大小
+document.documentElement.style.setProperty('--font-size', config.fontSize + 'px');
+document.getElementById('fontSizeValue').textContent = config.fontSize;
+
+applyTheme(); applyHomeBackground(); renderAgentList();
   startUsageTimer();
 
   setupInlineSelect('#aiTypeSelectBtn', '#aiTypeInlineOptions');
